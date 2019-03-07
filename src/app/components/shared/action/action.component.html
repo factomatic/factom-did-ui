@@ -1,0 +1,29 @@
+<form #actionForm="ngForm">
+  <div class="form-horizontal">
+    <div class="tab-pane fade in active">
+      <h4 class="head text-center">{{title}}</h4>
+      <br/>
+      <div class="row">
+        <div class='col-xs-offset-4 col-xs-10 col-sm-offset-5 col-sm-4'>
+          <div class="form-group">
+            <div class="radio">
+              <label>
+                <input type="radio" #action="ngModel" required name="action" [(ngModel)]="actionType" value="create">
+                Create New DID
+              </label>
+            </div>
+            <div class="radio mt-3">
+              <label>
+                <input type="radio" #action="ngModel" required name="action" [(ngModel)]="actionType" value="update">
+                Update Existing DID
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group text-center">
+        <button class="btn btn-outline-rounded btn-info" [disabled]="!actionForm.valid" (click)="goToNext()"> Next <span style="margin-left:10px;" class="glyphicon glyphicon-arrow-right"></span></button>
+      </div>
+    </div>
+  </div>
+</form>
