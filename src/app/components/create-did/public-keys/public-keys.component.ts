@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class PublicKeysComponent implements OnInit, AfterViewInit {
   @ViewChildren(CollapseComponent) collapses: CollapseComponent[];
   protected generatedKeys = [];
-  protected title = '';
+  protected title = 'Generate public keys for your DID';
   protected keyForm;
 
   constructor(
@@ -50,6 +50,9 @@ export class PublicKeysComponent implements OnInit, AfterViewInit {
   }
 
   goToNext() {
+    if (this.generatedKeys.length > 0) {
+      this.router.navigate(['/create/keys/authentication']);
+    }
   }
 
   goToPrevious() {

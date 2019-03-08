@@ -3,73 +3,73 @@
   <br/>
   <div class="row">
     <div class="col-xs-offset-1 col-xs-10 col-sm-offset-3 col-sm-6">
-        <fieldset class="collapsible collapsed" *ngFor="let key of generatedKeys">
-          <legend (click)="collapse.toggle()">{{key.alias}}</legend>
-          <div mdbCollapse #collapse="bs-collapse">
-            <div class="form-group">
-              <label class="control-label" for="type">Key type</label>
-              <input type="text" class="form-control input-md" id="type" value="{{key.type}}" disabled />
-            </div>
+      <fieldset class="collapsible collapsed" *ngFor="let key of generatedKeys">
+        <legend (click)="collapse.toggle()">{{key.alias}}</legend>
+        <div mdbCollapse #collapse="bs-collapse">
+          <div class="form-group">
+            <label class="control-label" for="type">Key type</label>
+            <input type="text" class="form-control input-md" id="type" value="{{key.type}}" disabled />
+          </div>
   
+          <div class="form-group">
+            <label class="control-label" for="controller">Key controller</label>
+            <input type="text" class="form-control input-md" id="controller" value="{{key.controller}}" disabled />
+          </div>
+
+          <div class="form-group">
+            <label class="control-label" for="alias">Alias</label>
+            <input type="text" class="form-control input-md" id="alias" value="{{key.alias}}" disabled />
+          </div>
+
+          <div class="form-group">
+            <label class="control-label" for="controller">Key (Base58)</label>
+            <input type="text" class="form-control input-md" id="controller" value="{{key.pubKey}}" disabled />
+          </div>
+        </div>
+      </fieldset>
+      <fieldset class="collapsible collapsed">
+        <legend (click)="collapse.toggle()">Generate Public Key</legend>
+        <div mdbCollapse #collapse="bs-collapse">
+          <form [formGroup]="keyForm" (ngSubmit)="generateKey()">
             <div class="form-group">
-              <label class="control-label" for="controller">Key controller</label>
-              <input type="text" class="form-control input-md" id="controller" value="{{key.controller}}" disabled />
+              <label class="control-label" for="type">Choose key type</label>
+              <select class="form-control" formControlName="type" id="type">
+                <option value="Ed25519VerificationKey2018">Ed25519VerificationKey2018</option>
+                <option value="Secp256k1VerificationKey2018">Secp256k1VerificationKey2018</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label" for="controller">Choose key controller</label>
+              <input 
+                type="text" 
+                class="form-control input-md" 
+                formControlName="controller" 
+                id="controller" 
+                placeholder="Key controller"
+                [ngClass]="{ 'is-invalid': controller.touched && controller.errors }" />
+              <div *ngIf="controller.errors" class="invalid-feedback">
+                <div *ngIf="controller.errors.required">Key controller is required!</div>
+              </div>
             </div>
 
             <div class="form-group">
               <label class="control-label" for="alias">Alias</label>
-              <input type="text" class="form-control input-md" id="alias" value="{{key.alias}}" disabled />
+              <input type="text" class="form-control input-md" formControlName="alias" id="alias" placeholder="Alias" [ngClass]="{ 'is-invalid': alias.touched && alias.errors }" />
+              <div *ngIf="alias.errors" class="invalid-feedback">
+                <div *ngIf="alias.errors.required">Alias is required!</div>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label class="control-label" for="controller">Key (Base58)</label>
-              <input type="text" class="form-control input-md" id="controller" value="{{key.pubKey}}" disabled />
+            <div class="form-group text-center">
+              <input type="submit" class="btn green" value="Generate key" [disabled]="keyForm.invalid" />
             </div>
-          </div>
-        </fieldset>
-        <fieldset class="collapsible collapsed">
-          <legend (click)="collapse.toggle()">Generate Public Key</legend>
-          <div mdbCollapse #collapse="bs-collapse">
-            <form [formGroup]="keyForm" (ngSubmit)="generateKey()">
-              <div class="form-group">
-                <label class="control-label" for="type">Choose key type</label>
-                <select class="form-control" formControlName="type" id="type">
-                  <option value="Ed25519VerificationKey2018">Ed25519VerificationKey2018</option>
-                  <option value="Secp256k1VerificationKey2018">Secp256k1VerificationKey2018</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label" for="controller">Choose key controller</label>
-                <input 
-                  type="text" 
-                  class="form-control input-md" 
-                  formControlName="controller" 
-                  id="controller" 
-                  placeholder="Key controller"
-                  [ngClass]="{ 'is-invalid': controller.touched && controller.errors }" />
-                <div *ngIf="controller.errors" class="invalid-feedback">
-                  <div *ngIf="controller.errors.required">Key controller is required!</div>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label" for="alias">Alias</label>
-                <input type="text" class="form-control input-md" formControlName="alias" id="alias" placeholder="Alias" [ngClass]="{ 'is-invalid': alias.touched && alias.errors }" />
-                <div *ngIf="alias.errors" class="invalid-feedback">
-                  <div *ngIf="alias.errors.required">Alias is required!</div>
-                </div>
-              </div>
-
-              <div class="form-group text-center">
-                <input type="submit" class="btn green" value="Generate key" [disabled]="keyForm.invalid" />
-              </div>
-            </form>
-          </div>
-        </fieldset>
+          </form>
+        </div>
+      </fieldset>
       <div class="form-group text-center">
         <button class="btn btn-outline-rounded default" (click)="goToPrevious()"> <span class="glyphicon glyphicon-arrow-left mr-3"></span> Previous</button>
-        <button class="btn btn-outline-rounded btn-info" style="margin-left: 40px;" (click)="goToNext()"> Next <span class="glyphicon glyphicon-arrow-right ml-3"></span></button>
+        <button class="btn btn-outline-rounded btn-info" (click)="goToNext()"> Next <span class="glyphicon glyphicon-arrow-right ml-3"></span></button>
       </div>
     </div>
   </div>
