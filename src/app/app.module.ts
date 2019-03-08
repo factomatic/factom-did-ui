@@ -1,4 +1,5 @@
 import { ActionReducer, StoreModule } from '@ngrx/store';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { NgModule } from '@angular/core';
@@ -24,6 +25,7 @@ export const metaReducers = environment.production ? [] : [logger];
   ],
   imports: [
     AppRoutingModule,
+    BrowserAnimationsModule,
     BrowserModule,
     CreateDIDModule,
     MDBBootstrapModule.forRoot(),

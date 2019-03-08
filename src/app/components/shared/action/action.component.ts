@@ -23,5 +23,6 @@ export class ActionComponent implements OnInit {
 
   goToNext() {
     this.store.dispatch(new SelectAction(this.actionType));
+    this.router.navigate([`${this.actionType}/keys/public`]);
   }
 }
