@@ -9,7 +9,8 @@ import { AppState } from 'src/app/core/store/app.state';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  protected secondRingLink = '/create/keys/public';
+  protected secondTabLink = '/create/keys/public';
+  protected thirdTabLink = '/create/keys/authentication';
 
   constructor(private store: Store<AppState>) {
   }
@@ -19,7 +20,8 @@ export class NavbarComponent implements OnInit {
      .pipe(select(state => state.action.selectedAction))
      .subscribe(selectedAction => {
        if (selectedAction) {
-        this.secondRingLink = `/${selectedAction}/keys/public`;
+        this.secondTabLink = `/${selectedAction}/keys/public`;
+        this.thirdTabLink = `/${selectedAction}/keys/authentication`;
        }
      });
   }
