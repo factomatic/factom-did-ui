@@ -4,10 +4,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthenticationKeysComponent } from './authentication-keys/authentication-keys.component';
 import { CreateComponentsGuard } from '../../core/guards/create-components.guard';
 import { PublicKeysComponent } from './public-keys/public-keys.component';
+import { ServicesComponent } from './services/services.component';
 
 const carsRoutes: Routes = [
   { path: 'keys/authentication', component: AuthenticationKeysComponent, canActivate: [ CreateComponentsGuard ] },
-  { path: 'keys/public', component: PublicKeysComponent, canActivate: [ CreateComponentsGuard ] }
+  { path: 'keys/public', component: PublicKeysComponent, canActivate: [ CreateComponentsGuard ] },
+  { path: 'services', component: ServicesComponent, canActivate: [ CreateComponentsGuard ] }
 ];
 
 @NgModule({

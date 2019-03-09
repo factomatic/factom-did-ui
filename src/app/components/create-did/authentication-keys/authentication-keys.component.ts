@@ -2,6 +2,11 @@ import { CollapseComponent } from 'angular-bootstrap-md';
 import { Component, OnInit, AfterViewInit, ViewChildren, NgZone } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+
+import { AppState } from 'src/app/core/store/app.state';
+import { CompleteStep } from 'src/app/core/store/action/action.actions';
+import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 
 @Component({
   selector: 'app-authentication-keys',
@@ -32,7 +37,8 @@ export class AuthenticationKeysComponent implements OnInit, AfterViewInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private zone: NgZone) { }
+    private zone: NgZone,
+    private store: Store<AppState>) { }
 
   ngOnInit() {
     this.keyForm = this.fb.group({
@@ -104,6 +110,10 @@ export class AuthenticationKeysComponent implements OnInit, AfterViewInit {
   }
 
   goToNext() {
+    if (this.authenticationKeys.length > 0) {
+      this.store.dispatch(new CompleteStep(CreateStepsIndexes.AuthenticationKeys));
+      this.router.navigate(['/create/services']);
+    }
   }
 
   goToPrevious() {

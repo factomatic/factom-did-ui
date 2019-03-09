@@ -11,6 +11,7 @@ import { AppState } from 'src/app/core/store/app.state';
 export class NavbarComponent implements OnInit {
   protected secondTabLink = '/create/keys/public';
   protected thirdTabLink = '/create/keys/authentication';
+  protected forthTabLink = '/create/services';
 
   constructor(private store: Store<AppState>) {
   }
@@ -22,6 +23,7 @@ export class NavbarComponent implements OnInit {
        if (selectedAction) {
         this.secondTabLink = `/${selectedAction}/keys/public`;
         this.thirdTabLink = `/${selectedAction}/keys/authentication`;
+        this.forthTabLink = `/${selectedAction}/services`;
        }
      });
   }

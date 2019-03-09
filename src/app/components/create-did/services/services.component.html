@@ -1,0 +1,86 @@
+<div class="tab-pane fade in active">
+  <h4 class="head text-center">Add services for your DID</h4>
+  <br/>
+  <div class="row">
+    <div class="col-xs-offset-1 col-xs-10 col-sm-offset-3 col-sm-6">
+      <fieldset class="collapsible collapsed" *ngFor="let service of services">
+        <legend (click)="collapse.toggle()">{{service.alias}}</legend>
+        <div mdbCollapse #collapse="bs-collapse">
+          <div class="form-group">
+            <label class="control-label" for="type">Service type</label>
+            <input type="text" class="form-control input-md" id="type" value="{{service.type}}" disabled />
+          </div>
+  
+          <div class="form-group">
+            <label class="control-label" for="endpoint">Service endpoint</label>
+            <input type="text" class="form-control input-md" id="endpoint" value="{{service.endpoint}}" disabled />
+          </div>
+
+          <div class="form-group">
+            <label class="control-label" for="alias">Alias</label>
+            <input type="text" class="form-control input-md" id="alias" value="{{service.alias}}" disabled />
+          </div>
+        </div>
+      </fieldset>
+      <fieldset class="collapsible collapsed">
+        <legend (click)="collapse.toggle()">Add service</legend>
+        <div mdbCollapse #collapse="bs-collapse">
+          <form [formGroup]="serviceForm" (ngSubmit)="addService()">
+
+            <div class="form-group">
+              <label class="control-label" for="type">Enter service type</label>
+              <input 
+                type="text" 
+                class="form-control input-md"
+                formControlName="type"
+                id="type"
+                placeholder="Service type"
+                [ngClass]="{ 'is-invalid': type.touched && type.errors }" />
+              <div *ngIf="type.errors" class="invalid-feedback">
+                <div *ngIf="type.errors.required">Service type is required!</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label" for="endpoint">Enter service endpoint</label>
+              <input 
+                type="text" 
+                class="form-control input-md"
+                formControlName="endpoint"
+                id="endpoint"
+                placeholder="Service endpoint"
+                [ngClass]="{ 'is-invalid': endpoint.touched && endpoint.errors }" />
+              <div *ngIf="endpoint.errors" class="invalid-feedback">
+                <div *ngIf="endpoint.errors.required">Service endpoint is required!</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label" for="alias">Alias</label>
+              <input 
+                type="text" 
+                class="form-control input-md" 
+                formControlName="alias" 
+                id="alias" 
+                placeholder="Alias" 
+                [ngClass]="{ 'is-invalid': alias.touched && alias.errors }" />
+              <div *ngIf="alias.errors" class="invalid-feedback">
+                <div *ngIf="alias.errors.required">Alias is required!</div>
+              </div>
+            </div>
+
+            <div class="form-group text-center">
+              <input type="submit" class="btn green" value="Add service" [disabled]="serviceForm.invalid" />
+            </div>
+          </form>
+        </div>
+      </fieldset>
+      <div class="row">
+        <div class="col-xs-offset-1 col-sm-offset-1">
+          <button class="btn btn-outline-rounded default" (click)="goToPrevious()"> <span class="glyphicon glyphicon-arrow-left mr-3"></span> Previous</button>
+          <button class="btn btn-outline-rounded btn-info" (click)="goToNext()"> Next <span class="glyphicon glyphicon-arrow-right ml-3"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
