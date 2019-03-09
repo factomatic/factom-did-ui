@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 
 import { AppState } from 'src/app/core/store/app.state';
 import { SelectAction } from 'src/app/core/store/action/action.actions';
@@ -19,6 +19,10 @@ export class ActionComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
+    this.store.pipe(select(state => state.action))
+      .subscribe(action => {
+        this.actionType = action.selectedAction;
+      });
   }
 
   goToNext() {

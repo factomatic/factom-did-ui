@@ -10,6 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppState } from './core/store/app.state';
 import { CreateDIDModule } from './components/create-did/create-did.module';
 import { environment } from '../environments/environment';
+import { GuardsModule } from './core/guards/guards.module';
 import { ServicesModule } from './core/services/services.module';
 import { SharedModule } from './components/shared/shared.module';
 import { storeLogger } from 'ngrx-store-logger';
@@ -29,6 +30,7 @@ export const metaReducers = environment.production ? [] : [logger];
     BrowserAnimationsModule,
     BrowserModule,
     CreateDIDModule,
+    GuardsModule,
     MDBBootstrapModule.forRoot(),
     ServicesModule,
     SharedModule,
