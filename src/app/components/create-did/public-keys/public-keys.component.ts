@@ -2,6 +2,11 @@ import { CollapseComponent } from 'angular-bootstrap-md';
 import { Component, OnInit, AfterViewInit, ViewChildren } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+
+import { AppState } from 'src/app/core/store/app.state';
+import { CompleteStep } from 'src/app/core/store/action/action.actions';
+import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 
 @Component({
   selector: 'app-public-keys',
@@ -16,7 +21,8 @@ export class PublicKeysComponent implements OnInit, AfterViewInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router) { }
+    private router: Router,
+    private store: Store<AppState>) { }
 
   ngOnInit() {
     this.keyForm = this.fb.group({
@@ -51,6 +57,7 @@ export class PublicKeysComponent implements OnInit, AfterViewInit {
 
   goToNext() {
     if (this.generatedKeys.length > 0) {
+      this.store.dispatch(new CompleteStep(CreateStepsIndexes.PublicKeys));
       this.router.navigate(['/create/keys/authentication']);
     }
   }
