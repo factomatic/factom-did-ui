@@ -2,7 +2,7 @@ import { CollapseComponent } from 'angular-bootstrap-md';
 import { Component, OnInit, AfterViewInit, ViewChildren } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 
 import { AddServices } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
@@ -26,6 +26,12 @@ export class ServicesComponent implements OnInit, AfterViewInit {
     private store: Store<AppState>) { }
 
   ngOnInit() {
+    this.store
+      .pipe(select(state => state.form.services))
+      .subscribe(services => {
+        this.services = services;
+      });
+
     this.serviceForm = this.fb.group({
       type: ['', [Validators.required]],
       endpoint: ['', [Validators.required]],
@@ -35,8 +41,10 @@ export class ServicesComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.collapses.forEach((collapse: CollapseComponent) => {
-        collapse.toggle();
+      this.collapses.forEach((collapse: CollapseComponent, index) => {
+        if (index === this.collapses.length - 1) {
+          collapse.toggle();
+        }
       });
     });
   }
@@ -55,15 +63,18 @@ export class ServicesComponent implements OnInit, AfterViewInit {
     this.serviceForm.reset();
   }
 
+  removeService(service: ServiceModel) {
+    this.services = this.services.filter(s => s !== service);
+  }
+
   goToNext() {
-    if (this.services.length > 0) {
-      this.store.dispatch(new CompleteStep(CreateStepsIndexes.Services));
-      this.store.dispatch(new AddServices(this.services));
-      this.router.navigate(['/create/services']);
-    }
+    this.store.dispatch(new AddServices(this.services));
+    this.store.dispatch(new CompleteStep(CreateStepsIndexes.Services));
+    this.router.navigate(['/create/keys/encrypt']);
   }
 
   goToPrevious() {
+    this.store.dispatch(new AddServices(this.services));
     this.router.navigate(['/create/keys/authentication']);
   }
 
