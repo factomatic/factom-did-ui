@@ -17,7 +17,8 @@ export class CreateComponentsGuard implements CanActivate {
   private createStepsIndexes = {
    [CreateStepsUrls.PublicKeys]: 1,
    [CreateStepsUrls.AuthenticationKeys]: 2,
-   [CreateStepsUrls.Services]: 3
+   [CreateStepsUrls.Services]: 3,
+   [CreateStepsUrls.EncryptKeys]: 4
   };
 
   constructor(private workflowService: WorkflowService) { }

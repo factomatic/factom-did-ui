@@ -1,0 +1,9 @@
+.btn.disabled, .btn[disabled], fieldset[disabled] .btn {
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 1 !important;
+}
+
+.btn-info {
+  margin-left: 20px;
+}
