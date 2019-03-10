@@ -2,8 +2,15 @@ import { Action } from '@ngrx/store';
 import { KeyModel } from '../../models/key.model';
 import { ServiceModel } from '../../models/service.model';
 
+export const ADD_AUTHENTICATION_KEYS = '[FORM] ADD_AUTHENTICATION_KEYS';
 export const ADD_PUBLIC_KEYS = '[FORM] ADD_PUBLIC_KEYS';
 export const ADD_SERVICES = '[FORM] ADD_SERVICES';
+
+export class AddAuthenticationKeys implements Action {
+  readonly type: string = ADD_AUTHENTICATION_KEYS;
+
+  constructor (public payload: KeyModel[]) { }
+}
 
 export class AddPublicKeys implements Action {
   readonly type: string = ADD_PUBLIC_KEYS;
