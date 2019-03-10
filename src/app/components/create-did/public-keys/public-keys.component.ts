@@ -2,11 +2,15 @@ import { CollapseComponent } from 'angular-bootstrap-md';
 import { Component, OnInit, AfterViewInit, ViewChildren } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 
+import { AddPublicKeys } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
 import { CompleteStep } from 'src/app/core/store/action/action.actions';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
+import { KeysService } from 'src/app/core/services/keys.service';
+import { KeyModel } from 'src/app/core/models/key.model';
+import { KeyType } from 'src/app/core/enums/key-type';
 
 @Component({
   selector: 'app-public-keys',
@@ -15,16 +19,22 @@ import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 })
 export class PublicKeysComponent implements OnInit, AfterViewInit {
   @ViewChildren(CollapseComponent) collapses: CollapseComponent[];
-  protected generatedKeys = [];
-  protected title = 'Generate public keys for your DID';
+  protected generatedKeys: KeyModel[] = [];
   protected keyForm;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private store: Store<AppState>) { }
+    private store: Store<AppState>,
+    private keysSrvice: KeysService) { }
 
   ngOnInit() {
+    this.store
+     .pipe(select(state => state.form.publicKeys))
+     .subscribe(publicKeys => {
+       this.generatedKeys = publicKeys;
+     });
+
     this.keyForm = this.fb.group({
       type: ['', [Validators.required]],
       controller: ['', [Validators.required]],
@@ -34,8 +44,10 @@ export class PublicKeysComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.collapses.forEach((collapse: CollapseComponent) => {
-        collapse.toggle();
+      this.collapses.forEach((collapse: CollapseComponent, index) => {
+        if (index === this.collapses.length - 1) {
+          collapse.toggle();
+        }
       });
     });
   }
@@ -45,24 +57,48 @@ export class PublicKeysComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.generatedKeys.push({
-      type: this.type.value,
-      controller: this.controller.value,
-      alias: this.alias.value,
-      pubKey: '2aommKjGU5bVm3HfaetG...NrcMTBHhTv'
-    });
+    if (this.type.value === KeyType.Ed25519) {
+      const keyPair = this.keysSrvice.generateEd25519KeyPair();
+      const generatedKey = new KeyModel(
+        this.alias.value,
+        KeyType.Ed25519,
+        this.controller.value,
+        keyPair.publicKey,
+        keyPair.privateKey
+      );
+
+      this.generatedKeys.push(generatedKey);
+
+    } else if (this.type.value === KeyType.Secp256k1) {
+      const keyPair = this.keysSrvice.generateSecp256k1KeyPair();
+      const generatedKey = new KeyModel(
+        this.alias.value,
+        KeyType.Secp256k1,
+        this.controller.value,
+        keyPair.publicKey,
+        keyPair.privateKey
+      );
+
+      this.generatedKeys.push(generatedKey);
+    }
 
     this.keyForm.reset();
   }
 
+  removeKey(key: KeyModel) {
+    this.generatedKeys = this.generatedKeys.filter(k => k.publicKey !== key.publicKey);
+  }
+
   goToNext() {
     if (this.generatedKeys.length > 0) {
+      this.store.dispatch(new AddPublicKeys(this.generatedKeys));
       this.store.dispatch(new CompleteStep(CreateStepsIndexes.PublicKeys));
       this.router.navigate(['/create/keys/authentication']);
     }
   }
 
   goToPrevious() {
+    this.store.dispatch(new AddPublicKeys(this.generatedKeys));
     this.router.navigate(['action']);
   }
 
