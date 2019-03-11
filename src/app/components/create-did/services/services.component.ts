@@ -9,28 +9,35 @@ import { AppState } from 'src/app/core/store/app.state';
 import { CompleteStep } from 'src/app/core/store/action/action.actions';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import { ServiceModel } from 'src/app/core/models/service.model';
+import { BaseComponent } from '../../base.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-services',
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.scss']
 })
-export class ServicesComponent implements OnInit, AfterViewInit {
+export class ServicesComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChildren(CollapseComponent) collapses: CollapseComponent[];
+  private subscription$: Subscription;
   protected services: ServiceModel[] = [];
   protected serviceForm;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private store: Store<AppState>) { }
+    private store: Store<AppState>) {
+    super();
+  }
 
   ngOnInit() {
-    this.store
+    this.subscription$ = this.store
       .pipe(select(state => state.form.services))
       .subscribe(services => {
         this.services = services;
       });
+
+    this.subscriptions.push(this.subscription$);
 
     this.serviceForm = this.fb.group({
       type: ['', [Validators.required]],

@@ -3,9 +3,11 @@ import { Component, OnInit, AfterViewInit, ViewChildren } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
+import { Subscription } from 'rxjs';
 
 import { AddPublicKeys } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
+import { BaseComponent } from 'src/app/components/base.component';
 import { CompleteStep } from 'src/app/core/store/action/action.actions';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import { KeysService } from 'src/app/core/services/keys.service';
@@ -17,8 +19,9 @@ import { KeyType } from 'src/app/core/enums/key-type';
   templateUrl: './public-keys.component.html',
   styleUrls: ['./public-keys.component.scss']
 })
-export class PublicKeysComponent implements OnInit, AfterViewInit {
+export class PublicKeysComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChildren(CollapseComponent) collapses: CollapseComponent[];
+  private subscription$: Subscription;
   protected generatedKeys: KeyModel[] = [];
   protected keyForm;
 
@@ -26,14 +29,18 @@ export class PublicKeysComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private router: Router,
     private store: Store<AppState>,
-    private keysService: KeysService) { }
+    private keysService: KeysService) {
+    super();
+  }
 
   ngOnInit() {
-    this.store
+    this.subscription$ = this.store
      .pipe(select(state => state.form.publicKeys))
      .subscribe(publicKeys => {
        this.generatedKeys = publicKeys;
      });
+
+    this.subscriptions.push(this.subscription$);
 
     this.keyForm = this.fb.group({
       type: ['', [Validators.required]],

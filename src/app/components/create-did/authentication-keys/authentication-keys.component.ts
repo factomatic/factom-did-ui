@@ -3,9 +3,11 @@ import { Component, OnInit, AfterViewInit, ViewChildren, NgZone } from '@angular
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
+import { Subscription } from 'rxjs';
 
 import { AddAuthenticationKeys } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
+import { BaseComponent } from 'src/app/components/base.component';
 import { CompleteStep } from 'src/app/core/store/action/action.actions';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import { KeyModel } from 'src/app/core/models/key.model';
@@ -17,9 +19,10 @@ import { KeysService } from 'src/app/core/services/keys.service';
   templateUrl: './authentication-keys.component.html',
   styleUrls: ['./authentication-keys.component.scss']
 })
-export class AuthenticationKeysComponent implements OnInit, AfterViewInit {
+export class AuthenticationKeysComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChildren(CollapseComponent) collapses: CollapseComponent[];
   private allPublicKeys: KeyModel[];
+  private subscription$: Subscription;
   protected keyForm;
   protected selectedAction = 'generate';
   protected selectedKey: KeyModel;
@@ -31,16 +34,20 @@ export class AuthenticationKeysComponent implements OnInit, AfterViewInit {
     private router: Router,
     private zone: NgZone,
     private store: Store<AppState>,
-    private keysService: KeysService) { }
+    private keysService: KeysService) {
+    super();
+  }
 
   ngOnInit() {
-    this.store
+    this.subscription$ = this.store
       .pipe(select(state => state.form))
       .subscribe(form => {
         this.allPublicKeys = form.publicKeys;
         this.authenticationKeys = form.authenticationKeys;
         this.availablePublicKeys = this.allPublicKeys.filter(k => !this.authenticationKeys.includes(k));
       });
+
+    this.subscriptions.push(this.subscription$);
 
     this.keyForm = this.fb.group({
       type: ['', [Validators.required]],
