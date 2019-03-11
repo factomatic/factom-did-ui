@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 
 import { AppState } from 'src/app/core/store/app.state';
-import { SelectAction } from 'src/app/core/store/action/action.actions';
+import { CompleteStep, SelectAction } from 'src/app/core/store/action/action.actions';
+import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 
 @Component({
   selector: 'app-action',
@@ -11,7 +12,7 @@ import { SelectAction } from 'src/app/core/store/action/action.actions';
   styleUrls: ['./action.component.scss']
 })
 export class ActionComponent implements OnInit {
-  protected title =  'What do you want to do ?';
+  private lastCompletedStepIndex: number;
   protected actionType: string;
 
   constructor(
@@ -21,12 +22,18 @@ export class ActionComponent implements OnInit {
   ngOnInit() {
     this.store.pipe(select(state => state.action))
       .subscribe(action => {
+        this.lastCompletedStepIndex = action.lastCompletedStepIndex;
         this.actionType = action.selectedAction;
       });
   }
 
   goToNext() {
     this.store.dispatch(new SelectAction(this.actionType));
+
+    if (this.lastCompletedStepIndex === 0) {
+      this.store.dispatch(new CompleteStep(CreateStepsIndexes.Action));
+    }
+
     this.router.navigate([`${this.actionType}/keys/public`]);
   }
 }

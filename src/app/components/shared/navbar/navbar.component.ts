@@ -9,6 +9,7 @@ import { AppState } from 'src/app/core/store/app.state';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
+  protected lastCompletedStepIndex: number;
   protected secondTabLink = '/create/keys/public';
   protected thirdTabLink = '/create/keys/authentication';
   protected forthTabLink = '/create/services';
@@ -19,13 +20,14 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.store
-     .pipe(select(state => state.action.selectedAction))
-     .subscribe(selectedAction => {
-       if (selectedAction) {
-        this.secondTabLink = `/${selectedAction}/keys/public`;
-        this.thirdTabLink = `/${selectedAction}/keys/authentication`;
-        this.forthTabLink = `/${selectedAction}/services`;
-        this.fifthTabLink = `/${selectedAction}/keys/encrypt`;
+     .pipe(select(state => state.action))
+     .subscribe(action => {
+       this.lastCompletedStepIndex = action.lastCompletedStepIndex;
+       if (action.selectedAction) {
+        this.secondTabLink = `/${action.selectedAction}/keys/public`;
+        this.thirdTabLink = `/${action.selectedAction}/keys/authentication`;
+        this.forthTabLink = `/${action.selectedAction}/services`;
+        this.fifthTabLink = `/${action.selectedAction}/keys/encrypt`;
        }
      });
   }

@@ -2,41 +2,41 @@
   <ul class="nav nav-tabs" id="myTab">
     <div class="liner"></div>
 
-    <li>
-      <a routerLink="/action" class="inactiveLink" routerLinkActive="active" data-toggle="tab">
-        <span class="round-tabs one">
+    <li routerLink="/action" routerLinkActive="active">
+      <a class="inactiveLink" [ngClass]="{ 'active': lastCompletedStepIndex > 0 }" data-toggle="tab">
+        <span class="round-tabs three">
           <span class="circle">1</span>
         </span>
       </a>
     </li>
                   
-    <li>
-      <a routerLink="{{secondTabLink}}" class="inactiveLink" routerLinkActive="active" data-toggle="tab">
-        <span class="round-tabs two">
+    <li routerLink="{{secondTabLink}}" routerLinkActive="active">
+      <a class="inactiveLink" [ngClass]="{ 'active': lastCompletedStepIndex > 1 }" data-toggle="tab">
+        <span class="round-tabs three">
           <span class="circle">2</span>
         </span>
       </a>
     </li>
 
-    <li>
-      <a routerLink="{{thirdTabLink}}" class="inactiveLink" routerLinkActive="active" data-toggle="tab">
+    <li routerLink="{{thirdTabLink}}" routerLinkActive="active">
+      <a class="inactiveLink" [ngClass]="{ 'active': lastCompletedStepIndex > 2 }" data-toggle="tab">
         <span class="round-tabs three">
           <span class="circle">3</span>
         </span> 
       </a>
     </li>
 
-    <li>
-      <a routerLink="{{forthTabLink}}" class="inactiveLink" routerLinkActive="active" data-toggle="tab">
-        <span class="round-tabs four">
+    <li routerLink="{{forthTabLink}}" routerLinkActive="active">
+      <a class="inactiveLink" [ngClass]="{ 'active': lastCompletedStepIndex > 3 }" data-toggle="tab">
+        <span class="round-tabs three">
           <span class="circle">4</span>
         </span>
       </a>
     </li>
 
-    <li>
-      <a routerLink="{{fifthTabLink}}" class="inactiveLink" routerLinkActive="active" data-toggle="tab">
-        <span class="round-tabs one">
+    <li routerLink="{{fifthTabLink}}" routerLinkActive="active">
+      <a class="inactiveLink" [ngClass]="{ 'active': lastCompletedStepIndex > 3 }" data-toggle="tab">
+        <span class="round-tabs three">
           <span class="circle">5</span>
         </span>
       </a>
@@ -44,7 +44,7 @@
 
     <li>
       <a routerLinkActive="active" data-toggle="tab">
-        <span class="round-tabs two">
+        <span class="round-tabs three">
           <span class="circle">6</span>
         </span>
       </a>
@@ -52,7 +52,7 @@
 
     <li>
       <a routerLinkActive="active" data-toggle="tab">
-        <span class="round-tabs five">
+        <span class="round-tabs three">
           <span class="circle">7</span>
         </span>
       </a>
