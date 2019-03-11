@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 
 import { AppState } from 'src/app/core/store/app.state';
-import { KeyModel } from 'src/app/core/models/key.model';
-import { KeysService } from 'src/app/core/services/keys.service';
 import { CompleteStep } from 'src/app/core/store/action/action.actions';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
+import CustomValidators from 'src/app/core/utils/customValidators';
+import { KeysService } from 'src/app/core/services/keys.service';
 
 @Component({
   selector: 'app-encrypt-keys',
@@ -15,9 +15,8 @@ import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
   styleUrls: ['./encrypt-keys.component.scss']
 })
 export class EncryptKeysComponent implements OnInit {
-  protected generatedKeys: KeyModel[] = [];
   protected encryptForm;
-  protected encrypted: boolean;
+  protected encryptedFile: string;
 
   constructor(
     private fb: FormBuilder,
@@ -26,28 +25,43 @@ export class EncryptKeysComponent implements OnInit {
     private keysService: KeysService) { }
 
   ngOnInit() {
-    this.store
-     .pipe(select(state => state.form))
-     .subscribe(form => {
-       this.generatedKeys = form.publicKeys;
-       const generatedAuthenticationKeys = form.authenticationKeys.filter(k => !form.publicKeys.includes(k));
-       generatedAuthenticationKeys.forEach(key => {
-         this.generatedKeys.push(key);
-       });
-     });
-
     this.encryptForm = this.fb.group({
       password: ['', [Validators.required]],
       confirmPassword: ['', [Validators.required]]
-    });
+    }, { validator: CustomValidators.passwordsDoMatch.bind(this)});
   }
 
   encryptKeys() {
-    this.encrypted = true;
+    if (this.encryptForm.invalid) {
+      return;
+    }
+
+    this.keysService
+      .encryptKeys(this.password.value)
+      .subscribe(encryptedFile => {
+        this.encryptedFile = encryptedFile;
+        this.encryptForm.reset();
+      });
+  }
+
+  downloadFile() {
+    if (this.encryptedFile) {
+      const downloader = document.createElement('a');
+      document.body.appendChild(downloader);
+
+      const blob = new Blob([this.encryptedFile], { type: 'text/json' });
+      const url = window.URL;
+      const fileUrl = url.createObjectURL(blob);
+
+      downloader.setAttribute('href', fileUrl);
+      const date = new Date();
+      downloader.setAttribute('download', `UTC--${date.toISOString()}--did-keys-backup`);
+      downloader.click();
+    }
   }
 
   goToNext() {
-    if (this.encrypted) {
+    if (this.encryptedFile) {
       this.store.dispatch(new CompleteStep(CreateStepsIndexes.EncryptKeys));
       this.router.navigate(['/create/finalize']);
     }

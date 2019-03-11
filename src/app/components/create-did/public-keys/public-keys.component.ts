@@ -26,7 +26,7 @@ export class PublicKeysComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private router: Router,
     private store: Store<AppState>,
-    private keysSrvice: KeysService) { }
+    private keysService: KeysService) { }
 
   ngOnInit() {
     this.store
@@ -58,7 +58,7 @@ export class PublicKeysComponent implements OnInit, AfterViewInit {
     }
 
     if (this.type.value === KeyType.Ed25519) {
-      const keyPair = this.keysSrvice.generateEd25519KeyPair();
+      const keyPair = this.keysService.generateEd25519KeyPair();
       const generatedKey = new KeyModel(
         this.alias.value,
         KeyType.Ed25519,
@@ -70,7 +70,7 @@ export class PublicKeysComponent implements OnInit, AfterViewInit {
       this.generatedKeys.push(generatedKey);
 
     } else if (this.type.value === KeyType.Secp256k1) {
-      const keyPair = this.keysSrvice.generateSecp256k1KeyPair();
+      const keyPair = this.keysService.generateSecp256k1KeyPair();
       const generatedKey = new KeyModel(
         this.alias.value,
         KeyType.Secp256k1,

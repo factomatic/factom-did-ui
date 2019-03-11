@@ -2,6 +2,6 @@ import { ActionState } from './action/action.state';
 import { FormState } from './form/form.state';
 
 export interface AppState {
-  action: ActionState;
-  form: FormState;
+  readonly action: ActionState;
+  readonly form: FormState;
 }

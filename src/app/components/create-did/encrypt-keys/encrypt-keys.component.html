@@ -26,9 +26,10 @@
             formControlName="confirmPassword" 
             id="confirm-password" 
             placeholder="Confirm Password"
-            [ngClass]="{ 'is-invalid': confirmPassword.touched && confirmPassword.errors }" />
-          <div *ngIf="confirmPassword.errors" class="invalid-feedback">
-            <div *ngIf="confirmPassword.errors.required">Passwords do not match!</div>
+            [ngClass]="{ 'is-invalid': confirmPassword.touched && (confirmPassword.errors || encryptForm.errors?.passwordsMismatch) }" />
+          <div *ngIf="confirmPassword.errors || encryptForm.errors?.passwordsMismatch" class="invalid-feedback">
+            <div *ngIf="confirmPassword.errors?.required">Confirm password is required!</div>
+            <div *ngIf="encryptForm.errors?.passwordsMismatch">Passwords do not match!</div>
           </div>
         </div>
   
@@ -36,9 +37,9 @@
           <input type="submit" class="btn green" value="Encrypt keys" [disabled]="encryptForm.invalid" />
         </div>
       </form>
-      <div *ngIf="encrypted" class="mt-5 text-center">
+      <div *ngIf="encryptedFile" class="mt-5 text-center">
         <p class="text-center text-warning">Download your keystore file!</p>
-        <button class="btn btn-info mt-3">Download File</button>
+        <button class="btn btn-info mt-3" (click)="downloadFile()">Download File</button>
       </div>
       <div class="row">
         <div class="col-xs-offset-1 col-sm-offset-1">

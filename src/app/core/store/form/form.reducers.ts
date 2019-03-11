@@ -10,21 +10,24 @@ const initialState: FormState = {
 };
 
 function addAuthenticationKeys(state: FormState, authenticationKeys: KeyModel[]) {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     authenticationKeys: authenticationKeys
-  });
+  };
 }
 
 function addPublicKeys(state: FormState, publicKeys: KeyModel[]) {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     publicKeys: publicKeys
-  });
+  };
 }
 
 function addServices(state: FormState, services: ServiceModel[]) {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     services: services
-  });
+  };
 }
 
 export function formReducers(state: FormState = initialState, action) {

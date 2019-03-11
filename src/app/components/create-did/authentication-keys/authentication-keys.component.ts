@@ -39,7 +39,7 @@ export class AuthenticationKeysComponent implements OnInit, AfterViewInit {
       .subscribe(form => {
         this.allPublicKeys = form.publicKeys;
         this.authenticationKeys = form.authenticationKeys;
-        this.availablePublicKeys = form.publicKeys.filter(k => !this.authenticationKeys.includes(k));
+        this.availablePublicKeys = this.allPublicKeys.filter(k => !this.authenticationKeys.includes(k));
       });
 
     this.keyForm = this.fb.group({
