@@ -14,6 +14,7 @@ export class NavbarComponent implements OnInit {
   protected thirdTabLink = '/create/keys/authentication';
   protected forthTabLink = '/create/services';
   protected fifthTabLink = '/create/keys/encrypt';
+  protected sixthTabLink = '/create/finalize';
 
   constructor(private store: Store<AppState>) {
   }
@@ -28,6 +29,7 @@ export class NavbarComponent implements OnInit {
         this.thirdTabLink = `/${action.selectedAction}/keys/authentication`;
         this.forthTabLink = `/${action.selectedAction}/services`;
         this.fifthTabLink = `/${action.selectedAction}/keys/encrypt`;
+        this.sixthTabLink = `/${action.selectedAction}/finalize`;
        }
      });
   }
