@@ -23,6 +23,8 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   @ViewChildren(CollapseComponent) collapses: CollapseComponent[];
   private allPublicKeys: KeyModel[];
   private subscription$: Subscription;
+  private formChange: boolean;
+  private lastCompletedStepIndex: number;
   protected keyForm;
   protected selectedAction = 'generate';
   protected selectedKey: KeyModel;
@@ -40,10 +42,11 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
 
   ngOnInit() {
     this.subscription$ = this.store
-      .pipe(select(state => state.form))
-      .subscribe(form => {
-        this.allPublicKeys = form.publicKeys;
-        this.authenticationKeys = form.authenticationKeys;
+      .pipe(select(state => state))
+      .subscribe(state => {
+        this.lastCompletedStepIndex = state.action.lastCompletedStepIndex;
+        this.allPublicKeys = state.form.publicKeys;
+        this.authenticationKeys = state.form.authenticationKeys;
         this.availablePublicKeys = this.allPublicKeys.filter(k => !this.authenticationKeys.includes(k));
       });
 
@@ -96,6 +99,7 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
       this.authenticationKeys.push(generatedKey);
     }
 
+    this.formChange = true;
     this.keyForm.reset();
   }
 
@@ -123,6 +127,7 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
     this.availablePublicKeys = this.availablePublicKeys.filter(k => k.publicKey !== this.selectedKey.publicKey);
     this.selectedKey = undefined;
     this.selectedAction = 'generate';
+    this.formChange = true;
 
     setTimeout(() => {
       this.collapses.forEach((collapse: CollapseComponent, index) => {
@@ -140,18 +145,29 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
     if (this.allPublicKeys.find(k => k.publicKey === key.publicKey)) {
       this.availablePublicKeys.push(key);
     }
+
+    this.formChange = true;
   }
 
   goToNext() {
     if (this.authenticationKeys.length > 0) {
-      this.store.dispatch(new AddAuthenticationKeys(this.authenticationKeys));
-      this.store.dispatch(new CompleteStep(CreateStepsIndexes.AuthenticationKeys));
+      if (this.formChange) {
+        this.store.dispatch(new AddAuthenticationKeys(this.authenticationKeys));
+      }
+
+      if (this.lastCompletedStepIndex === CreateStepsIndexes.PublicKeys) {
+        this.store.dispatch(new CompleteStep(CreateStepsIndexes.AuthenticationKeys));
+      }
+
       this.router.navigate(['/create/services']);
     }
   }
 
   goToPrevious() {
-    this.store.dispatch(new AddAuthenticationKeys(this.authenticationKeys));
+    if (this.formChange) {
+      this.store.dispatch(new AddAuthenticationKeys(this.authenticationKeys));
+    }
+
     this.router.navigate(['/create/keys/public']);
   }
 

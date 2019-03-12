@@ -20,6 +20,8 @@ import { Subscription } from 'rxjs';
 export class ServicesComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChildren(CollapseComponent) collapses: CollapseComponent[];
   private subscription$: Subscription;
+  private formChange: boolean;
+  private lastCompletedStepIndex: number;
   protected services: ServiceModel[] = [];
   protected serviceForm;
 
@@ -32,9 +34,10 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
 
   ngOnInit() {
     this.subscription$ = this.store
-      .pipe(select(state => state.form.services))
-      .subscribe(services => {
-        this.services = services;
+      .pipe(select(state => state))
+      .subscribe(state => {
+        this.lastCompletedStepIndex = state.action.lastCompletedStepIndex;
+        this.services = state.form.services;
       });
 
     this.subscriptions.push(this.subscription$);
@@ -67,21 +70,32 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
       this.alias.value
     ));
 
+    this.formChange = true;
     this.serviceForm.reset();
   }
 
   removeService(service: ServiceModel) {
     this.services = this.services.filter(s => s !== service);
+    this.formChange = true;
   }
 
   goToNext() {
-    this.store.dispatch(new AddServices(this.services));
-    this.store.dispatch(new CompleteStep(CreateStepsIndexes.Services));
+    if (this.formChange) {
+      this.store.dispatch(new AddServices(this.services));
+    }
+
+    if (this.lastCompletedStepIndex === CreateStepsIndexes.AuthenticationKeys) {
+      this.store.dispatch(new CompleteStep(CreateStepsIndexes.Services));
+    }
+
     this.router.navigate(['/create/keys/encrypt']);
   }
 
   goToPrevious() {
-    this.store.dispatch(new AddServices(this.services));
+    if (this.formChange) {
+      this.store.dispatch(new AddServices(this.services));
+    }
+
     this.router.navigate(['/create/keys/authentication']);
   }
 

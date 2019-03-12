@@ -1,30 +1,46 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 
 import { AppState } from 'src/app/core/store/app.state';
 import { CompleteStep } from 'src/app/core/store/action/action.actions';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { KeysService } from 'src/app/core/services/keys.service';
+import { Subscription } from 'rxjs';
+import { BaseComponent } from '../../base.component';
 
 @Component({
   selector: 'app-encrypt-keys',
   templateUrl: './encrypt-keys.component.html',
   styleUrls: ['./encrypt-keys.component.scss']
 })
-export class EncryptKeysComponent implements OnInit {
+export class EncryptKeysComponent extends BaseComponent implements OnInit {
+  private subscription$: Subscription;
+  protected lastCompletedStepIndex: number;
+  protected currentStepIndex = CreateStepsIndexes.EncryptKeys;
   protected encryptForm;
   protected encryptedFile: string;
+  protected fileDowloaded: boolean;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private store: Store<AppState>,
-    private keysService: KeysService) { }
+    private keysService: KeysService) {
+    super();
+  }
 
   ngOnInit() {
+    this.subscription$ = this.store
+     .pipe(select(state => state.action.lastCompletedStepIndex))
+     .subscribe(lastCompletedStepIndex => {
+        this.lastCompletedStepIndex = lastCompletedStepIndex;
+     });
+
+    this.subscriptions.push(this.subscription$);
+
     this.encryptForm = this.fb.group({
       password: ['', [Validators.required]],
       confirmPassword: ['', [Validators.required]]
@@ -57,12 +73,17 @@ export class EncryptKeysComponent implements OnInit {
       const date = new Date();
       downloader.setAttribute('download', `UTC--${date.toISOString()}--did-keys-backup`);
       downloader.click();
+
+      this.fileDowloaded = true;
     }
   }
 
   goToNext() {
-    if (this.encryptedFile) {
-      this.store.dispatch(new CompleteStep(CreateStepsIndexes.EncryptKeys));
+    if (this.fileDowloaded || this.lastCompletedStepIndex === CreateStepsIndexes.EncryptKeys) {
+      if (this.lastCompletedStepIndex === CreateStepsIndexes.Services) {
+        this.store.dispatch(new CompleteStep(CreateStepsIndexes.EncryptKeys));
+      }
+
       this.router.navigate(['/create/finalize']);
     }
   }

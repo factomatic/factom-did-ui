@@ -6,7 +6,7 @@
       <fieldset class="collapsible collapsed" *ngFor="let service of services">
         <legend (click)="collapse.toggle()">
           {{service.alias}}
-          <button class="btn btn-danger pull-right" (click)="removeService(service)">
+          <button class="btn btn-sm btn-danger pull-right" (click)="removeService(service)">
             <span class="glyphicon glyphicon-remove"></span>
           </button>
         </legend>
