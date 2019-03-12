@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 
-import { AddPublicKeys } from 'src/app/core/store/form/form.actions';
+import { AddPublicKeys, RemovePublicKey } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
 import { CompleteStep } from 'src/app/core/store/action/action.actions';
@@ -22,6 +22,8 @@ import { KeyType } from 'src/app/core/enums/key-type';
 export class PublicKeysComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChildren(CollapseComponent) collapses: CollapseComponent[];
   private subscription$: Subscription;
+  private formChange: boolean;
+  private lastCompletedStepIndex: number;
   protected generatedKeys: KeyModel[] = [];
   protected keyForm;
 
@@ -35,9 +37,10 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
 
   ngOnInit() {
     this.subscription$ = this.store
-     .pipe(select(state => state.form.publicKeys))
-     .subscribe(publicKeys => {
-       this.generatedKeys = publicKeys;
+     .pipe(select(state => state))
+     .subscribe(state => {
+        this.lastCompletedStepIndex = state.action.lastCompletedStepIndex;
+        this.generatedKeys = state.form.publicKeys.slice();
      });
 
     this.subscriptions.push(this.subscription$);
@@ -89,23 +92,35 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
       this.generatedKeys.push(generatedKey);
     }
 
+    this.formChange = true;
     this.keyForm.reset();
   }
 
   removeKey(key: KeyModel) {
-    this.generatedKeys = this.generatedKeys.filter(k => k.publicKey !== key.publicKey);
+    this.generatedKeys = this.generatedKeys.filter(k => k !== key);
+    this.store.dispatch(new RemovePublicKey(key));
+    this.formChange = true;
   }
 
   goToNext() {
     if (this.generatedKeys.length > 0) {
-      this.store.dispatch(new AddPublicKeys(this.generatedKeys));
-      this.store.dispatch(new CompleteStep(CreateStepsIndexes.PublicKeys));
+      if (this.formChange) {
+        this.store.dispatch(new AddPublicKeys(this.generatedKeys));
+      }
+
+      if (this.lastCompletedStepIndex === CreateStepsIndexes.Action) {
+        this.store.dispatch(new CompleteStep(CreateStepsIndexes.PublicKeys));
+      }
+
       this.router.navigate(['/create/keys/authentication']);
     }
   }
 
   goToPrevious() {
-    this.store.dispatch(new AddPublicKeys(this.generatedKeys));
+    if (this.formChange) {
+      this.store.dispatch(new AddPublicKeys(this.generatedKeys));
+    }
+
     this.router.navigate(['action']);
   }
 
