@@ -60,7 +60,13 @@
 
             <div class="form-group">
               <label class="control-label" for="alias">Alias</label>
-              <input type="text" class="form-control input-md" formControlName="alias" id="alias" placeholder="Alias" [ngClass]="{ 'is-invalid': alias.touched && alias.errors }" />
+              <input
+                type="text"
+                class="form-control input-md"
+                formControlName="alias" id="alias"
+                placeholder="Alias"
+                pattern="^[^\s]+$"
+                [ngClass]="{ 'is-invalid': alias.touched && alias.errors }" />
               <div *ngIf="alias.errors" class="invalid-feedback">
                 <div *ngIf="alias['errors'].required">Alias is required!</div>
                 <div *ngIf="alias['errors'].pattern">Alias must not contain spaces!</div>
