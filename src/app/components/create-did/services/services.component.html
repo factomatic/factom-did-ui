@@ -54,6 +54,7 @@
                 formControlName="endpoint"
                 id="endpoint"
                 placeholder="Service endpoint"
+                pattern="^(http|https):\/\/[a-zA-Z0-9]+.*$"
                 [ngClass]="{ 'is-invalid': endpoint.touched && endpoint.errors }" />
               <div *ngIf="endpoint.errors" class="invalid-feedback">
                 <div *ngIf="endpoint['errors'].required">Service endpoint is required!</div>
