@@ -59,8 +59,12 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
   createForm() {
     this.serviceForm = this.fb.group({
       type: ['', [Validators.required]],
-      endpoint: ['', [Validators.required]],
-      alias: ['', [Validators.required, CustomValidators.uniqueServiceAlias(this.services)]]
+      endpoint: ['', [Validators.required, Validators.pattern('^(http|https):\/\/[a-zA-Z0-9]+.*$')]],
+      alias: ['', [
+        Validators.required,
+        Validators.pattern('^[^\s]+$'),
+        CustomValidators.uniqueServiceAlias(this.services)
+      ]]
     });
   }
 

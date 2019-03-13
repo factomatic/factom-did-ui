@@ -70,7 +70,11 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
     this.keyForm = this.fb.group({
       type: [KeyType.Ed25519, [Validators.required]],
       controller: ['', [Validators.required]],
-      alias: ['', [Validators.required, CustomValidators.uniqueKeyAlias(this.allPublicKeys, this.authenticationKeys)]]
+      alias: ['', [
+        Validators.required,
+        Validators.pattern('^[^\s]+$'),
+        CustomValidators.uniqueKeyAlias(this.allPublicKeys, this.authenticationKeys)
+      ]]
     });
   }
 

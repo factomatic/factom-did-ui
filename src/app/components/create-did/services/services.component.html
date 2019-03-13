@@ -57,6 +57,7 @@
                 [ngClass]="{ 'is-invalid': endpoint.touched && endpoint.errors }" />
               <div *ngIf="endpoint.errors" class="invalid-feedback">
                 <div *ngIf="endpoint['errors'].required">Service endpoint is required!</div>
+                <div *ngIf="endpoint['errors'].pattern">Service endpoint must be a valid URL address!</div>
               </div>
             </div>
 
@@ -71,6 +72,7 @@
                 [ngClass]="{ 'is-invalid': alias.touched && alias.errors }" />
               <div *ngIf="alias.errors" class="invalid-feedback">
                 <div *ngIf="alias['errors'].required">Alias is required!</div>
+                <div *ngIf="alias['errors'].pattern">Alias must not contain spaces!</div>
                 <div *ngIf="alias['errors'].taken">You have already used this alias!</div>
               </div>
             </div>
