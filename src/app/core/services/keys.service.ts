@@ -18,17 +18,16 @@ export class KeysService {
     this.store
       .pipe(select(state => state.form))
       .subscribe(form => {
-        this.keys = [];
-        form.publicKeys.forEach(key => {
-          this.keys.push({
-            type: key.type,
-            privateKey: key.privateKey
-          });
-        });
+        this.keys = form.publicKeys.map(key => ({
+          alias: key.alias,
+          type: key.type,
+          privateKey: key.privateKey
+        }));
 
         form.authenticationKeys.forEach(key => {
           if (!this.keys.find(k => k.privateKey === key.privateKey)) {
             this.keys.push({
+              alias: key.alias,
               type: key.type,
               privateKey: key.privateKey
             });
