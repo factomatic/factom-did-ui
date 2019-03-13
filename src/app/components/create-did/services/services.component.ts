@@ -1,6 +1,6 @@
 import { CollapseComponent } from 'angular-bootstrap-md';
 import { Component, OnInit, AfterViewInit, ViewChildren } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 
@@ -8,6 +8,7 @@ import { AddServices } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
 import { CompleteStep } from 'src/app/core/store/action/action.actions';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
+import CustomValidators from 'src/app/core/utils/customValidators';
 import { ServiceModel } from 'src/app/core/models/service.model';
 import { BaseComponent } from '../../base.component';
 import { Subscription } from 'rxjs';
@@ -23,7 +24,7 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
   private formChange: boolean;
   private lastCompletedStepIndex: number;
   protected services: ServiceModel[] = [];
-  protected serviceForm;
+  protected serviceForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
@@ -42,11 +43,7 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
 
     this.subscriptions.push(this.subscription$);
 
-    this.serviceForm = this.fb.group({
-      type: ['', [Validators.required]],
-      endpoint: ['', [Validators.required]],
-      alias: ['', [Validators.required]]
-    });
+    this.createForm();
   }
 
   ngAfterViewInit() {
@@ -56,6 +53,14 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
           collapse.toggle();
         }
       });
+    });
+  }
+
+  createForm() {
+    this.serviceForm = this.fb.group({
+      type: ['', [Validators.required]],
+      endpoint: ['', [Validators.required]],
+      alias: ['', [Validators.required, CustomValidators.uniqueServiceAlias(this.services)]]
     });
   }
 
@@ -71,11 +76,12 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
     ));
 
     this.formChange = true;
-    this.serviceForm.reset();
+    this.createForm();
   }
 
   removeService(service: ServiceModel) {
     this.services = this.services.filter(s => s !== service);
+    this.createForm();
     this.formChange = true;
   }
 

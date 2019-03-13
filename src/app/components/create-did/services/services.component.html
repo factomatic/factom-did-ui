@@ -42,7 +42,7 @@
                 placeholder="Service type"
                 [ngClass]="{ 'is-invalid': type.touched && type.errors }" />
               <div *ngIf="type.errors" class="invalid-feedback">
-                <div *ngIf="type.errors.required">Service type is required!</div>
+                <div *ngIf="type['errors'].required">Service type is required!</div>
               </div>
             </div>
 
@@ -56,7 +56,7 @@
                 placeholder="Service endpoint"
                 [ngClass]="{ 'is-invalid': endpoint.touched && endpoint.errors }" />
               <div *ngIf="endpoint.errors" class="invalid-feedback">
-                <div *ngIf="endpoint.errors.required">Service endpoint is required!</div>
+                <div *ngIf="endpoint['errors'].required">Service endpoint is required!</div>
               </div>
             </div>
 
@@ -70,7 +70,8 @@
                 placeholder="Alias" 
                 [ngClass]="{ 'is-invalid': alias.touched && alias.errors }" />
               <div *ngIf="alias.errors" class="invalid-feedback">
-                <div *ngIf="alias.errors.required">Alias is required!</div>
+                <div *ngIf="alias['errors'].required">Alias is required!</div>
+                <div *ngIf="alias['errors'].taken">You have already used this alias!</div>
               </div>
             </div>
 
