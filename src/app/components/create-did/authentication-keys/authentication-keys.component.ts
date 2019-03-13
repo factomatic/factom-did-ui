@@ -1,6 +1,6 @@
 import { CollapseComponent } from 'angular-bootstrap-md';
 import { Component, OnInit, AfterViewInit, ViewChildren, NgZone } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -10,6 +10,7 @@ import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
 import { CompleteStep } from 'src/app/core/store/action/action.actions';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
+import CustomValidators from 'src/app/core/utils/customValidators';
 import { KeyModel } from 'src/app/core/models/key.model';
 import { KeyType } from 'src/app/core/enums/key-type';
 import { KeysService } from 'src/app/core/services/keys.service';
@@ -25,7 +26,7 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   private subscription$: Subscription;
   private formChange: boolean;
   private lastCompletedStepIndex: number;
-  protected keyForm;
+  protected keyForm: FormGroup;
   protected selectedAction = 'generate';
   protected selectedKey: KeyModel;
   protected authenticationKeys: KeyModel[] = [];
@@ -52,11 +53,7 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
 
     this.subscriptions.push(this.subscription$);
 
-    this.keyForm = this.fb.group({
-      type: ['', [Validators.required]],
-      controller: ['', [Validators.required]],
-      alias: ['', [Validators.required]]
-    });
+    this.createForm();
   }
 
   ngAfterViewInit() {
@@ -66,6 +63,14 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
           collapse.toggle();
         }
       });
+    });
+  }
+
+  createForm() {
+    this.keyForm = this.fb.group({
+      type: [KeyType.Ed25519, [Validators.required]],
+      controller: ['', [Validators.required]],
+      alias: ['', [Validators.required, CustomValidators.uniqueKeyAlias(this.allPublicKeys, this.authenticationKeys)]]
     });
   }
 
@@ -100,7 +105,7 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
     }
 
     this.formChange = true;
-    this.keyForm.reset();
+    this.createForm();
   }
 
   changeAction(event) {
@@ -146,6 +151,7 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
       this.availablePublicKeys.push(key);
     }
 
+    this.createForm();
     this.formChange = true;
   }
 

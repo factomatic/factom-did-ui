@@ -36,7 +36,7 @@
         <label class="control-label" for="action">Select key or generate new one</label>
         <select class="form-control" id="action" (change)="changeAction($event)">
           <option value="generate">Generate New Key</option>
-          <option value="{{key.publicKey}}" *ngFor="let key of availablePublicKeys">{{key.publicKey}}</option>
+          <option value="{{key.publicKey}}" *ngFor="let key of availablePublicKeys">{{key.alias}}</option>
         </select>
       </div>
       <fieldset class="collapsible collapsed" *ngIf="selectedKey">
@@ -89,7 +89,7 @@
                 placeholder="Key controller"
                 [ngClass]="{ 'is-invalid': controller.touched && controller.errors }" />
               <div *ngIf="controller.errors" class="invalid-feedback">
-                <div *ngIf="controller.errors.required">Key controller is required!</div>
+                <div *ngIf="controller['errors'].required">Key controller is required!</div>
               </div>
             </div>
   
@@ -97,7 +97,8 @@
               <label class="control-label" for="alias">Alias</label>
               <input type="text" class="form-control input-md" formControlName="alias" id="alias" placeholder="Alias" [ngClass]="{ 'is-invalid': alias.touched && alias.errors }" />
               <div *ngIf="alias.errors" class="invalid-feedback">
-                <div *ngIf="alias.errors.required">Alias is required!</div>
+                <div *ngIf="alias['errors'].required">Alias is required!</div>
+                <div *ngIf="alias['errors'].taken">You have already used this alias!</div>
               </div>
             </div>
   

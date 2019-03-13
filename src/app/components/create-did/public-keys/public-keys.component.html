@@ -54,7 +54,7 @@
                 placeholder="Key controller"
                 [ngClass]="{ 'is-invalid': controller.touched && controller.errors }" />
               <div *ngIf="controller.errors" class="invalid-feedback">
-                <div *ngIf="controller.errors.required">Key controller is required!</div>
+                <div *ngIf="controller['errors'].required">Key controller is required!</div>
               </div>
             </div>
 
@@ -62,7 +62,8 @@
               <label class="control-label" for="alias">Alias</label>
               <input type="text" class="form-control input-md" formControlName="alias" id="alias" placeholder="Alias" [ngClass]="{ 'is-invalid': alias.touched && alias.errors }" />
               <div *ngIf="alias.errors" class="invalid-feedback">
-                <div *ngIf="alias.errors.required">Alias is required!</div>
+                <div *ngIf="alias['errors'].required">Alias is required!</div>
+                <div *ngIf="alias['errors'].taken">You have already used this alias!</div>
               </div>
             </div>
 

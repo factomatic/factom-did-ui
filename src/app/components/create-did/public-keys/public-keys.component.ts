@@ -1,6 +1,6 @@
 import { CollapseComponent } from 'angular-bootstrap-md';
 import { Component, OnInit, AfterViewInit, ViewChildren } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -10,6 +10,7 @@ import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
 import { CompleteStep } from 'src/app/core/store/action/action.actions';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
+import CustomValidators from 'src/app/core/utils/customValidators';
 import { KeysService } from 'src/app/core/services/keys.service';
 import { KeyModel } from 'src/app/core/models/key.model';
 import { KeyType } from 'src/app/core/enums/key-type';
@@ -24,8 +25,9 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
   private subscription$: Subscription;
   private formChange: boolean;
   private lastCompletedStepIndex: number;
+  private authenticationKeys: KeyModel[] = [];
   protected generatedKeys: KeyModel[] = [];
-  protected keyForm;
+  protected keyForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
@@ -41,15 +43,12 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
      .subscribe(state => {
         this.lastCompletedStepIndex = state.action.lastCompletedStepIndex;
         this.generatedKeys = state.form.publicKeys.slice();
+        this.authenticationKeys = state.form.authenticationKeys;
      });
 
     this.subscriptions.push(this.subscription$);
 
-    this.keyForm = this.fb.group({
-      type: ['', [Validators.required]],
-      controller: ['', [Validators.required]],
-      alias: ['', [Validators.required]]
-    });
+    this.createForm();
   }
 
   ngAfterViewInit() {
@@ -59,6 +58,14 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
           collapse.toggle();
         }
       });
+    });
+  }
+
+  createForm() {
+    this.keyForm = this.fb.group({
+      type: [KeyType.Ed25519, [Validators.required]],
+      controller: ['', [Validators.required]],
+      alias: ['', [Validators.required, CustomValidators.uniqueKeyAlias(this.generatedKeys, this.authenticationKeys)]]
     });
   }
 
@@ -93,12 +100,13 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
     }
 
     this.formChange = true;
-    this.keyForm.reset();
+    this.createForm();
   }
 
   removeKey(key: KeyModel) {
     this.generatedKeys = this.generatedKeys.filter(k => k !== key);
     this.store.dispatch(new RemovePublicKey(key));
+    this.createForm();
     this.formChange = true;
   }
 
