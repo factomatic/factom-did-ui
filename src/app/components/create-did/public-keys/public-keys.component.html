@@ -3,7 +3,7 @@
   <br/>
   <div class="row">
     <div class="col-xs-offset-1 col-xs-10 col-sm-offset-3 col-sm-6">
-      <fieldset class="collapsible collapsed" *ngFor="let key of generatedKeys">
+      <fieldset class="collapsible collapsed mb-5" *ngFor="let key of generatedKeys">
         <legend (click)="collapse.toggle()">
           {{key.alias}}
           <button class="btn btn-sm btn-danger pull-right" (click)="removeKey(key)">
