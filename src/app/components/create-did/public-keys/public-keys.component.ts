@@ -11,6 +11,7 @@ import { BaseComponent } from 'src/app/components/base.component';
 import { CompleteStep } from 'src/app/core/store/action/action.actions';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
+import { DIDService } from 'src/app/core/services/did.service';
 import { KeysService } from 'src/app/core/services/keys.service';
 import { KeyModel } from 'src/app/core/models/key.model';
 import { KeyType } from 'src/app/core/enums/key-type';
@@ -25,6 +26,7 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
   private subscription$: Subscription;
   private formChange: boolean;
   private lastCompletedStepIndex: number;
+  private didId: string;
   private authenticationKeys: KeyModel[] = [];
   protected generatedKeys: KeyModel[] = [];
   protected keyForm: FormGroup;
@@ -33,7 +35,8 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
     private fb: FormBuilder,
     private router: Router,
     private store: Store<AppState>,
-    private keysService: KeysService) {
+    private keysService: KeysService,
+    private didService: DIDService) {
     super();
   }
 
@@ -47,6 +50,11 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
      });
 
     this.subscriptions.push(this.subscription$);
+
+    this.didId = this.didService.getId();
+    if (!this.didId) {
+      this.didId = this.didService.generateId();
+    }
 
     this.createForm();
   }
@@ -64,7 +72,7 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
   createForm() {
     this.keyForm = this.fb.group({
       type: [KeyType.Ed25519, [Validators.required]],
-      controller: ['', [Validators.required]],
+      controller: [this.didId, [Validators.required]],
       alias: ['', [Validators.required, CustomValidators.uniqueKeyAlias(this.generatedKeys, this.authenticationKeys)]]
     });
   }

@@ -11,6 +11,7 @@ import { BaseComponent } from 'src/app/components/base.component';
 import { CompleteStep } from 'src/app/core/store/action/action.actions';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
+import { DIDService } from 'src/app/core/services/did.service';
 import { KeyModel } from 'src/app/core/models/key.model';
 import { KeyType } from 'src/app/core/enums/key-type';
 import { KeysService } from 'src/app/core/services/keys.service';
@@ -26,6 +27,7 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   private subscription$: Subscription;
   private formChange: boolean;
   private lastCompletedStepIndex: number;
+  private didId: string;
   protected keyForm: FormGroup;
   protected selectedAction = 'generate';
   protected selectedKey: KeyModel;
@@ -37,7 +39,8 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
     private router: Router,
     private zone: NgZone,
     private store: Store<AppState>,
-    private keysService: KeysService) {
+    private keysService: KeysService,
+    private didService: DIDService) {
     super();
   }
 
@@ -52,6 +55,8 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
       });
 
     this.subscriptions.push(this.subscription$);
+
+    this.didId = this.didService.getId();
 
     this.createForm();
   }
@@ -69,7 +74,7 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   createForm() {
     this.keyForm = this.fb.group({
       type: [KeyType.Ed25519, [Validators.required]],
-      controller: ['', [Validators.required]],
+      controller: [this.didId, [Validators.required]],
       alias: ['', [Validators.required, CustomValidators.uniqueKeyAlias(this.allPublicKeys, this.authenticationKeys)]]
     });
   }
