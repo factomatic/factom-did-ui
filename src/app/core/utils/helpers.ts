@@ -8,12 +8,11 @@ function toHexString(byteArray) {
 }
 
 function calculateChainId(extIds) {
-  let extIdsHashBytes = [];
-  extIds.forEach(extId => {
+  const extIdsHashBytes = extIds.reduce(function (total, currentExtId) {
     const extIdHash = sha256.create();
-    extIdHash.update(extId);
-    extIdsHashBytes = extIdsHashBytes.concat(extIdHash.array());
-  });
+    extIdHash.update(currentExtId);
+    return total.concat(extIdHash.array());
+  }, []);
 
   const fullHash = sha256.create();
   fullHash.update(extIdsHashBytes);
