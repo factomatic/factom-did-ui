@@ -69,7 +69,18 @@ export class DIDService {
     return JSON.stringify(this.didDocument, null, 2);
   }
 
-  generateId(): string {
+  getId(): string {
+    if (!this.id) {
+      return this.generateId();
+    }
+
+    return this.id;
+  }
+
+  save() {
+  }
+
+  private generateId(): string {
     const method = 'Register DID';
     const version = environment.version;
     this.nonce = toHexString(nacl.randomBytes(32));
@@ -77,12 +88,5 @@ export class DIDService {
     const chainId = calculateChainId([method, version, this.nonce]);
     this.id = `did:fct:${chainId}`;
     return this.id;
-  }
-
-  getId(): string {
-    return this.id;
-  }
-
-  save() {
   }
 }

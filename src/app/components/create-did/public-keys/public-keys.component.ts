@@ -5,10 +5,11 @@ import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 
-import { AddPublicKeys, RemovePublicKey } from 'src/app/core/store/form/form.actions';
+import { AddPublicKey, RemovePublicKey } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
 import { CompleteStep } from 'src/app/core/store/action/action.actions';
+import { CreateRoutes } from 'src/app/core/enums/create-routes';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { DIDService } from 'src/app/core/services/did.service';
@@ -24,7 +25,6 @@ import { KeyType } from 'src/app/core/enums/key-type';
 export class PublicKeysComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChildren(CollapseComponent) collapses: CollapseComponent[];
   private subscription$: Subscription;
-  private formChange: boolean;
   private lastCompletedStepIndex: number;
   private didId: string;
   private authenticationKeys: KeyModel[] = [];
@@ -45,17 +45,13 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
      .pipe(select(state => state))
      .subscribe(state => {
         this.lastCompletedStepIndex = state.action.lastCompletedStepIndex;
-        this.generatedKeys = state.form.publicKeys.slice();
+        this.generatedKeys = state.form.publicKeys;
         this.authenticationKeys = state.form.authenticationKeys;
      });
 
     this.subscriptions.push(this.subscription$);
 
     this.didId = this.didService.getId();
-    if (!this.didId) {
-      this.didId = this.didService.generateId();
-    }
-
     this.createForm();
   }
 
@@ -82,62 +78,34 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
       return;
     }
 
-    if (this.type.value === KeyType.Ed25519) {
-      const keyPair = this.keysService.generateEd25519KeyPair();
-      const generatedKey = new KeyModel(
-        this.alias.value,
-        KeyType.Ed25519,
-        this.controller.value,
-        keyPair.publicKey,
-        keyPair.privateKey
-      );
+    const keyPair = this.keysService.generateKeyPair(this.type.value);
+    const generatedKey = new KeyModel(
+      this.alias.value,
+      this.type.value,
+      this.controller.value,
+      keyPair.publicKey,
+      keyPair.privateKey
+    );
 
-      this.generatedKeys.push(generatedKey);
-
-    } else if (this.type.value === KeyType.Secp256k1) {
-      const keyPair = this.keysService.generateSecp256k1KeyPair();
-      const generatedKey = new KeyModel(
-        this.alias.value,
-        KeyType.Secp256k1,
-        this.controller.value,
-        keyPair.publicKey,
-        keyPair.privateKey
-      );
-
-      this.generatedKeys.push(generatedKey);
-    }
-
-    this.formChange = true;
+    this.store.dispatch(new AddPublicKey(generatedKey));
     this.createForm();
   }
 
   removeKey(key: KeyModel) {
-    this.generatedKeys = this.generatedKeys.filter(k => k !== key);
     this.store.dispatch(new RemovePublicKey(key));
     this.createForm();
-    this.formChange = true;
   }
 
   goToNext() {
-    if (this.generatedKeys.length > 0) {
-      if (this.formChange) {
-        this.store.dispatch(new AddPublicKeys(this.generatedKeys));
-      }
-
-      if (this.lastCompletedStepIndex === CreateStepsIndexes.Action) {
-        this.store.dispatch(new CompleteStep(CreateStepsIndexes.PublicKeys));
-      }
-
-      this.router.navigate(['/create/keys/authentication']);
+    if (this.lastCompletedStepIndex === CreateStepsIndexes.Action) {
+      this.store.dispatch(new CompleteStep(CreateStepsIndexes.PublicKeys));
     }
+
+    this.router.navigate([CreateRoutes.AuthenticationKeys]);
   }
 
   goToPrevious() {
-    if (this.formChange) {
-      this.store.dispatch(new AddPublicKeys(this.generatedKeys));
-    }
-
-    this.router.navigate(['action']);
+    this.router.navigate([CreateRoutes.Action]);
   }
 
   get type () {
