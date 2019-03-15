@@ -3,7 +3,7 @@
   <br/>
   <div class="row">
     <div class="col-xs-offset-1 col-xs-10 col-sm-offset-3 col-sm-6">
-      <fieldset class="collapsible collapsed mb-5" *ngFor="let key of generatedKeys">
+      <fieldset class="collapsible collapsed mb-5" *ngFor="let key of publicKeys">
         <legend (click)="collapse.toggle()">
           {{key.alias}}
           <button class="btn btn-sm btn-danger pull-right" (click)="removeKey(key)">
@@ -83,7 +83,7 @@
       <div class="row">
         <div class="col-xs-offset-1 col-sm-offset-1">
           <button class="btn btn-outline-rounded default" (click)="goToPrevious()"> <span class="glyphicon glyphicon-arrow-left mr-3"></span> Previous</button>
-          <button class="btn btn-outline-rounded btn-info" (click)="goToNext()" [disabled]="generatedKeys.length === 0"> Next <span class="glyphicon glyphicon-arrow-right ml-3"></span></button>
+          <button class="btn btn-outline-rounded btn-info" (click)="goToNext()" [disabled]="publicKeys.length === 0"> Next <span class="glyphicon glyphicon-arrow-right ml-3"></span></button>
         </div>
       </div>
     </div>

@@ -4,12 +4,13 @@ import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 
 import { AppState } from 'src/app/core/store/app.state';
+import { BaseComponent } from '../../base.component';
 import { CompleteStep } from 'src/app/core/store/action/action.actions';
+import { CreateRoutes } from 'src/app/core/enums/create-routes';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { KeysService } from 'src/app/core/services/keys.service';
 import { Subscription } from 'rxjs';
-import { BaseComponent } from '../../base.component';
 
 @Component({
   selector: 'app-encrypt-keys',
@@ -84,12 +85,12 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
         this.store.dispatch(new CompleteStep(CreateStepsIndexes.EncryptKeys));
       }
 
-      this.router.navigate(['/create/finalize']);
+      this.router.navigate([CreateRoutes.Finalize]);
     }
   }
 
   goToPrevious() {
-    this.router.navigate(['/create/services']);
+    this.router.navigate([CreateRoutes.Services]);
   }
 
   get password () {

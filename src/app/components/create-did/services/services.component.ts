@@ -4,13 +4,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 
-import { AddServices } from 'src/app/core/store/form/form.actions';
+import { AddService, RemoveService } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
+import { BaseComponent } from 'src/app/components/base.component';
 import { CompleteStep } from 'src/app/core/store/action/action.actions';
+import { CreateRoutes } from 'src/app/core/enums/create-routes';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { ServiceModel } from 'src/app/core/models/service.model';
-import { BaseComponent } from '../../base.component';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -21,7 +22,6 @@ import { Subscription } from 'rxjs';
 export class ServicesComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChildren(CollapseComponent) collapses: CollapseComponent[];
   private subscription$: Subscription;
-  private formChange: boolean;
   private lastCompletedStepIndex: number;
   protected services: ServiceModel[] = [];
   protected serviceForm: FormGroup;
@@ -42,7 +42,6 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
       });
 
     this.subscriptions.push(this.subscription$);
-
     this.createForm();
   }
 
@@ -69,40 +68,31 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
       return;
     }
 
-    this.services.push(new ServiceModel(
+    const service = new ServiceModel(
       this.type.value,
       this.endpoint.value,
       this.alias.value
-    ));
+    );
 
-    this.formChange = true;
+    this.store.dispatch(new AddService(service));
     this.createForm();
   }
 
   removeService(service: ServiceModel) {
-    this.services = this.services.filter(s => s !== service);
+    this.store.dispatch(new RemoveService(service));
     this.createForm();
-    this.formChange = true;
   }
 
   goToNext() {
-    if (this.formChange) {
-      this.store.dispatch(new AddServices(this.services));
-    }
-
     if (this.lastCompletedStepIndex === CreateStepsIndexes.AuthenticationKeys) {
       this.store.dispatch(new CompleteStep(CreateStepsIndexes.Services));
     }
 
-    this.router.navigate(['/create/keys/encrypt']);
+    this.router.navigate([CreateRoutes.EncryptKeys]);
   }
 
   goToPrevious() {
-    if (this.formChange) {
-      this.store.dispatch(new AddServices(this.services));
-    }
-
-    this.router.navigate(['/create/keys/authentication']);
+    this.router.navigate([CreateRoutes.AuthenticationKeys]);
   }
 
   get type () {

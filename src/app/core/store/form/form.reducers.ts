@@ -1,4 +1,5 @@
-import { ADD_AUTHENTICATION_KEY, ADD_PUBLIC_KEY, ADD_SERVICES, REMOVE_AUTHENTICATION_KEY, REMOVE_PUBLIC_KEY } from './form.actions';
+import { ADD_AUTHENTICATION_KEY, ADD_PUBLIC_KEY, ADD_SERVICE,
+  REMOVE_AUTHENTICATION_KEY, REMOVE_PUBLIC_KEY, REMOVE_SERVICE } from './form.actions';
 import { FormState } from './form.state';
 import { KeyModel } from '../../models/key.model';
 import { ServiceModel } from '../../models/service.model';
@@ -23,10 +24,10 @@ function addPublicKey(state: FormState, publicKey: KeyModel) {
   };
 }
 
-function addServices(state: FormState, services: ServiceModel[]) {
+function addService(state: FormState, service: ServiceModel) {
   return {
     ...state,
-    services: services
+    services: [...state.services, service]
   };
 }
 
@@ -45,18 +46,27 @@ function removePublicKey(state: FormState, key: KeyModel) {
   };
 }
 
+function removeService(state: FormState, service: ServiceModel) {
+  return {
+    ...state,
+    services: state.services.filter(s => s !== service),
+  };
+}
+
 export function formReducers(state: FormState = initialState, action) {
   switch (action.type) {
     case ADD_AUTHENTICATION_KEY:
       return addAuthenticationKey(state, action.payload);
     case ADD_PUBLIC_KEY:
       return addPublicKey(state, action.payload);
-    case ADD_SERVICES:
-      return addServices(state, action.payload);
+    case ADD_SERVICE:
+      return addService(state, action.payload);
     case REMOVE_AUTHENTICATION_KEY:
       return removeAuthenticationKey(state, action.payload);
     case REMOVE_PUBLIC_KEY:
       return removePublicKey(state, action.payload);
+    case REMOVE_SERVICE:
+      return removeService(state, action.payload);
     default:
       return state;
   }

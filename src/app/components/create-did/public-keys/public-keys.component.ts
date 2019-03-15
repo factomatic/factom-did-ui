@@ -28,7 +28,7 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
   private lastCompletedStepIndex: number;
   private didId: string;
   private authenticationKeys: KeyModel[] = [];
-  protected generatedKeys: KeyModel[] = [];
+  protected publicKeys: KeyModel[] = [];
   protected keyForm: FormGroup;
 
   constructor(
@@ -45,7 +45,7 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
      .pipe(select(state => state))
      .subscribe(state => {
         this.lastCompletedStepIndex = state.action.lastCompletedStepIndex;
-        this.generatedKeys = state.form.publicKeys;
+        this.publicKeys = state.form.publicKeys;
         this.authenticationKeys = state.form.authenticationKeys;
      });
 
@@ -69,7 +69,7 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
     this.keyForm = this.fb.group({
       type: [KeyType.Ed25519, [Validators.required]],
       controller: [this.didId, [Validators.required]],
-      alias: ['', [Validators.required, CustomValidators.uniqueKeyAlias(this.generatedKeys, this.authenticationKeys)]]
+      alias: ['', [Validators.required, CustomValidators.uniqueKeyAlias(this.publicKeys, this.authenticationKeys)]]
     });
   }
 
@@ -97,11 +97,13 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
   }
 
   goToNext() {
-    if (this.lastCompletedStepIndex === CreateStepsIndexes.Action) {
-      this.store.dispatch(new CompleteStep(CreateStepsIndexes.PublicKeys));
-    }
+    if (this.publicKeys.length > 0) {
+      if (this.lastCompletedStepIndex === CreateStepsIndexes.Action) {
+        this.store.dispatch(new CompleteStep(CreateStepsIndexes.PublicKeys));
+      }
 
-    this.router.navigate([CreateRoutes.AuthenticationKeys]);
+      this.router.navigate([CreateRoutes.AuthenticationKeys]);
+    }
   }
 
   goToPrevious() {

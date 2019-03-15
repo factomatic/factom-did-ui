@@ -137,11 +137,13 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   }
 
   goToNext() {
-    if (this.lastCompletedStepIndex === CreateStepsIndexes.PublicKeys) {
-      this.store.dispatch(new CompleteStep(CreateStepsIndexes.AuthenticationKeys));
-    }
+    if (this.authenticationKeys.length > 0) {
+      if (this.lastCompletedStepIndex === CreateStepsIndexes.PublicKeys) {
+        this.store.dispatch(new CompleteStep(CreateStepsIndexes.AuthenticationKeys));
+      }
 
-    this.router.navigate([CreateRoutes.Services]);
+      this.router.navigate([CreateRoutes.Services]);
+    }
   }
 
   goToPrevious() {
