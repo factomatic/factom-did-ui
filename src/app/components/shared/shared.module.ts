@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { RouterModule } from '@angular/router';
 
 import { sharedComponents } from '.';
@@ -12,6 +13,7 @@ import { sharedComponents } from '.';
   imports: [
     CommonModule,
     FormsModule,
+    MDBBootstrapModule.forRoot(),
     RouterModule
   ],
   exports: [

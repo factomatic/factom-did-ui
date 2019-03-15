@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 
+import { ActionType } from 'src/app/core/enums/action-type';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
 import { CompleteStep, SelectAction } from 'src/app/core/store/action/action.actions';
@@ -16,7 +17,7 @@ import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 export class ActionComponent extends BaseComponent implements OnInit {
   private subscription$: Subscription;
   private lastCompletedStepIndex: number;
-  protected actionType: string;
+  protected actionType = ActionType.Create;
 
   constructor(
     private store: Store<AppState>,
@@ -28,7 +29,6 @@ export class ActionComponent extends BaseComponent implements OnInit {
     this.subscription$ = this.store.pipe(select(state => state.action))
       .subscribe(action => {
         this.lastCompletedStepIndex = action.lastCompletedStepIndex;
-        this.actionType = action.selectedAction;
       });
 
     this.subscriptions.push(this.subscription$);

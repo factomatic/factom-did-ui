@@ -12,6 +12,7 @@
 .btn-radio {
 	width: 100%;
 }
+
 .img-radio {
 	opacity: 0.8;
 	margin-bottom: 5px;
@@ -21,27 +22,10 @@
     margin-top: 20px;
 }
 
-/* active buttons */
-#status-buttons a.active span.round-tabs.one { 
-    background: rgb(34, 194, 34); 
+#status-buttons a.active span.round-tabs.mdblue { 
+    background: #4285f4; 
     color: #fff
 }
-
-#status-buttons a.active span.round-tabs.two { 
-    background: #febe29; 
-    color: #fff
-}
-
-#status-buttons a.active span.round-tabs.three { 
-    background: #3e5e9a; 
-    color: #fff
-}
-
-#status-buttons a.active span.round-tabs.four { 
-    background: #f1685e; 
-    color: #fff
-}
-
 
 .iradio_buttons {
     display: inline-block;

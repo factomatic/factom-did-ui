@@ -59,48 +59,8 @@ span.round-tabs{
     font-size: 25px;
 }
 
-span.round-tabs.one{
-    color: rgb(34, 194, 34);border: 2px solid rgb(34, 194, 34);
-}
-
-li.active span.round-tabs.one{
-    background: #fff !important;
-    border: 2px solid #ddd;
-    color: rgb(34, 194, 34);
-}
-
-span.round-tabs.two{
-    color: #febe29;border: 2px solid #febe29;
-}
-
-li.active span.round-tabs.two{
-    background: #fff !important;
-    border: 2px solid #ddd;
-    color: #febe29;
-}
-
-span.round-tabs.three{
-    color: #3e5e9a;border: 2px solid #3e5e9a;
-}
-
-span.round-tabs.four{
-    color: #f1685e;border: 2px solid #f1685e;
-}
-
-li.active span.round-tabs.four{
-    background: #fff !important;
-    border: 2px solid #ddd;
-    color: #f1685e;
-}
-
-span.round-tabs.five{
-    color: #999;border: 2px solid #999;
-}
-
-li.active span.round-tabs.five{
-    background: #fff !important;
-    border: 2px solid #ddd;
-    color: #999;
+span.round-tabs.mdblue {
+    color: #4285f4;border: 2px solid #4285f4;
 }
 
 .nav-tabs > li.active > a span.round-tabs{
@@ -169,8 +129,12 @@ padding-top: 50px;
 .btn-outline-rounded{
     padding: 10px 40px;
     margin: 20px 0;
-    border: 2px solid transparent;
     border-radius: 25px;
+}
+
+.btn-md-blue {
+    padding: 5px 20px;
+    margin: 20px 0;
 }
 
 .btn.green{
@@ -182,6 +146,12 @@ padding-top: 50px;
 .btn.default {
   background-color: #2bbbad;
   color: #ffffff;
+}
+
+.btn.disabled, .btn[disabled], fieldset[disabled] .btn {
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 1 !important;
 }
 
 @media( max-width : 585px ){
