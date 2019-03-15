@@ -9,6 +9,7 @@ import { Store, select } from '@ngrx/store';
 
 import { AppState } from '../store/app.state';
 import { KeyPairModel } from '../models/key-pair.model';
+import { KeyType } from '../enums/key-type';
 
 @Injectable()
 export class KeysService {
@@ -36,27 +37,27 @@ export class KeysService {
      });
   }
 
-  generateEd25519KeyPair(): KeyPairModel {
-    const seed = nacl.randomBytes(32);
-    const keyPair = nacl.sign.keyPair.fromSeed(seed);
+  generateKeyPair(type: KeyType): KeyPairModel {
+    if (type === KeyType.Ed25519) {
+      const seed = nacl.randomBytes(32);
+      const keyPair = nacl.sign.keyPair.fromSeed(seed);
 
-    const publicKeyBase58 = base58.encode(Buffer.from(keyPair.publicKey));
-    const privateKeyBase58 = base58.encode(Buffer.from(keyPair.secretKey));
+      const publicKeyBase58 = base58.encode(Buffer.from(keyPair.publicKey));
+      const privateKeyBase58 = base58.encode(Buffer.from(keyPair.secretKey));
 
-    return new KeyPairModel(publicKeyBase58, privateKeyBase58);
-  }
+      return new KeyPairModel(publicKeyBase58, privateKeyBase58);
+    } else if (type === KeyType.Secp256k1) {
+      const ec = new elliptic.ec('secp256k1');
+      const key = ec.genKeyPair();
 
-  generateSecp256k1KeyPair(): KeyPairModel {
-    const ec = new elliptic.ec('secp256k1');
-    const key = ec.genKeyPair();
+      const compressedPubPoint = key.getPublic(true, 'hex');
+      const privateKey = key.getPrivate('hex');
 
-    const compressedPubPoint = key.getPublic(true, 'hex');
-    const privateKey = key.getPrivate('hex');
+      const publicKeyBase58 = base58.encode(Buffer.from(compressedPubPoint));
+      const privateKeyBase58 = base58.encode(Buffer.from(privateKey));
 
-    const publicKeyBase58 = base58.encode(Buffer.from(compressedPubPoint));
-    const privateKeyBase58 = base58.encode(Buffer.from(privateKey));
-
-    return new KeyPairModel(publicKeyBase58, privateKeyBase58);
+      return new KeyPairModel(publicKeyBase58, privateKeyBase58);
+    }
   }
 
   encryptKeys(password: string): Observable<string> {
