@@ -154,6 +154,11 @@ padding-top: 50px;
   opacity: 1 !important;
 }
 
+.btn.btn-sm {
+  padding: 0.2rem 0.4rem;
+  font-size: 0.64rem;
+}
+
 @media( max-width : 585px ){
     
     .board {

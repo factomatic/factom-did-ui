@@ -2,56 +2,56 @@
   <ul class="nav nav-tabs" id="myTab">
     <div class="liner"></div>
 
-    <li routerLink="/action" routerLinkActive="active">
-      <a class="inactiveLink" [ngClass]="{ 'active': lastCompletedStepIndex > 0 }" data-toggle="tab">
+    <li class="inactiveLink" routerLink="/action" routerLinkActive="active">
+      <a [ngClass]="{ 'active': lastCompletedStepIndex > 0 }" data-toggle="tab">
         <span class="round-tabs mdblue">
           <span class="circle">1</span>
         </span>
       </a>
     </li>
                   
-    <li routerLink="{{secondTabLink}}" routerLinkActive="active">
-      <a class="inactiveLink" [ngClass]="{ 'active': lastCompletedStepIndex > 1 }" data-toggle="tab">
+    <li class="inactiveLink" routerLink="{{secondTabLink}}" routerLinkActive="active">
+      <a [ngClass]="{ 'active': lastCompletedStepIndex > 1 }" data-toggle="tab">
         <span class="round-tabs mdblue">
           <span class="circle">2</span>
         </span>
       </a>
     </li>
 
-    <li routerLink="{{thirdTabLink}}" routerLinkActive="active">
-      <a class="inactiveLink" [ngClass]="{ 'active': lastCompletedStepIndex > 2 }" data-toggle="tab">
+    <li class="inactiveLink" routerLink="{{thirdTabLink}}" routerLinkActive="active">
+      <a [ngClass]="{ 'active': lastCompletedStepIndex > 2 }" data-toggle="tab">
         <span class="round-tabs mdblue">
           <span class="circle">3</span>
         </span> 
       </a>
     </li>
 
-    <li routerLink="{{forthTabLink}}" routerLinkActive="active">
-      <a class="inactiveLink" [ngClass]="{ 'active': lastCompletedStepIndex > 3 }" data-toggle="tab">
+    <li class="inactiveLink" routerLink="{{forthTabLink}}" routerLinkActive="active">
+      <a [ngClass]="{ 'active': lastCompletedStepIndex > 3 }" data-toggle="tab">
         <span class="round-tabs mdblue">
           <span class="circle">4</span>
         </span>
       </a>
     </li>
 
-    <li routerLink="{{fifthTabLink}}" routerLinkActive="active">
-      <a class="inactiveLink" [ngClass]="{ 'active': lastCompletedStepIndex > 4 }" data-toggle="tab">
+    <li class="inactiveLink" routerLink="{{fifthTabLink}}" routerLinkActive="active">
+      <a [ngClass]="{ 'active': lastCompletedStepIndex > 4 }" data-toggle="tab">
         <span class="round-tabs mdblue">
           <span class="circle">5</span>
         </span>
       </a>
     </li>
 
-    <li routerLink="{{sixthTabLink}}" routerLinkActive="active">
-      <a class="inactiveLink" [ngClass]="{ 'active': lastCompletedStepIndex > 5 }" data-toggle="tab">
+    <li class="inactiveLink" routerLink="{{sixthTabLink}}" routerLinkActive="active">
+      <a [ngClass]="{ 'active': lastCompletedStepIndex > 5 }" data-toggle="tab">
         <span class="round-tabs mdblue">
           <span class="circle">6</span>
         </span>
       </a>
     </li>
     
-    <li>
-      <a routerLinkActive="active" data-toggle="tab">
+    <li class="inactiveLink">
+      <a data-toggle="tab">
         <span class="round-tabs mdblue">
           <span class="circle">7</span>
         </span>
