@@ -1,8 +1,10 @@
+declare const Buffer;
 import * as nacl from 'tweetnacl/nacl-fast';
 import { Injectable } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 
 import { AppState } from '../store/app.state';
+import { DIDDocumentModel } from '../models/did-document,model';
 import { environment } from 'src/environments/environment';
 import { KeyModel } from '../models/key.model';
 import { ServiceModel } from '../models/service.model';
@@ -10,6 +12,8 @@ import { toHexString, calculateChainId } from '../utils/helpers';
 
 @Injectable()
 export class DIDService {
+  private registerMethod = 'Register DID';
+  private version = environment.version;
   private id: string;
   private nonce: string;
   private formPublicKeys: KeyModel[];
@@ -27,7 +31,7 @@ export class DIDService {
      });
   }
 
-  generateDocument(): string {
+  generateDocument(): DIDDocumentModel {
     const publicKeys = this.formPublicKeys.map(k => ({
       id: `${this.id}#${k.alias}`,
       type: k.type,
@@ -66,7 +70,15 @@ export class DIDService {
       'service': services
     };
 
-    return JSON.stringify(this.didDocument, null, 2);
+    const document = JSON.stringify(this.didDocument, null, 2);
+
+    const documentSize = this.calculateEntrySize(
+      [this.nonce],
+      [this.registerMethod, this.version],
+      JSON.stringify(this.didDocument)
+    );
+
+    return new DIDDocumentModel(document, documentSize);
   }
 
   getId(): string {
@@ -81,12 +93,32 @@ export class DIDService {
   }
 
   private generateId(): string {
-    const method = 'Register DID';
-    const version = environment.version;
     this.nonce = toHexString(nacl.randomBytes(32));
 
-    const chainId = calculateChainId([method, version, this.nonce]);
+    const chainId = calculateChainId([this.registerMethod, this.version, this.nonce]);
     this.id = `did:fct:${chainId}`;
     return this.id;
+  }
+
+  private calculateEntrySize(hexExtIds: string[], utf8ExtIds: string[], content: string): number {
+    let totalEntrySize = 0;
+    const fixedHeaderSize = 35;
+    totalEntrySize += fixedHeaderSize + 2 * hexExtIds.length + 2 * utf8ExtIds.length;
+
+    totalEntrySize += hexExtIds.reduce((accumulator, currentHexExtId) => {
+      return accumulator + currentHexExtId.length / 2;
+    }, 0);
+
+    totalEntrySize += utf8ExtIds.reduce((accumulator, currentUtf8ExtId) => {
+      return accumulator + this.getBinarySize(currentUtf8ExtId);
+    }, 0);
+
+    totalEntrySize += this.getBinarySize(content);
+
+    return totalEntrySize;
+  }
+
+  private getBinarySize(string): number {
+    return Buffer.byteLength(string, 'utf8');
   }
 }

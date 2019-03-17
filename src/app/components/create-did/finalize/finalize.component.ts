@@ -6,6 +6,7 @@ import { AppState } from 'src/app/core/store/app.state';
 import { CompleteStep } from 'src/app/core/store/action/action.actions';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import { DIDService } from 'src/app/core/services/did.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-finalize',
@@ -14,6 +15,7 @@ import { DIDService } from 'src/app/core/services/did.service';
 })
 export class FinalizeComponent implements OnInit {
   protected didDocument: string;
+  protected documentSizeExceeded: boolean;
 
   constructor(
     private didService: DIDService,
@@ -22,11 +24,17 @@ export class FinalizeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.didDocument = this.didService.generateDocument();
+    const didDocumentResult = this.didService.generateDocument();
+    this.didDocument = didDocumentResult.document;
+    if (didDocumentResult.size > environment.entrySizeLimit) {
+      this.documentSizeExceeded = true;
+    }
   }
 
   finalize() {
-    this.store.dispatch(new CompleteStep(CreateStepsIndexes.Finalize));
+    if (!this.documentSizeExceeded) {
+      this.store.dispatch(new CompleteStep(CreateStepsIndexes.Finalize));
+    }
   }
 
   goToPrevious() {
