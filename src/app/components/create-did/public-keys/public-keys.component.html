@@ -65,11 +65,11 @@
                 class="form-control input-md"
                 formControlName="alias" id="alias"
                 placeholder="Alias"
-                pattern="^[^\s]+$"
+                pattern="^[a-z0-9-]{1,32}$"
                 [ngClass]="{ 'is-invalid': alias.touched && alias.errors }" />
               <div *ngIf="alias.errors" class="invalid-feedback">
                 <div *ngIf="alias['errors'].required">Alias is required!</div>
-                <div *ngIf="alias['errors'].pattern">Alias must not contain spaces!</div>
+                <div *ngIf="alias['errors'].pattern">Alias must not be more than 32 characters long and must contain only lower-case letters, digits and hyphens!</div>
                 <div *ngIf="alias['errors'].taken">You have already used this alias!</div>
               </div>
             </div>
