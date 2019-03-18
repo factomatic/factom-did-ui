@@ -53,8 +53,8 @@ export class KeysService {
       const compressedPubPoint = key.getPublic(true, 'hex');
       const privateKey = key.getPrivate('hex');
 
-      const publicKeyBase58 = base58.encode(Buffer.from(compressedPubPoint));
-      const privateKeyBase58 = base58.encode(Buffer.from(privateKey));
+      const publicKeyBase58 = base58.encode(Buffer.from(compressedPubPoint, 'hex'));
+      const privateKeyBase58 = base58.encode(Buffer.from(privateKey, 'hex'));
 
       return new KeyPairModel(publicKeyBase58, privateKeyBase58);
     }
