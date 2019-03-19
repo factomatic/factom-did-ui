@@ -46,7 +46,7 @@ export class KeysService {
       const privateKeyBase58 = base58.encode(Buffer.from(keyPair.secretKey));
 
       return new KeyPairModel(publicKeyBase58, privateKeyBase58);
-    } else if (type === KeyType.Secp256k1) {
+    } else if (type === KeyType.ECDSASecp256k1) {
       const ec = new elliptic.ec('secp256k1');
       const key = ec.genKeyPair();
 
