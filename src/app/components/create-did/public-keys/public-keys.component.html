@@ -37,7 +37,10 @@
         <div mdbCollapse #collapse="bs-collapse">
           <form [formGroup]="keyForm" (ngSubmit)="generateKey()">
             <div class="form-group">
-              <label class="control-label" for="type">Choose key type</label>
+              <label class="control-label" for="type">
+                Choose signature type
+                <i class="fas fa-info ml-4" ngbTooltip="You can choose between two types..." tooltipClass="my-custom-class"></i>
+              </label>
               <select class="form-control" formControlName="type" id="type">
                 <option value="Ed25519">Ed25519</option>
                 <option value="ECDSASecp256k1">ECDSASecp256k1</option>
@@ -52,7 +55,7 @@
                 formControlName="controller" 
                 id="controller" 
                 placeholder="Key controller"
-                pattern="^did:fct:[abcdef0-9]{64}$"
+                pattern="^did:fctr:[abcdef0-9]{64}$"
                 [ngClass]="{ 'is-invalid': controller.touched && controller.errors }" />
               <div *ngIf="controller.errors" class="invalid-feedback">
                 <div *ngIf="controller['errors'].required">Key controller is required!</div>
@@ -84,7 +87,7 @@
       </fieldset>
       <div class="row justify-content-between mt-4">
         <button class="btn-md-blue" mdbBtn type="button" color="primary" mdbWavesEffect (click)="goToPrevious()"> <span class="glyphicon glyphicon-arrow-left mr-3"></span> Previous</button>
-        <button class="btn-md-blue" mdbBtn type="button" color="primary" mdbWavesEffect (click)="goToNext()" [disabled]="publicKeys.length === 0"> Next <span class="glyphicon glyphicon-arrow-right ml-3"></span></button>
+        <button class="btn-md-blue" mdbBtn type="button" color="primary" mdbWavesEffect (click)="goToNext()"> Next <span class="glyphicon glyphicon-arrow-right ml-3"></span></button>
       </div>
     </div>
   </div>
