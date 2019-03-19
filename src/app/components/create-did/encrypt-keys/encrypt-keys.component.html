@@ -3,7 +3,11 @@
   <br/>
   <div class="row">
     <div class="col-xs-offset-1 col-xs-10 col-sm-offset-3 col-sm-6">
-      <form [formGroup]="encryptForm" (ngSubmit)="encryptKeys()">
+      <div class="alert alert-info text-center" role="alert" *ngIf="!keysGenerated">
+        <i class="fas fa-info mr-4"></i>
+        You have not generated any keys.
+      </div>
+      <form [formGroup]="encryptForm" (ngSubmit)="encryptKeys()" *ngIf="keysGenerated">
         <div class="form-group">
           <label class="control-label" for="password">Enter password</label>
           <input 
@@ -45,7 +49,7 @@
       </div>
       <div class="row justify-content-between mt-4">
         <button class="btn-md-blue" mdbBtn type="button" color="primary" mdbWavesEffect (click)="goToPrevious()"> <span class="glyphicon glyphicon-arrow-left mr-3"></span> Previous</button>
-        <button class="btn-md-blue" mdbBtn type="button" color="primary" mdbWavesEffect (click)="goToNext()" [disabled]="!fileDowloaded && lastCompletedStepIndex < currentStepIndex"> Next <span class="glyphicon glyphicon-arrow-right ml-3"></span></button>
+        <button class="btn-md-blue" mdbBtn type="button" color="primary" mdbWavesEffect (click)="goToNext()" [disabled]="!fileDowloaded && lastCompletedStepIndex < currentStepIndex && keysGenerated"> Next <span class="glyphicon glyphicon-arrow-right ml-3"></span></button>
       </div>
     </div>
   </div>

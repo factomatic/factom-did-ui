@@ -24,6 +24,7 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
   protected encryptForm;
   protected encryptedFile: string;
   protected fileDowloaded: boolean;
+  protected keysGenerated: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -35,9 +36,12 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     this.subscription$ = this.store
-     .pipe(select(state => state.action.lastCompletedStepIndex))
-     .subscribe(lastCompletedStepIndex => {
-        this.lastCompletedStepIndex = lastCompletedStepIndex;
+     .pipe(select(state => state))
+     .subscribe(state => {
+        this.lastCompletedStepIndex = state.action.lastCompletedStepIndex;
+        if (state.form.publicKeys.length > 0 || state.form.authenticationKeys.length > 0) {
+          this.keysGenerated = true;
+        }
      });
 
     this.subscriptions.push(this.subscription$);
@@ -80,7 +84,7 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
   }
 
   goToNext() {
-    if (this.fileDowloaded || this.lastCompletedStepIndex === CreateStepsIndexes.EncryptKeys) {
+    if (this.fileDowloaded || this.lastCompletedStepIndex === CreateStepsIndexes.EncryptKeys || !this.keysGenerated) {
       if (this.lastCompletedStepIndex === CreateStepsIndexes.Services) {
         this.store.dispatch(new CompleteStep(CreateStepsIndexes.EncryptKeys));
       }
