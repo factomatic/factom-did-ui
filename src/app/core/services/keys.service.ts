@@ -9,7 +9,7 @@ import { Store, select } from '@ngrx/store';
 
 import { AppState } from '../store/app.state';
 import { KeyPairModel } from '../models/key-pair.model';
-import { KeyType } from '../enums/key-type';
+import { SignatureType } from '../enums/signature-type';
 
 @Injectable()
 export class KeysService {
@@ -37,8 +37,8 @@ export class KeysService {
      });
   }
 
-  generateKeyPair(type: KeyType): KeyPairModel {
-    if (type === KeyType.Ed25519) {
+  generateKeyPair(type: SignatureType): KeyPairModel {
+    if (type === SignatureType.EdDSA) {
       const seed = nacl.randomBytes(32);
       const keyPair = nacl.sign.keyPair.fromSeed(seed);
 
@@ -46,7 +46,7 @@ export class KeysService {
       const privateKeyBase58 = base58.encode(Buffer.from(keyPair.secretKey));
 
       return new KeyPairModel(publicKeyBase58, privateKeyBase58);
-    } else if (type === KeyType.ECDSASecp256k1) {
+    } else if (type === SignatureType.ECDSA) {
       const ec = new elliptic.ec('secp256k1');
       const key = ec.genKeyPair();
 

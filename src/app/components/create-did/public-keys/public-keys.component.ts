@@ -1,5 +1,5 @@
 import { CollapseComponent } from 'angular-bootstrap-md';
-import { Component, OnInit, AfterViewInit, ViewChildren } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
@@ -15,12 +15,13 @@ import CustomValidators from 'src/app/core/utils/customValidators';
 import { DIDService } from 'src/app/core/services/did.service';
 import { KeysService } from 'src/app/core/services/keys.service';
 import { KeyModel } from 'src/app/core/models/key.model';
-import { KeyType } from 'src/app/core/enums/key-type';
+import { SignatureType } from 'src/app/core/enums/signature-type';
 
 @Component({
   selector: 'app-public-keys',
   templateUrl: './public-keys.component.html',
-  styleUrls: ['./public-keys.component.scss']
+  styleUrls: ['./public-keys.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PublicKeysComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChildren(CollapseComponent) collapses: CollapseComponent[];
@@ -67,7 +68,7 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
 
   createForm() {
     this.keyForm = this.fb.group({
-      type: [KeyType.Ed25519, [Validators.required]],
+      type: [SignatureType.EdDSA, [Validators.required]],
       controller: [this.didId, [Validators.required]],
       alias: ['', [Validators.required, CustomValidators.uniqueKeyAlias(this.publicKeys, this.authenticationKeys)]]
     });
@@ -97,13 +98,11 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
   }
 
   goToNext() {
-    if (this.publicKeys.length > 0) {
-      if (this.lastCompletedStepIndex === CreateStepsIndexes.Action) {
-        this.store.dispatch(new CompleteStep(CreateStepsIndexes.PublicKeys));
-      }
-
-      this.router.navigate([CreateRoutes.AuthenticationKeys]);
+    if (this.lastCompletedStepIndex === CreateStepsIndexes.Action) {
+      this.store.dispatch(new CompleteStep(CreateStepsIndexes.PublicKeys));
     }
+
+    this.router.navigate([CreateRoutes.AuthenticationKeys]);
   }
 
   goToPrevious() {

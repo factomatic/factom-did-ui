@@ -14,8 +14,8 @@ import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { DIDService } from 'src/app/core/services/did.service';
 import { KeyModel } from 'src/app/core/models/key.model';
-import { KeyType } from 'src/app/core/enums/key-type';
 import { KeysService } from 'src/app/core/services/keys.service';
+import { SignatureType } from 'src/app/core/enums/signature-type';
 
 const GENERATE_ACTION = 'generate';
 
@@ -72,7 +72,7 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
 
   createForm() {
     this.keyForm = this.fb.group({
-      type: [KeyType.Ed25519, [Validators.required]],
+      type: [SignatureType.EdDSA, [Validators.required]],
       controller: [this.didId, [Validators.required]],
       alias: ['', [Validators.required, CustomValidators.uniqueKeyAlias(this.availablePublicKeys, this.authenticationKeys)]]
     });
@@ -137,13 +137,11 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   }
 
   goToNext() {
-    if (this.authenticationKeys.length > 0) {
-      if (this.lastCompletedStepIndex === CreateStepsIndexes.PublicKeys) {
-        this.store.dispatch(new CompleteStep(CreateStepsIndexes.AuthenticationKeys));
-      }
-
-      this.router.navigate([CreateRoutes.Services]);
+    if (this.lastCompletedStepIndex === CreateStepsIndexes.PublicKeys) {
+      this.store.dispatch(new CompleteStep(CreateStepsIndexes.AuthenticationKeys));
     }
+
+    this.router.navigate([CreateRoutes.Services]);
   }
 
   goToPrevious() {
