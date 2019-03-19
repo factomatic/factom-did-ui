@@ -12,7 +12,8 @@ import { toHexString, calculateChainId } from '../utils/helpers';
 
 @Injectable()
 export class DIDService {
-  private registerMethod = 'Register DID';
+  private VerificationKeySuffix = 'VerificationKey';
+  private registerMethod = 'RegisterDID';
   private version = environment.version;
   private id: string;
   private nonce: string;
@@ -34,7 +35,7 @@ export class DIDService {
   generateDocument(): DIDDocumentModel {
     const publicKeys = this.formPublicKeys.map(k => ({
       id: `${this.id}#${k.alias}`,
-      type: k.type,
+      type: `${k.type}${this.VerificationKeySuffix}`,
       controller: k.controller,
       publicKeyBase58: k.publicKey
     }));
@@ -47,7 +48,7 @@ export class DIDService {
       } else {
         fullAuthenticationKeys.push({
           id: `${this.id}#${k.alias}`,
-          type: k.type,
+          type: `${k.type}${this.VerificationKeySuffix}`,
           controller: k.controller,
           publicKeyBase58: k.publicKey
          });
@@ -63,7 +64,7 @@ export class DIDService {
     }));
 
     this.didDocument = {
-      '@context': 'https://example.org/example-method/v1',
+      '@context': 'https://w3id.org/did/v1',
       'id': this.id,
       'publicKey': publicKeys,
       'authentication': authenticationKeys,
@@ -96,7 +97,7 @@ export class DIDService {
     this.nonce = toHexString(nacl.randomBytes(32));
 
     const chainId = calculateChainId([this.registerMethod, this.version, this.nonce]);
-    this.id = `did:fct:${chainId}`;
+    this.id = `did:fctr:${chainId}`;
     return this.id;
   }
 
