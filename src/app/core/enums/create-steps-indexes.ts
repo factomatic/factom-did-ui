@@ -4,5 +4,5 @@ export enum CreateStepsIndexes {
   AuthenticationKeys = 3,
   Services = 4,
   EncryptKeys = 5,
-  Finalize = 6
+  Summary = 6
 }

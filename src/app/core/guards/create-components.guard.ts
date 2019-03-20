@@ -19,7 +19,7 @@ export class CreateComponentsGuard implements CanActivate {
    [CreateStepsUrls.AuthenticationKeys]: 3,
    [CreateStepsUrls.Services]: 4,
    [CreateStepsUrls.EncryptKeys]: 5,
-   [CreateStepsUrls.Finalize]: 6
+   [CreateStepsUrls.Summary]: 6
   };
 
   constructor(private workflowService: WorkflowService) { }

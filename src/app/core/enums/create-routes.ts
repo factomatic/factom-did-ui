@@ -4,5 +4,5 @@ export enum CreateRoutes {
   AuthenticationKeys = '/create/keys/authentication',
   Services = '/create/services',
   EncryptKeys = '/create/keys/encrypt',
-  Finalize = '/create/finalize'
+  Summary = '/create/summary'
 }

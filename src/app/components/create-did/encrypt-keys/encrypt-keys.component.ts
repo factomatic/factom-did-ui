@@ -89,7 +89,7 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
         this.store.dispatch(new CompleteStep(CreateStepsIndexes.EncryptKeys));
       }
 
-      this.router.navigate([CreateRoutes.Finalize]);
+      this.router.navigate([CreateRoutes.Summary]);
     }
   }
 

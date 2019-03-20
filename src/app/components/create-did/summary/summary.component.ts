@@ -9,11 +9,11 @@ import { DIDService } from 'src/app/core/services/did.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-finalize',
-  templateUrl: './finalize.component.html',
-  styleUrls: ['./finalize.component.scss']
+  selector: 'app-summary',
+  templateUrl: './summary.component.html',
+  styleUrls: ['./summary.component.scss']
 })
-export class FinalizeComponent implements OnInit {
+export class SummaryComponent implements OnInit {
   protected didDocument: string;
   protected documentSizeExceeded: boolean;
 
@@ -31,9 +31,9 @@ export class FinalizeComponent implements OnInit {
     }
   }
 
-  finalize() {
+  recordOnChain() {
     if (!this.documentSizeExceeded) {
-      this.store.dispatch(new CompleteStep(CreateStepsIndexes.Finalize));
+      this.store.dispatch(new CompleteStep(CreateStepsIndexes.Summary));
     }
   }
 
