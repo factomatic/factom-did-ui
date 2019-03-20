@@ -50,8 +50,8 @@
       </a>
     </li>
     
-    <li class="inactiveLink">
-      <a data-toggle="tab">
+    <li class="inactiveLink" routerLink="/final" routerLinkActive="active">
+      <a [ngClass]="{ 'active': lastCompletedStepIndex > 6 }" data-toggle="tab">
         <span class="round-tabs mdblue">
           <span class="circle">7</span>
         </span>

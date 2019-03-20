@@ -1,5 +1,4 @@
 export enum CreateRoutes {
-  Action = 'action',
   PublicKeys = '/create/keys/public',
   AuthenticationKeys = '/create/keys/authentication',
   Services = '/create/services',

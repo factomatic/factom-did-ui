@@ -15,6 +15,7 @@ import CustomValidators from 'src/app/core/utils/customValidators';
 import { DIDService } from 'src/app/core/services/did.service';
 import { KeysService } from 'src/app/core/services/keys.service';
 import { KeyModel } from 'src/app/core/models/key.model';
+import { SharedRoutes } from 'src/app/core/enums/shared-routes';
 import { SignatureType } from 'src/app/core/enums/signature-type';
 
 @Component({
@@ -106,7 +107,7 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
   }
 
   goToPrevious() {
-    this.router.navigate([CreateRoutes.Action]);
+    this.router.navigate([SharedRoutes.Action]);
   }
 
   get type () {

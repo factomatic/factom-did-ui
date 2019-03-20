@@ -3,12 +3,15 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ActionComponent } from './components/shared/action/action.component';
 import { CreateActionGuard } from './core/guards/create-action.guard';
+import { FinalComponentGuard } from './core/guards/final-component.guard';
 import { CreateDIDModule } from './components/create-did/create-did.module';
+import { FinalComponent } from './components/shared/final/final.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'action' },
   { path: 'action', component: ActionComponent },
   { path: 'create', loadChildren: () => CreateDIDModule, canActivate: [ CreateActionGuard ] },
+  { path: 'final', component: FinalComponent, canActivate: [ FinalComponentGuard ] },
   { path: '**', redirectTo: 'action' }
 ];
 
