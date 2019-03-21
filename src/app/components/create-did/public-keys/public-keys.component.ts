@@ -17,6 +17,7 @@ import { KeysService } from 'src/app/core/services/keys.service';
 import { KeyModel } from 'src/app/core/models/key.model';
 import { SharedRoutes } from 'src/app/core/enums/shared-routes';
 import { SignatureType } from 'src/app/core/enums/signature-type';
+import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
 
 @Component({
   selector: 'app-public-keys',
@@ -32,6 +33,9 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
   private authenticationKeys: KeyModel[] = [];
   protected publicKeys: KeyModel[] = [];
   protected keyForm: FormGroup;
+  protected aliasTooltipMessage = TooltipMessages.AliasTooltip;
+  protected controllerTooltipMessage = TooltipMessages.ControllerTooltip;
+  protected signatureTypeTooltipMessage = TooltipMessages.SignatureTypeTooltip;
 
   constructor(
     private fb: FormBuilder,

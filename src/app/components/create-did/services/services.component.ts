@@ -13,6 +13,7 @@ import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { ServiceModel } from 'src/app/core/models/service.model';
 import { Subscription } from 'rxjs';
+import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
 
 @Component({
   selector: 'app-services',
@@ -25,6 +26,8 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
   private lastCompletedStepIndex: number;
   protected services: ServiceModel[] = [];
   protected serviceForm: FormGroup;
+  protected tooltipMessage = TooltipMessages.ServicesHeaderTooltip;
+  protected boldPartTooltipMessage = TooltipMessages.ServicesHeaderBoldPartTooltip;
 
   constructor(
     private fb: FormBuilder,

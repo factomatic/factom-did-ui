@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 
 import { AppState } from 'src/app/core/store/app.state';
+import { CreateStepsUrls } from 'src/app/core/enums/create-steps-urls';
 
 @Component({
   selector: 'app-navbar',
@@ -10,11 +11,11 @@ import { AppState } from 'src/app/core/store/app.state';
 })
 export class NavbarComponent implements OnInit {
   protected lastCompletedStepIndex: number;
-  protected secondTabLink = '/create/keys/public';
-  protected thirdTabLink = '/create/keys/authentication';
-  protected forthTabLink = '/create/services';
-  protected fifthTabLink = '/create/keys/encrypt';
-  protected sixthTabLink = '/create/summary';
+  protected secondTabLink = CreateStepsUrls.PublicKeys.toString();
+  protected thirdTabLink = CreateStepsUrls.AuthenticationKeys.toString();
+  protected forthTabLink = CreateStepsUrls.Services.toString();
+  protected fifthTabLink = CreateStepsUrls.EncryptKeys.toString();
+  protected sixthTabLink = CreateStepsUrls.Summary.toString();
 
   constructor(private store: Store<AppState>) {
   }

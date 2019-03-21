@@ -11,6 +11,7 @@ import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { KeysService } from 'src/app/core/services/keys.service';
 import { Subscription } from 'rxjs';
+import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
 
 @Component({
   selector: 'app-encrypt-keys',
@@ -25,6 +26,8 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
   protected encryptedFile: string;
   protected fileDowloaded: boolean;
   protected keysGenerated: boolean;
+  protected tooltipMessage = TooltipMessages.EncryptHeaderTooltip;
+  protected boldPartTooltipMessage = TooltipMessages.EncryptHeaderBoldPartTooltip;
 
   constructor(
     private fb: FormBuilder,

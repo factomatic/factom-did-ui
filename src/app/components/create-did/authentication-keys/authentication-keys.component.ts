@@ -16,6 +16,7 @@ import { DIDService } from 'src/app/core/services/did.service';
 import { KeyModel } from 'src/app/core/models/key.model';
 import { KeysService } from 'src/app/core/services/keys.service';
 import { SignatureType } from 'src/app/core/enums/signature-type';
+import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
 
 const GENERATE_ACTION = 'generate';
 
@@ -34,6 +35,7 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   protected selectedKey: KeyModel;
   protected authenticationKeys: KeyModel[] = [];
   protected availablePublicKeys: KeyModel[] = [];
+  protected actionDropdownTooltipMessage = TooltipMessages.AuthenticationDropdownTooltip;
 
   constructor(
     private fb: FormBuilder,

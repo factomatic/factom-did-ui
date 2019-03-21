@@ -33,7 +33,10 @@
         </div>
       </fieldset>
       <div class="mb-4">
-        <label class="control-label" for="action">Select key or generate new one</label>
+        <label class="control-label" for="action">
+          Select key or generate new one
+          <i class="fas fa-info-circle fa-lg ml-4" ngbTooltip="{{actionDropdownTooltipMessage}}" tooltipClass="custom-tooltip"></i>
+        </label>
         <select class="form-control" id="action" (change)="changeAction($event)">
           <option value="generate">Generate New Key</option>
           <option value="{{key.publicKey}}" *ngFor="let key of availablePublicKeys">{{key.alias}}</option>

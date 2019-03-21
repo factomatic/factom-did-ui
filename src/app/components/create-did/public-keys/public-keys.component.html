@@ -39,7 +39,7 @@
             <div class="form-group">
               <label class="control-label" for="type">
                 Choose signature type
-                <i class="fas fa-info ml-4" ngbTooltip="You can choose between two types..." tooltipClass="my-custom-class"></i>
+                <i class="fas fa-info-circle fa-lg ml-4" ngbTooltip="{{signatureTypeTooltipMessage}}" tooltipClass="custom-tooltip"></i>
               </label>
               <select class="form-control" formControlName="type" id="type">
                 <option value="Ed25519">Ed25519</option>
@@ -48,7 +48,10 @@
             </div>
 
             <div class="form-group">
-              <label class="control-label" for="controller">Choose key controller</label>
+              <label class="control-label" for="controller">
+                Choose key controller
+                <i class="fas fa-info-circle fa-lg ml-4" ngbTooltip="{{controllerTooltipMessage}}" tooltipClass="custom-tooltip"></i>
+              </label>
               <input 
                 type="text" 
                 class="form-control input-md" 
@@ -64,7 +67,10 @@
             </div>
 
             <div class="form-group">
-              <label class="control-label" for="alias">Alias</label>
+              <label class="control-label" for="alias">
+                Alias
+                <i class="fas fa-info-circle fa-lg ml-4" ngbTooltip="{{aliasTooltipMessage}}" tooltipClass="custom-tooltip"></i>
+              </label>
               <input
                 type="text"
                 class="form-control input-md"
