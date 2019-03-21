@@ -1,5 +1,6 @@
 declare const Buffer;
 import * as nacl from 'tweetnacl/nacl-fast';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 
@@ -9,6 +10,7 @@ import { environment } from 'src/environments/environment';
 import { KeyModel } from '../models/key.model';
 import { ServiceModel } from '../models/service.model';
 import { toHexString, calculateChainId } from '../utils/helpers';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class DIDService {
@@ -22,7 +24,9 @@ export class DIDService {
   private formServices: ServiceModel[];
   private didDocument: Object;
 
-  constructor (private store: Store<AppState>) {
+  constructor (
+    private http: HttpClient,
+    private store: Store<AppState>) {
     this.store
      .pipe(select(state => state.form))
      .subscribe(form => {
@@ -90,7 +94,19 @@ export class DIDService {
     return this.id;
   }
 
-  save() {
+  recordOnChain(): Observable<Object> {
+    const url = 'https://testnet-api.factomatic.io/write-did';
+    const data = JSON.stringify([
+      [this.nonce, this.version],
+      this.didDocument
+    ]);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+      })
+    };
+
+    return this.http.post(url, data, httpOptions);
   }
 
   private generateId(): string {

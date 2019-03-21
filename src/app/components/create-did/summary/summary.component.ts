@@ -35,8 +35,12 @@ export class SummaryComponent implements OnInit {
 
   recordOnChain() {
     if (!this.documentSizeExceeded) {
-      this.store.dispatch(new CompleteStep(CreateStepsIndexes.Summary));
-      this.router.navigate([SharedRoutes.Final]);
+      this.didService
+        .recordOnChain()
+        .subscribe((res: any) => {
+          this.store.dispatch(new CompleteStep(CreateStepsIndexes.Summary));
+          this.router.navigate([SharedRoutes.Final], { queryParams: { url: res.url } });
+        });
     }
   }
 
