@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
@@ -22,6 +23,7 @@ export class SummaryComponent implements OnInit {
   constructor(
     private didService: DIDService,
     private router: Router,
+    private spinner: NgxSpinnerService,
     private store: Store<AppState>) {
   }
 
@@ -35,10 +37,12 @@ export class SummaryComponent implements OnInit {
 
   recordOnChain() {
     if (!this.documentSizeExceeded) {
+      this.spinner.show();
       this.didService
         .recordOnChain()
         .subscribe((res: any) => {
           this.store.dispatch(new CompleteStep(CreateStepsIndexes.Summary));
+          this.spinner.hide();
           this.router.navigate([SharedRoutes.Final], { queryParams: { url: res.url } });
         });
     }

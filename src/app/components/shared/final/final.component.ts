@@ -11,9 +11,6 @@ import { BaseComponent } from '../../base.component';
 export class FinalComponent extends BaseComponent implements OnInit {
   private subscription$: Subscription;
   protected externalLink: string;
-  protected successMessage = `You're done! Your DID is in ` +
-  `the process of being recorded on the Factom blockchain and it shoud be included in the next block. You can track ` +
-  `the progress in the blockchain explorer.`;
 
   constructor(private route: ActivatedRoute) {
     super();

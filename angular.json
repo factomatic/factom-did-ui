@@ -33,6 +33,7 @@
               "node_modules/bootstrap/scss/bootstrap.scss",
               "node_modules/angular-bootstrap-md/scss/mdb-free.scss",
               "node_modules/highlight.js/styles/solarized-dark.css",
+              "node_modules/ngx-toastr/toastr.css",
               "src/styles.scss"
             ],
             "scripts": [
