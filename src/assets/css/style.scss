@@ -51,6 +51,18 @@
   background-position: -168px 0;
 }
 
+.modal-backdrop.fade {
+  opacity: 0.5;
+}
+
+.modal-open .modal {
+  opacity: 1;
+}
+
+.modal {
+  margin-top: 10em;
+}
+
 .custom-tooltip .tooltip-inner {
   background-color:azure;
   color: black;
