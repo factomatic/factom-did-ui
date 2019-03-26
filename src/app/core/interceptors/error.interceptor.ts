@@ -11,9 +11,12 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
+import { DIDService } from '../services/did.service';
+
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
   constructor (
+    private didService: DIDService,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService ) { }
 
@@ -21,12 +24,13 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next
       .handle(req)
       .pipe(catchError((err: HttpErrorResponse) => {
-        this.spinner.hide();
-
-        if (err.error.message) {
-          this.toastr.error(err.error.message, 'Warning!');
+        if (err.status === 503) {
+          this.didService.recordOnChain();
         } else {
-          this.toastr.error(err.message, 'Warning!');
+          this.spinner.hide();
+
+          const errorMessage = err.error.message ? err.error.message : err.message;
+          this.toastr.error(errorMessage, 'Warning!');
         }
 
         return throwError(err);

@@ -2,15 +2,19 @@ declare const Buffer;
 import * as nacl from 'tweetnacl/nacl-fast';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 
 import { AppState } from '../store/app.state';
+import { CompleteStep } from '../store/action/action.actions';
+import { CreateStepsIndexes } from '../enums/create-steps-indexes';
 import { DIDDocumentModel } from '../models/did-document.model';
 import { environment } from 'src/environments/environment';
 import { KeyModel } from '../models/key.model';
 import { ServiceModel } from '../models/service.model';
+import { SharedRoutes } from '../enums/shared-routes';
 import { toHexString, calculateChainId } from '../utils/helpers';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class DIDService {
@@ -26,6 +30,8 @@ export class DIDService {
 
   constructor (
     private http: HttpClient,
+    private router: Router,
+    private spinner: NgxSpinnerService,
     private store: Store<AppState>) {
     this.store
      .pipe(select(state => state.form))
@@ -94,7 +100,7 @@ export class DIDService {
     return this.id;
   }
 
-  recordOnChain(): Observable<Object> {
+  recordOnChain(): void {
     const url = 'https://testnet-api.factomatic.io/write-did';
     const data = JSON.stringify([
       [this.nonce, this.version],
@@ -106,7 +112,13 @@ export class DIDService {
       })
     };
 
-    return this.http.post(url, data, httpOptions);
+    this.http
+      .post(url, data, httpOptions)
+      .subscribe((res: any) => {
+        this.store.dispatch(new CompleteStep(CreateStepsIndexes.Summary));
+        this.spinner.hide();
+        this.router.navigate([SharedRoutes.Final], { queryParams: { url: res.url } });
+      });
   }
 
   private generateId(): string {
