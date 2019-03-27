@@ -10,7 +10,7 @@ import { BaseComponent } from '../../base.component';
 })
 export class FinalComponent extends BaseComponent implements OnInit {
   private subscription$: Subscription;
-  protected externalLink: string;
+  public externalLink: string;
 
   constructor(private route: ActivatedRoute) {
     super();

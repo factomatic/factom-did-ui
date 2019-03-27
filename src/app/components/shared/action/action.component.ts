@@ -19,7 +19,7 @@ import { InfoModalComponent } from 'src/app/components/shared/info-modal/info-mo
 export class ActionComponent extends BaseComponent implements OnInit, AfterViewInit {
   private subscription$: Subscription;
   private lastCompletedStepIndex: number;
-  protected actionType = ActionType.Create;
+  public actionType = ActionType.Create;
 
   constructor(
     private modalService: NgbModal,

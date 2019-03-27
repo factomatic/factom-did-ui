@@ -12,8 +12,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./summary.component.scss']
 })
 export class SummaryComponent implements OnInit {
-  protected didDocument: string;
-  protected documentSizeExceeded: boolean;
+  public didDocument: string;
+  public documentSizeExceeded: boolean;
 
   constructor(
     private didService: DIDService,

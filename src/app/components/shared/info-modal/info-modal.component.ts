@@ -8,5 +8,5 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class InfoModalComponent {
 
-  constructor(protected activeModal: NgbActiveModal) {}
+  constructor(public activeModal: NgbActiveModal) {}
 }

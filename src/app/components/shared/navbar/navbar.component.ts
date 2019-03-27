@@ -10,12 +10,12 @@ import { CreateStepsUrls } from 'src/app/core/enums/create-steps-urls';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  protected lastCompletedStepIndex: number;
-  protected secondTabLink = CreateStepsUrls.PublicKeys.toString();
-  protected thirdTabLink = CreateStepsUrls.AuthenticationKeys.toString();
-  protected forthTabLink = CreateStepsUrls.Services.toString();
-  protected fifthTabLink = CreateStepsUrls.EncryptKeys.toString();
-  protected sixthTabLink = CreateStepsUrls.Summary.toString();
+  public lastCompletedStepIndex: number;
+  public secondTabLink = CreateStepsUrls.PublicKeys.toString();
+  public thirdTabLink = CreateStepsUrls.AuthenticationKeys.toString();
+  public forthTabLink = CreateStepsUrls.Services.toString();
+  public fifthTabLink = CreateStepsUrls.EncryptKeys.toString();
+  public sixthTabLink = CreateStepsUrls.Summary.toString();
 
   constructor(private store: Store<AppState>) {
   }

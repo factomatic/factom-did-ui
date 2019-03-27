@@ -20,14 +20,14 @@ import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
 })
 export class EncryptKeysComponent extends BaseComponent implements OnInit {
   private subscription$: Subscription;
-  protected lastCompletedStepIndex: number;
-  protected currentStepIndex = CreateStepsIndexes.EncryptKeys;
-  protected encryptForm;
-  protected encryptedFile: string;
-  protected fileDowloaded: boolean;
-  protected keysGenerated: boolean;
-  protected tooltipMessage = TooltipMessages.EncryptHeaderTooltip;
-  protected boldPartTooltipMessage = TooltipMessages.EncryptHeaderBoldPartTooltip;
+  public lastCompletedStepIndex: number;
+  public currentStepIndex = CreateStepsIndexes.EncryptKeys;
+  public encryptForm;
+  public encryptedFile: string;
+  public fileDowloaded: boolean;
+  public keysGenerated: boolean;
+  public tooltipMessage = TooltipMessages.EncryptHeaderTooltip;
+  public boldPartTooltipMessage = TooltipMessages.EncryptHeaderBoldPartTooltip;
 
   constructor(
     private fb: FormBuilder,

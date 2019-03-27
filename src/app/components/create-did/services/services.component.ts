@@ -24,12 +24,12 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
   @ViewChildren(CollapseComponent) collapses: CollapseComponent[];
   private subscription$: Subscription;
   private lastCompletedStepIndex: number;
-  protected services: ServiceModel[] = [];
-  protected serviceForm: FormGroup;
-  protected headerTooltipMessage = TooltipMessages.ServicesHeaderTooltip;
-  protected headerBoldPartTooltipMessage = TooltipMessages.ServicesHeaderBoldPartTooltip;
-  protected typeTooltipMessage = TooltipMessages.ServiceTypeTooltip;
-  protected endpointTooltipMessage = TooltipMessages.ServiceEndpointTooltip;
+  public services: ServiceModel[] = [];
+  public serviceForm: FormGroup;
+  public headerTooltipMessage = TooltipMessages.ServicesHeaderTooltip;
+  public headerBoldPartTooltipMessage = TooltipMessages.ServicesHeaderBoldPartTooltip;
+  public typeTooltipMessage = TooltipMessages.ServiceTypeTooltip;
+  public endpointTooltipMessage = TooltipMessages.ServiceEndpointTooltip;
 
   constructor(
     private fb: FormBuilder,

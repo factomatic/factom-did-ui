@@ -31,11 +31,11 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
   private lastCompletedStepIndex: number;
   private didId: string;
   private authenticationKeys: KeyModel[] = [];
-  protected publicKeys: KeyModel[] = [];
-  protected keyForm: FormGroup;
-  protected aliasTooltipMessage = TooltipMessages.AliasTooltip;
-  protected controllerTooltipMessage = TooltipMessages.ControllerTooltip;
-  protected signatureTypeTooltipMessage = TooltipMessages.SignatureTypeTooltip;
+  public publicKeys: KeyModel[] = [];
+  public keyForm: FormGroup;
+  public aliasTooltipMessage = TooltipMessages.AliasTooltip;
+  public controllerTooltipMessage = TooltipMessages.ControllerTooltip;
+  public signatureTypeTooltipMessage = TooltipMessages.SignatureTypeTooltip;
 
   constructor(
     private fb: FormBuilder,

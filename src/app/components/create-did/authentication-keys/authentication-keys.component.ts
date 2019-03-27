@@ -30,12 +30,12 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   private subscription$: Subscription;
   private lastCompletedStepIndex: number;
   private didId: string;
-  protected keyForm: FormGroup;
-  protected selectedAction = GENERATE_ACTION;
-  protected selectedKey: KeyModel;
-  protected authenticationKeys: KeyModel[] = [];
-  protected availablePublicKeys: KeyModel[] = [];
-  protected actionDropdownTooltipMessage = TooltipMessages.AuthenticationDropdownTooltip;
+  public keyForm: FormGroup;
+  public selectedAction = GENERATE_ACTION;
+  public selectedKey: KeyModel;
+  public authenticationKeys: KeyModel[] = [];
+  public availablePublicKeys: KeyModel[] = [];
+  public actionDropdownTooltipMessage = TooltipMessages.AuthenticationDropdownTooltip;
 
   constructor(
     private fb: FormBuilder,
