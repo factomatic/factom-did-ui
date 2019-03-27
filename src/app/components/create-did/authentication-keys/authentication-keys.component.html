@@ -75,7 +75,7 @@
         <div mdbCollapse #collapse="bs-collapse">
           <form [formGroup]="keyForm" (ngSubmit)="generateKey()">
             <div class="form-group">
-              <label class="control-label" for="type">Choose signature type</label>
+              <label class="control-label" for="type">Signature type</label>
               <select class="form-control" formControlName="type" id="type">
                 <option value="Ed25519">Ed25519</option>
                 <option value="ECDSASecp256k1">ECDSASecp256k1</option>
