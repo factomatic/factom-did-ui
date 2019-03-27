@@ -79,7 +79,7 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
 
       downloader.setAttribute('href', fileUrl);
       const date = new Date();
-      downloader.setAttribute('download', `UTC--${date.toISOString()}--did-keys-backup`);
+      downloader.setAttribute('download', `paper-did-UTC--${date.toISOString()}`);
       downloader.click();
 
       this.fileDowloaded = true;
