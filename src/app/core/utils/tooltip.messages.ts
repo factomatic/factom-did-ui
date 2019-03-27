@@ -19,7 +19,12 @@ export class TooltipMessages {
   'messaging hubs, credential repositories for verifiable claims, etc.';
 
   public static ServicesHeaderBoldPartTooltip = 'DO NOT put links to personally identifiable information ' +
-  '(such as Facebook or LinkedIn profiles, e.g.)';
+  '(such as social media profiles, email addresses, phone numbers, etc.)';
+
+  public static ServiceTypeTooltip = 'Choose a human-readable description of the type of service, e.g. KYCProvider, ' +
+  'CredentialRepositoryService, MessagingHub, etc.';
+
+  public static ServiceEndpointTooltip = 'Specify the URL for the service, e.g. https://example.com/KYCProvider';
 
   public static EncryptHeaderTooltip = 'Choose a strong password to encrypt the private part of the DID.';
 

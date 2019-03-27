@@ -26,8 +26,10 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
   private lastCompletedStepIndex: number;
   protected services: ServiceModel[] = [];
   protected serviceForm: FormGroup;
-  protected tooltipMessage = TooltipMessages.ServicesHeaderTooltip;
-  protected boldPartTooltipMessage = TooltipMessages.ServicesHeaderBoldPartTooltip;
+  protected headerTooltipMessage = TooltipMessages.ServicesHeaderTooltip;
+  protected headerBoldPartTooltipMessage = TooltipMessages.ServicesHeaderBoldPartTooltip;
+  protected typeTooltipMessage = TooltipMessages.ServiceTypeTooltip;
+  protected endpointTooltipMessage = TooltipMessages.ServiceEndpointTooltip;
 
   constructor(
     private fb: FormBuilder,
