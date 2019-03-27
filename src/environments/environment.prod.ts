@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  version: '1.0',
+  entrySizeLimit: 10275
 };
