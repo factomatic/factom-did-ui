@@ -103,7 +103,7 @@ export class DIDService {
   recordOnChain(): void {
     const url = 'https://testnet-api.factomatic.io/write-did';
     const data = JSON.stringify([
-      [this.nonce, this.version],
+      [this.registerMethod, this.version, this.nonce],
       this.didDocument
     ]);
     const httpOptions = {
