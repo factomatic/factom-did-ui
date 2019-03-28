@@ -38,7 +38,7 @@
           <form [formGroup]="keyForm" (ngSubmit)="generateKey()">
             <div class="form-group">
               <label class="control-label" for="type">
-                Choose signature type
+                Signature type
                 <i class="fas fa-info-circle fa-lg ml-4" ngbTooltip="{{signatureTypeTooltipMessage}}" tooltipClass="custom-tooltip"></i>
               </label>
               <select class="form-control" formControlName="type" id="type">
@@ -49,7 +49,7 @@
 
             <div class="form-group">
               <label class="control-label" for="controller">
-                Choose key controller
+                Key controller
                 <i class="fas fa-info-circle fa-lg ml-4" ngbTooltip="{{controllerTooltipMessage}}" tooltipClass="custom-tooltip"></i>
               </label>
               <input 
