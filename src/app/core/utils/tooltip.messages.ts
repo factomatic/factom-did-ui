@@ -1,6 +1,6 @@
 export class TooltipMessages {
-  public static SignatureTypeTooltip = 'With digital signature you can choose to have different signature types. ' +
-  'The two types of signatures you can choose from serve the exact same functional purpose. ' +
+  public static SignatureTypeTooltip = 'With digital signatures you can choose between different signature types. ' +
+  'The two types of signatures you can choose from here serve the exact same functional purpose. ' +
   'Therefore, if you do not know the technical differences between the two, you do not have to worry: ' +
   'simply choose the default option and we will handle the rest.';
 
