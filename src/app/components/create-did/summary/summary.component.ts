@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
 
@@ -14,14 +15,20 @@ import { environment } from 'src/environments/environment';
 export class SummaryComponent implements OnInit {
   public didDocument: string;
   public documentSizeExceeded: boolean;
+  public recordOnChainButtonName = 'Record on-chain';
 
   constructor(
+    private deviceService: DeviceDetectorService,
     private didService: DIDService,
     private router: Router,
     private spinner: NgxSpinnerService) {
   }
 
   ngOnInit() {
+    if (this.deviceService.isMobile()) {
+      this.recordOnChainButtonName = 'Record';
+    }
+
     const didDocumentResult = this.didService.generateDocument();
     this.didDocument = didDocumentResult.document;
     if (didDocumentResult.size > environment.entrySizeLimit) {
