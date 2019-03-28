@@ -1,5 +1,6 @@
 import { ADD_AUTHENTICATION_KEY, ADD_PUBLIC_KEY, ADD_SERVICE,
   REMOVE_AUTHENTICATION_KEY, REMOVE_PUBLIC_KEY, REMOVE_SERVICE } from './form.actions';
+import { CLEAR_FORM } from '../action/action.actions';
 import { FormState } from './form.state';
 import { KeyModel } from '../../models/key.model';
 import { ServiceModel } from '../../models/service.model';
@@ -61,6 +62,8 @@ export function formReducers(state: FormState = initialState, action) {
       return addPublicKey(state, action.payload);
     case ADD_SERVICE:
       return addService(state, action.payload);
+    case CLEAR_FORM:
+      return initialState;
     case REMOVE_AUTHENTICATION_KEY:
       return removeAuthenticationKey(state, action.payload);
     case REMOVE_PUBLIC_KEY:

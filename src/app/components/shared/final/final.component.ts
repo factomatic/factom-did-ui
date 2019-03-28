@@ -1,7 +1,11 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { BaseComponent } from '../../base.component';
+
+import { AppState } from 'src/app/core/store/app.state';
+import { BaseComponent } from 'src/app/components/base.component';
+import { ClearForm } from 'src/app/core/store/action/action.actions';
 
 @Component({
   selector: 'app-final',
@@ -12,7 +16,10 @@ export class FinalComponent extends BaseComponent implements OnInit {
   private subscription$: Subscription;
   public externalLink: string;
 
-  constructor(private route: ActivatedRoute) {
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private store: Store<AppState>) {
     super();
   }
 
@@ -22,5 +29,10 @@ export class FinalComponent extends BaseComponent implements OnInit {
     });
 
     this.subscriptions.push(this.subscription$);
+  }
+
+  createAnother() {
+    this.store.dispatch(new ClearForm());
+    this.router.navigate(['action']);
   }
 }
