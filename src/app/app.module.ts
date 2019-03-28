@@ -33,7 +33,6 @@ export const metaReducers = environment.production ? [] : [logger];
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
-    CreateDIDModule,
     GuardsModule,
     HttpClientModule,
     MDBBootstrapModule.forRoot(),
