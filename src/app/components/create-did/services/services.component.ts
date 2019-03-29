@@ -7,13 +7,17 @@ import { Store, select } from '@ngrx/store';
 import { AddService, RemoveService } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
-import { MoveToStep } from 'src/app/core/store/action/action.actions';
+import { ComponentServiceModel } from 'src/app/core/models/component-service.model';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
+import { MoveToStep } from 'src/app/core/store/action/action.actions';
 import { ServiceModel } from 'src/app/core/models/service.model';
 import { Subscription } from 'rxjs';
 import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
+
+const UP_POSITION = 'up';
+const DOWN_POSITION = 'down';
 
 @Component({
   selector: 'app-services',
@@ -23,7 +27,7 @@ import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
 export class ServicesComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChildren(CollapseComponent) collapses: CollapseComponent[];
   private subscription$: Subscription;
-  public services: ServiceModel[] = [];
+  public services: ComponentServiceModel[] = [];
   public serviceForm: FormGroup;
   public headerTooltipMessage = TooltipMessages.ServicesHeaderTooltip;
   public headerBoldPartTooltipMessage = TooltipMessages.ServicesHeaderBoldPartTooltip;
@@ -41,7 +45,7 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
     this.subscription$ = this.store
       .pipe(select(state => state))
       .subscribe(state => {
-        this.services = state.form.services;
+        this.services = state.form.services.map(service => new ComponentServiceModel(service, DOWN_POSITION));
       });
 
     this.subscriptions.push(this.subscription$);
@@ -62,7 +66,7 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
     this.serviceForm = this.fb.group({
       type: ['', [Validators.required]],
       endpoint: ['', [Validators.required]],
-      alias: ['', [Validators.required, CustomValidators.uniqueServiceAlias(this.services)]]
+      alias: ['', [Validators.required, CustomValidators.uniqueServiceAlias(this.services.map(s => s.serviceModel))]]
     });
   }
 
@@ -84,6 +88,11 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
   removeService(service: ServiceModel) {
     this.store.dispatch(new RemoveService(service));
     this.createForm();
+  }
+
+  toggleService(serviceModel) {
+    const service = this.services.find(s => s.serviceModel === serviceModel);
+    service.iconPosition = service.iconPosition === DOWN_POSITION ? UP_POSITION : DOWN_POSITION;
   }
 
   goToNext() {

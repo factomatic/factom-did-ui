@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { AddPublicKey, RemovePublicKey } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
+import { ComponentKeyModel } from 'src/app/core/models/component-key.model';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
@@ -18,6 +19,9 @@ import { MoveToStep } from 'src/app/core/store/action/action.actions';
 import { SharedRoutes } from 'src/app/core/enums/shared-routes';
 import { SignatureType } from 'src/app/core/enums/signature-type';
 import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
+
+const UP_POSITION = 'up';
+const DOWN_POSITION = 'down';
 
 @Component({
   selector: 'app-public-keys',
@@ -30,7 +34,7 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
   private subscription$: Subscription;
   private didId: string;
   private authenticationKeys: KeyModel[] = [];
-  public publicKeys: KeyModel[] = [];
+  public publicKeys: ComponentKeyModel[] = [];
   public keyForm: FormGroup;
   public aliasTooltipMessage = TooltipMessages.AliasTooltip;
   public controllerTooltipMessage = TooltipMessages.ControllerTooltip;
@@ -49,7 +53,7 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
     this.subscription$ = this.store
      .pipe(select(state => state))
      .subscribe(state => {
-        this.publicKeys = state.form.publicKeys;
+        this.publicKeys = state.form.publicKeys.map(key => new ComponentKeyModel(key, DOWN_POSITION));
         this.authenticationKeys = state.form.authenticationKeys;
      });
 
@@ -73,7 +77,7 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
     this.keyForm = this.fb.group({
       type: [SignatureType.EdDSA, [Validators.required]],
       controller: [this.didId, [Validators.required]],
-      alias: ['', [Validators.required, CustomValidators.uniqueKeyAlias(this.publicKeys, this.authenticationKeys)]]
+      alias: ['', [Validators.required, CustomValidators.uniqueKeyAlias(this.publicKeys.map(key => key.keyModel), this.authenticationKeys)]]
     });
   }
 
@@ -98,6 +102,11 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
   removeKey(key: KeyModel) {
     this.store.dispatch(new RemovePublicKey(key));
     this.createForm();
+  }
+
+  toggleKey(keyModel) {
+    const publicKey = this.publicKeys.find(k => k.keyModel === keyModel);
+    publicKey.iconPosition = publicKey.iconPosition === DOWN_POSITION ? UP_POSITION : DOWN_POSITION;
   }
 
   goToNext() {

@@ -4,31 +4,32 @@
   <div class="row">
     <div class="col-xs-offset-1 col-xs-10 col-sm-offset-3 col-sm-6">
       <fieldset class="collapsible collapsed mb-5" *ngFor="let key of publicKeys">
-        <legend (click)="collapse.toggle()">
-          {{key.alias}}
-          <button class="btn btn-sm btn-danger pull-right" (click)="removeKey(key)">
+        <legend (click)="collapse.toggle(); toggleKey(key.keyModel);">
+          {{key.keyModel.alias}}
+          <i class="fas fa-caret-{{key.iconPosition}} ml-2"></i>
+          <button class="btn btn-sm btn-danger pull-right" (click)="removeKey(key.keyModel)">
             <span class="glyphicon glyphicon-remove"></span>
           </button>
         </legend>
         <div mdbCollapse #collapse="bs-collapse">
           <div class="form-group">
             <label class="control-label" for="type">Signature type</label>
-            <input type="text" class="form-control input-md" id="type" value="{{key.type}}" disabled />
+            <input type="text" class="form-control input-md" id="type" value="{{key.keyModel.type}}" disabled />
           </div>
   
           <div class="form-group">
             <label class="control-label" for="controller">Key controller</label>
-            <input type="text" class="form-control input-md" id="controller" value="{{key.controller}}" disabled />
+            <input type="text" class="form-control input-md" id="controller" value="{{key.keyModel.controller}}" disabled />
           </div>
 
           <div class="form-group">
             <label class="control-label" for="alias">Alias</label>
-            <input type="text" class="form-control input-md" id="alias" value="{{key.alias}}" disabled />
+            <input type="text" class="form-control input-md" id="alias" value="{{key.keyModel.alias}}" disabled />
           </div>
 
           <div class="form-group">
             <label class="control-label" for="controller">Key (Base58)</label>
-            <input type="text" class="form-control input-md" id="controller" value="{{key.publicKey}}" disabled />
+            <input type="text" class="form-control input-md" id="controller" value="{{key.keyModel.publicKey}}" disabled />
           </div>
         </div>
       </fieldset>

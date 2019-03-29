@@ -8,26 +8,27 @@
   <div class="row">
     <div class="col-xs-offset-1 col-xs-10 col-sm-offset-3 col-sm-6">
       <fieldset class="collapsible collapsed mb-5" *ngFor="let service of services">
-        <legend (click)="collapse.toggle()">
-          {{service.alias}}
-          <button class="btn btn-sm btn-danger pull-right" (click)="removeService(service)">
+        <legend (click)="collapse.toggle(); toggleService(service.serviceModel);">
+          {{service.serviceModel.alias}}
+          <i class="fas fa-caret-{{service.iconPosition}} ml-2"></i>
+          <button class="btn btn-sm btn-danger pull-right" (click)="removeService(service.serviceModel)">
             <span class="glyphicon glyphicon-remove"></span>
           </button>
         </legend>
         <div mdbCollapse #collapse="bs-collapse">
           <div class="form-group">
             <label class="control-label" for="type">Service type</label>
-            <input type="text" class="form-control input-md" id="type" value="{{service.type}}" disabled />
+            <input type="text" class="form-control input-md" id="type" value="{{service.serviceModel.type}}" disabled />
           </div>
   
           <div class="form-group">
             <label class="control-label" for="endpoint">Service endpoint</label>
-            <input type="text" class="form-control input-md" id="endpoint" value="{{service.endpoint}}" disabled />
+            <input type="text" class="form-control input-md" id="endpoint" value="{{service.serviceModel.endpoint}}" disabled />
           </div>
 
           <div class="form-group">
             <label class="control-label" for="alias">Alias</label>
-            <input type="text" class="form-control input-md" id="alias" value="{{service.alias}}" disabled />
+            <input type="text" class="form-control input-md" id="alias" value="{{service.serviceModel.alias}}" disabled />
           </div>
         </div>
       </fieldset>
