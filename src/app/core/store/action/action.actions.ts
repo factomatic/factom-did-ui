@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 
 export const CLEAR_FORM = '[ACTION] CLEAR_FORM';
-export const COMPLETE_STEP = '[ACTION] COMPLETE_STEP';
+export const MOVE_TO_STEP = '[ACTION] MOVE_TO_STEP';
 export const SELECT_ACTION = '[ACTION] SELECT_ACTION';
 
 export class SelectAction implements Action {
@@ -10,8 +10,8 @@ export class SelectAction implements Action {
   constructor (public payload: string) { }
 }
 
-export class CompleteStep implements Action {
-  readonly type: string = COMPLETE_STEP;
+export class MoveToStep implements Action {
+  readonly type: string = MOVE_TO_STEP;
 
   constructor (public payload: number) { }
 }

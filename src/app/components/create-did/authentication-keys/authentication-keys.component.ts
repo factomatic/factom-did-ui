@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 import { AddAuthenticationKey, RemoveAuthenticationKey } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
-import { CompleteStep } from 'src/app/core/store/action/action.actions';
+import { MoveToStep } from 'src/app/core/store/action/action.actions';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
@@ -28,7 +28,6 @@ const GENERATE_ACTION = 'generate';
 export class AuthenticationKeysComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChildren(CollapseComponent) collapses: CollapseComponent[];
   private subscription$: Subscription;
-  private lastCompletedStepIndex: number;
   private didId: string;
   public keyForm: FormGroup;
   public selectedAction = GENERATE_ACTION;
@@ -51,7 +50,6 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
     this.subscription$ = this.store
       .pipe(select(state => state))
       .subscribe(state => {
-        this.lastCompletedStepIndex = state.action.lastCompletedStepIndex;
         this.authenticationKeys = state.form.authenticationKeys;
         this.availablePublicKeys = state.form.publicKeys.filter(k => !this.authenticationKeys.includes(k));
       });
@@ -139,14 +137,12 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   }
 
   goToNext() {
-    if (this.lastCompletedStepIndex === CreateStepsIndexes.PublicKeys) {
-      this.store.dispatch(new CompleteStep(CreateStepsIndexes.AuthenticationKeys));
-    }
-
+    this.store.dispatch(new MoveToStep(CreateStepsIndexes.Services));
     this.router.navigate([CreateRoutes.Services]);
   }
 
   goToPrevious() {
+    this.store.dispatch(new MoveToStep(CreateStepsIndexes.PublicKeys));
     this.router.navigate([CreateRoutes.PublicKeys]);
   }
 

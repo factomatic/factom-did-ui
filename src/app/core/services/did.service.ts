@@ -7,11 +7,11 @@ import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 
 import { AppState } from '../store/app.state';
-import { CompleteStep } from '../store/action/action.actions';
 import { CreateStepsIndexes } from '../enums/create-steps-indexes';
 import { DIDDocumentModel } from '../models/did-document.model';
 import { environment } from 'src/environments/environment';
 import { KeyModel } from '../models/key.model';
+import { MoveToStep } from '../store/action/action.actions';
 import { ServiceModel } from '../models/service.model';
 import { SharedRoutes } from '../enums/shared-routes';
 import { toHexString, calculateChainId } from '../utils/helpers';
@@ -115,7 +115,7 @@ export class DIDService {
     this.http
       .post(url, data, httpOptions)
       .subscribe((res: any) => {
-        this.store.dispatch(new CompleteStep(CreateStepsIndexes.Summary));
+        this.store.dispatch(new MoveToStep(CreateStepsIndexes.Final));
         this.spinner.hide();
         this.router.navigate([SharedRoutes.Final], { queryParams: { url: res.url } });
       });

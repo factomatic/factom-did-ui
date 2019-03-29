@@ -8,13 +8,13 @@ import { Subscription } from 'rxjs';
 import { AddPublicKey, RemovePublicKey } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
-import { CompleteStep } from 'src/app/core/store/action/action.actions';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { DIDService } from 'src/app/core/services/did.service';
 import { KeysService } from 'src/app/core/services/keys.service';
 import { KeyModel } from 'src/app/core/models/key.model';
+import { MoveToStep } from 'src/app/core/store/action/action.actions';
 import { SharedRoutes } from 'src/app/core/enums/shared-routes';
 import { SignatureType } from 'src/app/core/enums/signature-type';
 import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
@@ -28,7 +28,6 @@ import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
 export class PublicKeysComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChildren(CollapseComponent) collapses: CollapseComponent[];
   private subscription$: Subscription;
-  private lastCompletedStepIndex: number;
   private didId: string;
   private authenticationKeys: KeyModel[] = [];
   public publicKeys: KeyModel[] = [];
@@ -50,7 +49,6 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
     this.subscription$ = this.store
      .pipe(select(state => state))
      .subscribe(state => {
-        this.lastCompletedStepIndex = state.action.lastCompletedStepIndex;
         this.publicKeys = state.form.publicKeys;
         this.authenticationKeys = state.form.authenticationKeys;
      });
@@ -103,14 +101,12 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
   }
 
   goToNext() {
-    if (this.lastCompletedStepIndex === CreateStepsIndexes.Action) {
-      this.store.dispatch(new CompleteStep(CreateStepsIndexes.PublicKeys));
-    }
-
+    this.store.dispatch(new MoveToStep(CreateStepsIndexes.AuthenticationKeys));
     this.router.navigate([CreateRoutes.AuthenticationKeys]);
   }
 
   goToPrevious() {
+    this.store.dispatch(new MoveToStep(CreateStepsIndexes.Action));
     this.router.navigate([SharedRoutes.Action]);
   }
 

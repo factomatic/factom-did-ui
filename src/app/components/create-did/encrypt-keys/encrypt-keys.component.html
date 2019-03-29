@@ -53,7 +53,7 @@
       </div>
       <div class="row justify-content-between mt-4">
         <button class="btn-md-blue" mdbBtn type="button" color="primary" mdbWavesEffect (click)="goToPrevious()"> <span class="glyphicon glyphicon-arrow-left mr-3"></span> Previous</button>
-        <button class="btn-md-blue" mdbBtn type="button" color="primary" mdbWavesEffect (click)="goToNext()" [disabled]="!fileDowloaded && lastCompletedStepIndex < currentStepIndex && keysGenerated"> Next <span class="glyphicon glyphicon-arrow-right ml-3"></span></button>
+        <button class="btn-md-blue" mdbBtn type="button" color="primary" mdbWavesEffect (click)="goToNext()" [disabled]="!fileDowloaded && keysGenerated"> Next <span class="glyphicon glyphicon-arrow-right ml-3"></span></button>
       </div>
     </div>
   </div>

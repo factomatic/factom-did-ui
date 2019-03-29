@@ -7,7 +7,7 @@ import { Store, select } from '@ngrx/store';
 import { AddService, RemoveService } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
-import { CompleteStep } from 'src/app/core/store/action/action.actions';
+import { MoveToStep } from 'src/app/core/store/action/action.actions';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
@@ -23,7 +23,6 @@ import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
 export class ServicesComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChildren(CollapseComponent) collapses: CollapseComponent[];
   private subscription$: Subscription;
-  private lastCompletedStepIndex: number;
   public services: ServiceModel[] = [];
   public serviceForm: FormGroup;
   public headerTooltipMessage = TooltipMessages.ServicesHeaderTooltip;
@@ -42,7 +41,6 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
     this.subscription$ = this.store
       .pipe(select(state => state))
       .subscribe(state => {
-        this.lastCompletedStepIndex = state.action.lastCompletedStepIndex;
         this.services = state.form.services;
       });
 
@@ -89,14 +87,12 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   goToNext() {
-    if (this.lastCompletedStepIndex === CreateStepsIndexes.AuthenticationKeys) {
-      this.store.dispatch(new CompleteStep(CreateStepsIndexes.Services));
-    }
-
+    this.store.dispatch(new MoveToStep(CreateStepsIndexes.EncryptKeys));
     this.router.navigate([CreateRoutes.EncryptKeys]);
   }
 
   goToPrevious() {
+    this.store.dispatch(new MoveToStep(CreateStepsIndexes.AuthenticationKeys));
     this.router.navigate([CreateRoutes.AuthenticationKeys]);
   }
 

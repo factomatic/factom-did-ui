@@ -5,11 +5,11 @@ import { Store, select } from '@ngrx/store';
 
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from '../../base.component';
-import { CompleteStep } from 'src/app/core/store/action/action.actions';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { KeysService } from 'src/app/core/services/keys.service';
+import { MoveToStep } from 'src/app/core/store/action/action.actions';
 import { Subscription } from 'rxjs';
 import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
 
@@ -20,7 +20,6 @@ import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
 })
 export class EncryptKeysComponent extends BaseComponent implements OnInit {
   private subscription$: Subscription;
-  public lastCompletedStepIndex: number;
   public currentStepIndex = CreateStepsIndexes.EncryptKeys;
   public encryptForm;
   public encryptedFile: string;
@@ -41,7 +40,6 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
     this.subscription$ = this.store
      .pipe(select(state => state))
      .subscribe(state => {
-        this.lastCompletedStepIndex = state.action.lastCompletedStepIndex;
         if (state.form.publicKeys.length > 0 || state.form.authenticationKeys.length > 0) {
           this.keysGenerated = true;
         }
@@ -87,16 +85,14 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
   }
 
   goToNext() {
-    if (this.fileDowloaded || this.lastCompletedStepIndex === CreateStepsIndexes.EncryptKeys || !this.keysGenerated) {
-      if (this.lastCompletedStepIndex === CreateStepsIndexes.Services) {
-        this.store.dispatch(new CompleteStep(CreateStepsIndexes.EncryptKeys));
-      }
-
+    if (this.fileDowloaded || !this.keysGenerated) {
+      this.store.dispatch(new MoveToStep(CreateStepsIndexes.Summary));
       this.router.navigate([CreateRoutes.Summary]);
     }
   }
 
   goToPrevious() {
+    this.store.dispatch(new MoveToStep(CreateStepsIndexes.Services));
     this.router.navigate([CreateRoutes.Services]);
   }
 
