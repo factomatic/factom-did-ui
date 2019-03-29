@@ -69,7 +69,7 @@
                 [ngClass]="{ 'is-invalid': endpoint.touched && endpoint.errors }" />
               <div *ngIf="endpoint.errors" class="invalid-feedback">
                 <div *ngIf="endpoint['errors'].required">Service endpoint is required!</div>
-                <div *ngIf="endpoint['errors'].pattern">Service endpoint must be a valid URL address starting with http:// or https:// !</div>
+                <div *ngIf="endpoint['errors'].pattern">Service endpoint must be a valid URL address starting with http:// or https://</div>
               </div>
             </div>
 
