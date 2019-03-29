@@ -5,6 +5,17 @@
 }
 
 .modal-content {
-  margin-top: 10.7em;
+  margin-top: 11.2em;
   background-color: azure;
+}
+
+.close:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.close {
+  color: white;
+  margin-top: 0.5em; 
 }
