@@ -23,7 +23,7 @@ export function logger(reducer: ActionReducer<AppState>): any {
   return storeLogger()(reducer);
 }
 
-export const metaReducers = environment.production ? [] : [logger];
+export const metaReducers = environment.production || environment.staging ? [] : [logger];
 
 @NgModule({
   declarations: [

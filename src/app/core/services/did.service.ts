@@ -20,6 +20,7 @@ import { toHexString, calculateChainId } from '../utils/helpers';
 export class DIDService {
   private VerificationKeySuffix = 'VerificationKey';
   private registerMethod = 'RegisterDID';
+  private apiUrl = environment.apiUrl;
   private version = environment.version;
   private id: string;
   private nonce: string;
@@ -102,11 +103,11 @@ export class DIDService {
   }
 
   recordOnChain(): void {
-    const url = 'https://testnet-api.factomatic.io/write-did';
     const data = JSON.stringify([
       [this.registerMethod, this.version, this.nonce],
       this.didDocument
     ]);
+
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type':  'application/json'
@@ -114,7 +115,7 @@ export class DIDService {
     };
 
     this.http
-      .post(url, data, httpOptions)
+      .post(this.apiUrl, data, httpOptions)
       .subscribe((res: any) => {
         this.store.dispatch(new MoveToStep(CreateStepsIndexes.Final));
         this.spinner.hide();
