@@ -50,6 +50,7 @@ export class DIDService {
       publicKeyBase58: k.publicKey
     }));
 
+    /** Divided in two separate arrays because the embeddedKeys must be included first in the final array. */
     const embeddedAuthenticationKeys = [];
     const fullAuthenticationKeys = [];
     this.formAuthenticationKeys.forEach(k => {
