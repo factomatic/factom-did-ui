@@ -33,6 +33,7 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
   public headerBoldPartTooltipMessage = TooltipMessages.ServicesHeaderBoldPartTooltip;
   public typeTooltipMessage = TooltipMessages.ServiceTypeTooltip;
   public endpointTooltipMessage = TooltipMessages.ServiceEndpointTooltip;
+  public continueButtonText: string;
 
   constructor(
     private fb: FormBuilder,
@@ -46,6 +47,7 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
       .pipe(select(state => state))
       .subscribe(state => {
         this.services = state.form.services.map(service => new ComponentServiceModel(service, DOWN_POSITION));
+        this.continueButtonText = this.services.length > 0 ? 'Next' : 'Skip';
       });
 
     this.subscriptions.push(this.subscription$);

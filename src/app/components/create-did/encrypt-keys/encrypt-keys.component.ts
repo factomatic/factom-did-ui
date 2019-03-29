@@ -27,6 +27,7 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
   public keysGenerated: boolean;
   public tooltipMessage = TooltipMessages.EncryptHeaderTooltip;
   public boldPartTooltipMessage = TooltipMessages.EncryptHeaderBoldPartTooltip;
+  public continueButtonText = 'Skip';
 
   constructor(
     private fb: FormBuilder,
@@ -42,6 +43,7 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
      .subscribe(state => {
         if (state.form.publicKeys.length > 0 || state.form.authenticationKeys.length > 0) {
           this.keysGenerated = true;
+          this.continueButtonText = 'Next';
         }
      });
 

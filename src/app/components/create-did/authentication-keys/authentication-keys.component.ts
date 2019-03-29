@@ -38,6 +38,7 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   public authenticationKeys: ComponentKeyModel[] = [];
   public availablePublicKeys: ComponentKeyModel[] = [];
   public actionDropdownTooltipMessage = TooltipMessages.AuthenticationDropdownTooltip;
+  public continueButtonText: string;
 
   constructor(
     private fb: FormBuilder,
@@ -59,6 +60,8 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
         this.availablePublicKeys = state.form.publicKeys
           .filter(k => !state.form.authenticationKeys.includes(k))
           .map(key => new ComponentKeyModel(key, DOWN_POSITION));
+
+        this.continueButtonText = this.authenticationKeys.length > 0 ? 'Next' : 'Skip';
       });
 
     this.subscriptions.push(this.subscription$);

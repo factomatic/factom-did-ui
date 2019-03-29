@@ -39,6 +39,7 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
   public aliasTooltipMessage = TooltipMessages.AliasTooltip;
   public controllerTooltipMessage = TooltipMessages.ControllerTooltip;
   public signatureTypeTooltipMessage = TooltipMessages.SignatureTypeTooltip;
+  public continueButtonText: string;
 
   constructor(
     private fb: FormBuilder,
@@ -55,6 +56,8 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
      .subscribe(state => {
         this.publicKeys = state.form.publicKeys.map(key => new ComponentKeyModel(key, DOWN_POSITION));
         this.authenticationKeys = state.form.authenticationKeys;
+
+        this.continueButtonText = this.publicKeys.length > 0 ? 'Next' : 'Skip';
      });
 
     this.subscriptions.push(this.subscription$);
