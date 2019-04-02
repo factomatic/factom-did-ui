@@ -19,7 +19,7 @@ import { toHexString, calculateChainId } from '../utils/helpers';
 @Injectable()
 export class DIDService {
   private VerificationKeySuffix = 'VerificationKey';
-  private registerMethod = 'RegisterDID';
+  private CreateDIDEntry = 'CreateDID';
   private apiUrl = environment.apiUrl;
   private version = environment.version;
   private id: string;
@@ -87,7 +87,7 @@ export class DIDService {
 
     const documentSize = this.calculateEntrySize(
       [this.nonce],
-      [this.registerMethod, this.version],
+      [this.CreateDIDEntry, this.version],
       JSON.stringify(this.didDocument)
     );
 
@@ -104,7 +104,7 @@ export class DIDService {
 
   recordOnChain(): void {
     const data = JSON.stringify([
-      [this.registerMethod, this.version, this.nonce],
+      [this.CreateDIDEntry, this.version, this.nonce],
       this.didDocument
     ]);
 
@@ -126,7 +126,7 @@ export class DIDService {
   private generateId(): string {
     this.nonce = toHexString(nacl.randomBytes(32));
 
-    const chainId = calculateChainId([this.registerMethod, this.version, this.nonce]);
+    const chainId = calculateChainId([this.CreateDIDEntry, this.version, this.nonce]);
     this.id = `did:fctr:${chainId}`;
     return this.id;
   }
