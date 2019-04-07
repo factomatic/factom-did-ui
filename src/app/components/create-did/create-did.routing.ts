@@ -8,7 +8,7 @@ import { PublicKeysComponent } from './public-keys/public-keys.component';
 import { ServicesComponent } from './services/services.component';
 import { SummaryComponent } from './summary/summary.component';
 
-const carsRoutes: Routes = [
+const didCreationRoutes: Routes = [
   { path: 'keys/authentication', component: AuthenticationKeysComponent, canActivate: [ CreateComponentsGuard ] },
   { path: 'keys/encrypt', component: EncryptKeysComponent, canActivate: [ CreateComponentsGuard ] },
   { path: 'keys/public', component: PublicKeysComponent, canActivate: [ CreateComponentsGuard ] },
@@ -17,7 +17,7 @@ const carsRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(carsRoutes)],
+  imports: [RouterModule.forChild(didCreationRoutes)],
   exports: [RouterModule]
 })
 export class CreateDIDRoutingModule { }
