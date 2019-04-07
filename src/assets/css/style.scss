@@ -1,0 +1,82 @@
+.tab-content .choice {
+  text-align: center;
+  cursor: pointer;
+  margin-top: 38px;
+}
+
+.tab-content .choice i {
+  font-size: 32px;
+  line-height: 55px;
+}
+
+.btn-radio {
+  width: 100%;
+}
+
+.img-radio {
+  opacity: 0.8;
+  margin-bottom: 5px;
+}
+
+.space-20 {
+  margin-top: 20px;
+}
+
+#status-buttons a.active span.round-tabs.mdblue { 
+  background: #4285f4; 
+  color: #fff
+}
+
+.iradio_buttons {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+  padding: 0;
+  width: 22px;
+  height: 22px;
+  background: #febe29 no-repeat;
+  border: none;
+  cursor: pointer;
+}
+
+.iradio_buttons {
+  background-position: -120px 0;
+}
+
+.iradio_buttons.hover {
+  background-position: -144px 0;
+}
+
+.iradio_buttons.checked {
+  background-position: -168px 0;
+}
+
+.modal-backdrop.fade {
+  opacity: 0.5;
+}
+
+.modal-open .modal {
+  opacity: 1;
+}
+
+.modal {
+  margin-top: 5em;
+}
+
+.custom-tooltip .tooltip-inner {
+  background-color:azure;
+  color: black;
+  font-size: 100%;
+}
+
+.custom-tooltip .arrow::before {
+  border-top-color: azure;
+}
+
+.fa-info-circle {
+  color: #4285f4;
+}
+
+.tooltip.show {
+  opacity: 1;
+}

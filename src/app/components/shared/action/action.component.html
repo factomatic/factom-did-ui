@@ -1,0 +1,29 @@
+<form #actionForm="ngForm">
+  <div class="form-horizontal">
+    <div class="tab-pane fade in active">
+      <h4 class="head text-center">Choose an action</h4>
+      <br/>
+      <div class="row">
+        <div class='col-xs-offset-4 col-xs-10 col-sm-offset-5 col-sm-4'>
+          <div class="form-group">
+            <div class="radio">
+              <label>
+                <input type="radio" #action="ngModel" required name="action" [(ngModel)]="actionType" value="create">
+                Create Paper DID
+              </label>
+            </div>
+            <div class="radio mt-3">
+              <label id="update-did-label" class="text-black-50">
+                <input type="radio" required name="action" value="update" disabled>
+                Update Existing DID ( Coming soon! )
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group text-center">
+        <button class="btn-md-blue" mdbBtn type="button" color="primary" mdbWavesEffect [disabled]="!actionForm.valid" (click)="goToNext()"> Next <span style="margin-left:10px;" class="glyphicon glyphicon-arrow-right"></span></button>
+      </div>
+    </div>
+  </div>
+</form>
