@@ -3,7 +3,7 @@ import { Store, select } from '@ngrx/store';
 
 import { ActionType } from 'src/app/core/enums/action-type';
 import { AppState } from 'src/app/core/store/app.state';
-import { CreateStepsUrls } from 'src/app/core/enums/create-steps-urls';
+import { CreateRoutes } from 'src/app/core/enums/create-routes';
 
 @Component({
   selector: 'app-navbar',
@@ -26,11 +26,11 @@ export class NavbarComponent implements OnInit {
      .subscribe(action => {
        this.lastCompletedStepIndex = action.lastCompletedStepIndex;
        if (action.selectedAction === ActionType.Create) {
-        this.firstTabLink = CreateStepsUrls.PublicKeys.toString();
-        this.secondTabLink = CreateStepsUrls.AuthenticationKeys.toString();
-        this.thirdTabLink = CreateStepsUrls.Services.toString();
-        this.forthTabLink = CreateStepsUrls.EncryptKeys.toString();
-        this.fifthTabLink = CreateStepsUrls.Summary.toString();
+        this.firstTabLink = CreateRoutes.PublicKeys.toString();
+        this.secondTabLink = CreateRoutes.AuthenticationKeys.toString();
+        this.thirdTabLink = CreateRoutes.Services.toString();
+        this.forthTabLink = CreateRoutes.EncryptKeys.toString();
+        this.fifthTabLink = CreateRoutes.Summary.toString();
        }
      });
   }
