@@ -7,7 +7,7 @@ import {
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { CreateStepsIndexes } from '../enums/create-steps-indexes';
+import { CreateAdvancedStepsIndexes } from '../enums/create-advanced-steps-indexes';
 import { WorkflowService } from '../services/workflow.service';
 
 @Injectable({
@@ -23,7 +23,7 @@ export class FinalComponentGuard implements CanActivate {
     state: RouterStateSnapshot ): Observable<boolean> | Promise<boolean> | boolean {
 
     const lastCompletedStepIndex = this.workflowService.getLastCompletedStepIndex();
-    if (lastCompletedStepIndex < CreateStepsIndexes.Summary) {
+    if (lastCompletedStepIndex < CreateAdvancedStepsIndexes.Summary) {
       this.router.navigate(['action']);
     }
 

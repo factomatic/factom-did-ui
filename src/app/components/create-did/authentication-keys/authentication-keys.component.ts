@@ -11,7 +11,7 @@ import { BaseComponent } from 'src/app/components/base.component';
 import { MoveToStep } from 'src/app/core/store/action/action.actions';
 import { ComponentKeyModel } from 'src/app/core/models/component-key.model';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
-import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
+import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { DIDService } from 'src/app/core/services/did.service';
 import { KeyModel } from 'src/app/core/models/key.model';
@@ -158,12 +158,12 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   }
 
   goToNext() {
-    this.store.dispatch(new MoveToStep(CreateStepsIndexes.Services));
+    this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.Services));
     this.router.navigate([CreateRoutes.Services]);
   }
 
   goToPrevious() {
-    this.store.dispatch(new MoveToStep(CreateStepsIndexes.PublicKeys));
+    this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.PublicKeys));
     this.router.navigate([CreateRoutes.PublicKeys]);
   }
 

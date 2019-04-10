@@ -1,4 +1,4 @@
-export enum CreateStepsIndexes {
+export enum CreateAdvancedStepsIndexes {
   PublicKeys = 1,
   AuthenticationKeys = 2,
   Services = 3,

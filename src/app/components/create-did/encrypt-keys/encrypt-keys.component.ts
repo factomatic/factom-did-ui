@@ -6,7 +6,7 @@ import { Store, select } from '@ngrx/store';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from '../../base.component';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
-import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
+import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { KeysService } from 'src/app/core/services/keys.service';
 import { MoveToStep } from 'src/app/core/store/action/action.actions';
@@ -20,7 +20,7 @@ import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
 })
 export class EncryptKeysComponent extends BaseComponent implements OnInit {
   private subscription$: Subscription;
-  public currentStepIndex = CreateStepsIndexes.EncryptKeys;
+  public currentStepIndex = CreateAdvancedStepsIndexes.EncryptKeys;
   public encryptForm;
   public encryptedFile: string;
   public fileDowloaded: boolean;
@@ -88,13 +88,13 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
 
   goToNext() {
     if (this.fileDowloaded || !this.keysGenerated) {
-      this.store.dispatch(new MoveToStep(CreateStepsIndexes.Summary));
+      this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.Summary));
       this.router.navigate([CreateRoutes.Summary]);
     }
   }
 
   goToPrevious() {
-    this.store.dispatch(new MoveToStep(CreateStepsIndexes.Services));
+    this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.Services));
     this.router.navigate([CreateRoutes.Services]);
   }
 

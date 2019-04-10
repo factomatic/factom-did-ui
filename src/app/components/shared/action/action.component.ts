@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 
 import { ActionType } from 'src/app/core/enums/action-type';
 import { AppState } from 'src/app/core/store/app.state';
-import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
+import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-steps-indexes';
 import { MoveToStep, SelectAction } from 'src/app/core/store/action/action.actions';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
 
@@ -25,7 +25,7 @@ export class ActionComponent {
     this.store.dispatch(new SelectAction(this.actionType));
 
     if (this.actionType === ActionType.CreateAdvanced) {
-      this.store.dispatch(new MoveToStep(CreateStepsIndexes.PublicKeys));
+      this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.PublicKeys));
       this.router.navigate([CreateRoutes.PublicKeys]);
     }
   }

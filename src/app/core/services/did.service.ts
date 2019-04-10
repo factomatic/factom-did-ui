@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 
 import { AppState } from '../store/app.state';
-import { CreateStepsIndexes } from '../enums/create-steps-indexes';
+import { CreateAdvancedStepsIndexes } from '../enums/create-advanced-steps-indexes';
 import { DIDDocumentModel } from '../models/did-document.model';
 import { environment } from 'src/environments/environment';
 import { KeyModel } from '../models/key.model';
@@ -117,7 +117,7 @@ export class DIDService {
     this.http
       .post(this.apiUrl, data, httpOptions)
       .subscribe((res: any) => {
-        this.store.dispatch(new MoveToStep(CreateStepsIndexes.Final));
+        this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.Final));
         this.spinner.hide();
         this.router.navigate([SharedRoutes.Final], { queryParams: { url: res.url } });
       });

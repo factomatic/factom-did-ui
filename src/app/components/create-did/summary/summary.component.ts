@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 
 import { AppState } from 'src/app/core/store/app.state';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
-import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
+import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-steps-indexes';
 import { DIDService } from 'src/app/core/services/did.service';
 import { environment } from 'src/environments/environment';
 import { MoveToStep } from 'src/app/core/store/action/action.actions';
@@ -49,7 +49,7 @@ export class SummaryComponent implements OnInit {
   }
 
   goToPrevious() {
-    this.store.dispatch(new MoveToStep(CreateStepsIndexes.EncryptKeys));
+    this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.EncryptKeys));
     this.router.navigate([CreateRoutes.EncryptKeys]);
   }
 }
