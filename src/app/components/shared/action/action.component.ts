@@ -6,6 +6,7 @@ import { ActionType } from 'src/app/core/enums/action-type';
 import { AppState } from 'src/app/core/store/app.state';
 import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import { MoveToStep, SelectAction } from 'src/app/core/store/action/action.actions';
+import { CreateRoutes } from 'src/app/core/enums/create-routes';
 
 @Component({
   selector: 'app-action',
@@ -13,7 +14,7 @@ import { MoveToStep, SelectAction } from 'src/app/core/store/action/action.actio
   styleUrls: ['./action.component.scss']
 })
 export class ActionComponent {
-  public actionType = ActionType.Create;
+  public actionType = ActionType.CreateAdvanced;
 
   constructor(
     private store: Store<AppState>,
@@ -22,7 +23,10 @@ export class ActionComponent {
 
   goToNext() {
     this.store.dispatch(new SelectAction(this.actionType));
-    this.store.dispatch(new MoveToStep(CreateStepsIndexes.PublicKeys));
-    this.router.navigate([`${this.actionType}/keys/public`]);
+
+    if (this.actionType === ActionType.CreateAdvanced) {
+      this.store.dispatch(new MoveToStep(CreateStepsIndexes.PublicKeys));
+      this.router.navigate([CreateRoutes.PublicKeys]);
+    }
   }
 }

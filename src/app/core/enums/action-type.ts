@@ -1,4 +1,4 @@
 export enum ActionType {
-  Create = 'create',
+  CreateAdvanced = 'create-advanced',
   Update = 'update'
 }

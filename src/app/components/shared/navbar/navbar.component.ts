@@ -25,7 +25,7 @@ export class NavbarComponent implements OnInit {
      .pipe(select(state => state.action))
      .subscribe(action => {
        this.lastCompletedStepIndex = action.lastCompletedStepIndex;
-       if (action.selectedAction === ActionType.Create) {
+       if (action.selectedAction === ActionType.CreateAdvanced) {
         this.firstTabLink = CreateRoutes.PublicKeys.toString();
         this.secondTabLink = CreateRoutes.AuthenticationKeys.toString();
         this.thirdTabLink = CreateRoutes.Services.toString();
