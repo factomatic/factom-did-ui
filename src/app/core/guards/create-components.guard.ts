@@ -6,6 +6,7 @@ import {
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { CreateStepsIndexes } from '../enums/create-steps-indexes';
 import { CreateStepsUrls } from '../enums/create-steps-urls';
 import { WorkflowService } from '../services/workflow.service';
 
@@ -15,11 +16,11 @@ import { WorkflowService } from '../services/workflow.service';
 export class CreateComponentsGuard implements CanActivate {
 
   private createStepsIndexes = {
-   [CreateStepsUrls.PublicKeys]: 2,
-   [CreateStepsUrls.AuthenticationKeys]: 3,
-   [CreateStepsUrls.Services]: 4,
-   [CreateStepsUrls.EncryptKeys]: 5,
-   [CreateStepsUrls.Summary]: 6
+   [CreateStepsUrls.PublicKeys]: CreateStepsIndexes.PublicKeys,
+   [CreateStepsUrls.AuthenticationKeys]: CreateStepsIndexes.AuthenticationKeys,
+   [CreateStepsUrls.Services]: CreateStepsIndexes.Services,
+   [CreateStepsUrls.EncryptKeys]: CreateStepsIndexes.EncryptKeys,
+   [CreateStepsUrls.Summary]: CreateStepsIndexes.Summary
   };
 
   constructor(private workflowService: WorkflowService) { }
