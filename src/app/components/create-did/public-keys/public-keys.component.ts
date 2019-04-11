@@ -12,7 +12,7 @@ import { BaseComponent } from 'src/app/components/base.component';
 import { ClearForm, MoveToStep } from 'src/app/core/store/action/action.actions';
 import { ComponentKeyModel } from 'src/app/core/models/component-key.model';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
-import { CreateStepsIndexes } from 'src/app/core/enums/create-advanced-steps-indexes';
+import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { DIDService } from 'src/app/core/services/did.service';
 import { InfoModalComponent } from 'src/app/components/shared/info-modal/info-modal.component';
@@ -122,7 +122,7 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
   }
 
   goToNext() {
-    this.store.dispatch(new MoveToStep(CreateStepsIndexes.AuthenticationKeys));
+    this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.AuthenticationKeys));
     this.router.navigate([CreateRoutes.AuthenticationKeys]);
   }
 
