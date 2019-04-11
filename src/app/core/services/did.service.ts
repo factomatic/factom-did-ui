@@ -15,6 +15,7 @@ import { MoveToStep } from '../store/action/action.actions';
 import { ServiceModel } from '../models/service.model';
 import { SharedRoutes } from '../enums/shared-routes';
 import { toHexString, calculateChainId } from '../utils/helpers';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class DIDService {
@@ -102,7 +103,7 @@ export class DIDService {
     return this.id;
   }
 
-  recordOnChain(): void {
+  recordOnChain(): Observable<Object> {
     const data = JSON.stringify([
       [this.CreateDIDEntry, this.version, this.nonce],
       this.didDocument
@@ -114,13 +115,13 @@ export class DIDService {
       })
     };
 
-    this.http
-      .post(this.apiUrl, data, httpOptions)
-      .subscribe((res: any) => {
-        this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.Final));
-        this.spinner.hide();
-        this.router.navigate([SharedRoutes.Final], { queryParams: { url: res.url } });
-      });
+    return this.http.post(this.apiUrl, data, httpOptions);
+  }
+
+  clearData() {
+    this.id = undefined;
+    this.nonce = undefined;
+    this.didDocument = undefined;
   }
 
   private generateId(): string {

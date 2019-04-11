@@ -10,6 +10,7 @@ import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-s
 import { DIDService } from 'src/app/core/services/did.service';
 import { environment } from 'src/environments/environment';
 import { MoveToStep } from 'src/app/core/store/action/action.actions';
+import { SharedRoutes } from 'src/app/core/enums/shared-routes';
 
 @Component({
   selector: 'app-summary',
@@ -44,7 +45,14 @@ export class SummaryComponent implements OnInit {
   recordOnChain() {
     if (!this.documentSizeExceeded) {
       this.spinner.show();
-      this.didService.recordOnChain();
+      this.didService
+        .recordOnChain()
+        .subscribe((res: any) => {
+          this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.Final));
+          this.didService.clearData();
+          this.spinner.hide();
+          this.router.navigate([SharedRoutes.Final], { queryParams: { url: res.url } });
+        });
     }
   }
 
