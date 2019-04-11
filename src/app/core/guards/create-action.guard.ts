@@ -23,7 +23,7 @@ export class CreateActionGuard implements CanActivate {
      state: RouterStateSnapshot ): Observable<boolean> | Promise<boolean> | boolean {
 
     const selectedAction = this.workflowService.getSelectedAction();
-    if (selectedAction === ActionType.CreateAdvanced) {
+    if (selectedAction === ActionType.CreateAdvanced || selectedAction === ActionType.CreateBasic) {
       return true;
     }
 
