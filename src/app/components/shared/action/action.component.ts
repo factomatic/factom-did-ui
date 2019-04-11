@@ -5,8 +5,10 @@ import { Store } from '@ngrx/store';
 import { ActionType } from 'src/app/core/enums/action-type';
 import { AppState } from 'src/app/core/store/app.state';
 import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-steps-indexes';
-import { MoveToStep, SelectAction } from 'src/app/core/store/action/action.actions';
+import { CreateBasicStepsIndexes } from 'src/app/core/enums/create-basic-steps-indexes';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
+import { MoveToStep, SelectAction } from 'src/app/core/store/action/action.actions';
+import { KeysService } from 'src/app/core/services/keys.service';
 
 @Component({
   selector: 'app-action',
@@ -14,19 +16,23 @@ import { CreateRoutes } from 'src/app/core/enums/create-routes';
   styleUrls: ['./action.component.scss']
 })
 export class ActionComponent {
-  public actionType = ActionType.CreateAdvanced;
+  public actionType = ActionType.CreateBasic;
 
   constructor(
+    private keysService: KeysService,
     private store: Store<AppState>,
-    private router: Router) {
-  }
+    private router: Router) { }
 
   goToNext() {
-    this.store.dispatch(new SelectAction(this.actionType));
-
     if (this.actionType === ActionType.CreateAdvanced) {
       this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.PublicKeys));
       this.router.navigate([CreateRoutes.PublicKeys]);
+    } else if (this.actionType === ActionType.CreateBasic) {
+      this.keysService.autoGeneratePublicKey();
+      this.store.dispatch(new MoveToStep(CreateBasicStepsIndexes.EncryptKeys));
+      this.router.navigate([CreateRoutes.EncryptKeys]);
     }
+
+    this.store.dispatch(new SelectAction(this.actionType));
   }
 }

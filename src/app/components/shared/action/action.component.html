@@ -4,9 +4,15 @@
       <h4 class="head text-center">Choose an action</h4>
       <br/>
       <div class="row">
-        <div class='col-xs-offset-4 col-xs-10 col-sm-offset-5 col-sm-4'>
+        <div class='col-xs-offset-2 col-xs-10 col-sm-offset-2 col-sm-12 col-md-offset-4 col-md-4'>
           <div class="form-group">
             <div class="radio">
+              <label>
+                <input type="radio" #action="ngModel" required name="action" [(ngModel)]="actionType" value="create-basic">
+                Create Paper DID (Basic Mode)
+              </label>
+            </div>
+            <div class="radio mt-3">
               <label>
                 <input type="radio" #action="ngModel" required name="action" [(ngModel)]="actionType" value="create-advanced">
                 Create Paper DID (Advanced Mode)
