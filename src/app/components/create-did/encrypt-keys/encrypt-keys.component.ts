@@ -3,15 +3,19 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 
+import { ActionType } from 'src/app/core/enums/action-type';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from '../../base.component';
-import { CreateRoutes } from 'src/app/core/enums/create-routes';
 import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-steps-indexes';
+import { CreateBasicStepsIndexes } from 'src/app/core/enums/create-basic-steps-indexes';
+import { CreateRoutes } from 'src/app/core/enums/create-routes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { KeysService } from 'src/app/core/services/keys.service';
-import { MoveToStep } from 'src/app/core/store/action/action.actions';
+import { MoveToStep, ClearForm } from 'src/app/core/store/action/action.actions';
+import { SharedRoutes } from 'src/app/core/enums/shared-routes';
 import { Subscription } from 'rxjs';
 import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
+import { WorkflowService } from 'src/app/core/services/workflow.service';
 
 @Component({
   selector: 'app-encrypt-keys',
@@ -33,7 +37,8 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private store: Store<AppState>,
-    private keysService: KeysService) {
+    private keysService: KeysService,
+    private workflowService: WorkflowService) {
     super();
   }
 
@@ -88,14 +93,26 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
 
   goToNext() {
     if (this.fileDowloaded || !this.keysGenerated) {
-      this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.Summary));
-      this.router.navigate([CreateRoutes.Summary]);
+      const selectedAction = this.workflowService.getSelectedAction();
+      if (selectedAction === ActionType.CreateAdvanced) {
+        this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.Summary));
+        this.router.navigate([CreateRoutes.Summary]);
+      } else if (selectedAction === ActionType.CreateBasic) {
+        this.store.dispatch(new MoveToStep(CreateBasicStepsIndexes.Summary));
+        this.router.navigate([CreateRoutes.Summary]);
+      }
     }
   }
 
   goToPrevious() {
-    this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.Services));
-    this.router.navigate([CreateRoutes.Services]);
+    const selectedAction = this.workflowService.getSelectedAction();
+    if (selectedAction === ActionType.CreateAdvanced) {
+      this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.Services));
+      this.router.navigate([CreateRoutes.Services]);
+    } else if (selectedAction === ActionType.CreateBasic) {
+      this.store.dispatch(new ClearForm());
+      this.router.navigate([SharedRoutes.Action]);
+    }
   }
 
   get password () {
