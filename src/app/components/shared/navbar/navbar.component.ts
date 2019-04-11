@@ -11,7 +11,9 @@ import { CreateRoutes } from 'src/app/core/enums/create-routes';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
+  public actionType = ActionType;
   public lastCompletedStepIndex: number;
+  public selectedAction: string;
   public firstTabLink: string;
   public secondTabLink: string;
   public thirdTabLink: string;
@@ -25,12 +27,17 @@ export class NavbarComponent implements OnInit {
      .pipe(select(state => state.action))
      .subscribe(action => {
        this.lastCompletedStepIndex = action.lastCompletedStepIndex;
+       this.selectedAction = action.selectedAction;
+
        if (action.selectedAction === ActionType.CreateAdvanced) {
         this.firstTabLink = CreateRoutes.PublicKeys.toString();
         this.secondTabLink = CreateRoutes.AuthenticationKeys.toString();
         this.thirdTabLink = CreateRoutes.Services.toString();
         this.forthTabLink = CreateRoutes.EncryptKeys.toString();
         this.fifthTabLink = CreateRoutes.Summary.toString();
+       } else if (action.selectedAction === ActionType.CreateBasic) {
+         this.firstTabLink = CreateRoutes.EncryptKeys.toString();
+         this.secondTabLink = CreateRoutes.Summary.toString();
        }
      });
   }
