@@ -16,6 +16,7 @@ import { SharedRoutes } from 'src/app/core/enums/shared-routes';
 import { Subscription } from 'rxjs';
 import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
 import { WorkflowService } from 'src/app/core/services/workflow.service';
+import { DIDService } from 'src/app/core/services/did.service';
 
 @Component({
   selector: 'app-encrypt-keys',
@@ -34,6 +35,7 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
   public continueButtonText = 'Skip';
 
   constructor(
+    private didService: DIDService,
     private fb: FormBuilder,
     private router: Router,
     private store: Store<AppState>,
@@ -68,7 +70,9 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
     this.keysService
       .encryptKeys(this.password.value)
       .subscribe(encryptedFile => {
-        this.encryptedFile = encryptedFile;
+        const parsedFile = JSON.parse(encryptedFile);
+        parsedFile.did = this.didService.getId();
+        this.encryptedFile = JSON.stringify(parsedFile);
         this.encryptForm.reset();
       });
   }
@@ -84,7 +88,7 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
 
       downloader.setAttribute('href', fileUrl);
       const date = new Date();
-      downloader.setAttribute('download', `paper-did-UTC--${date.toISOString()}`);
+      downloader.setAttribute('download', `paper-did-UTC--${date.toISOString()}.txt`);
       downloader.click();
 
       this.fileDowloaded = true;
@@ -96,11 +100,11 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
       const selectedAction = this.workflowService.getSelectedAction();
       if (selectedAction === ActionType.CreateAdvanced) {
         this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.Summary));
-        this.router.navigate([CreateRoutes.Summary]);
       } else if (selectedAction === ActionType.CreateBasic) {
         this.store.dispatch(new MoveToStep(CreateBasicStepsIndexes.Summary));
-        this.router.navigate([CreateRoutes.Summary]);
       }
+
+      this.router.navigate([CreateRoutes.Summary]);
     }
   }
 
