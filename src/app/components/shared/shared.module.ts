@@ -6,7 +6,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { sharedComponents } from '.';
-import { InfoModalComponent } from './info-modal/info-modal.component';
 
 @NgModule({
   declarations: [
@@ -21,9 +20,6 @@ import { InfoModalComponent } from './info-modal/info-modal.component';
   ],
   exports: [
     ...sharedComponents
-  ],
-  entryComponents: [
-    InfoModalComponent
-  ],
+  ]
 })
 export class SharedModule { }
