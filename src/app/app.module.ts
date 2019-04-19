@@ -13,6 +13,7 @@ import { appReducers } from './core/store/app.reducers';
 import { AppRoutingModule } from './app-routing.module';
 import { AppState } from './core/store/app.state';
 import { CreateAdvancedInfoModalComponent } from './components/create-did/create-advanced-info-modal/create-advanced-info-modal.component';
+import { CreateBasicInfoModalComponent } from './components/create-did/create-basic-info-modal/create-basic-info-modal.component';
 import { environment } from '../environments/environment';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { GuardsModule } from './core/guards/guards.module';
@@ -29,7 +30,8 @@ export const metaReducers = environment.production || environment.staging ? [] :
 @NgModule({
   declarations: [
     AppComponent,
-    CreateAdvancedInfoModalComponent
+    CreateAdvancedInfoModalComponent,
+    CreateBasicInfoModalComponent
   ],
   imports: [
     AppRoutingModule,
@@ -53,7 +55,8 @@ export const metaReducers = environment.production || environment.staging ? [] :
     }
   ],
   entryComponents: [
-    CreateAdvancedInfoModalComponent
+    CreateAdvancedInfoModalComponent,
+    CreateBasicInfoModalComponent
   ],
   bootstrap: [AppComponent]
 })
