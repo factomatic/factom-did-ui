@@ -2,18 +2,13 @@ declare const Buffer;
 import * as nacl from 'tweetnacl/nacl-fast';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 
 import { AppState } from '../store/app.state';
-import { CreateAdvancedStepsIndexes } from '../enums/create-advanced-steps-indexes';
 import { DIDDocumentModel } from '../models/did-document.model';
 import { environment } from 'src/environments/environment';
 import { KeyModel } from '../models/key.model';
-import { MoveToStep } from '../store/action/action.actions';
 import { ServiceModel } from '../models/service.model';
-import { SharedRoutes } from '../enums/shared-routes';
 import { toHexString, calculateChainId } from '../utils/helpers';
 import { Observable } from 'rxjs';
 
@@ -32,8 +27,6 @@ export class DIDService {
 
   constructor (
     private http: HttpClient,
-    private router: Router,
-    private spinner: NgxSpinnerService,
     private store: Store<AppState>) {
     this.store
      .pipe(select(state => state.form))

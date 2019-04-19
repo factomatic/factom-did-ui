@@ -59,7 +59,6 @@ export class SummaryComponent implements OnInit {
             this.store.dispatch(new MoveToStep(CreateBasicStepsIndexes.Final));
           }
 
-          this.didService.clearData();
           this.spinner.hide();
           this.router.navigate([SharedRoutes.Final], { queryParams: { url: res.url } });
         });
