@@ -1,7 +1,6 @@
 import { CollapseComponent } from 'angular-bootstrap-md';
 import { Component, OnInit, AfterViewInit, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -9,15 +8,14 @@ import { Subscription } from 'rxjs';
 import { AddPublicKey, RemovePublicKey } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
-import { ClearForm, MoveToStep } from 'src/app/core/store/action/action.actions';
 import { ComponentKeyModel } from 'src/app/core/models/component-key.model';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
 import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { DIDService } from 'src/app/core/services/did.service';
-import { InfoModalComponent } from 'src/app/components/shared/info-modal/info-modal.component';
 import { KeysService } from 'src/app/core/services/keys.service';
 import { KeyModel } from 'src/app/core/models/key.model';
+import { MoveToStep } from 'src/app/core/store/action/action.actions';
 import { SharedRoutes } from 'src/app/core/enums/shared-routes';
 import { SignatureType } from 'src/app/core/enums/signature-type';
 import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
@@ -45,7 +43,6 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
 
   constructor(
     private fb: FormBuilder,
-    private modalService: NgbModal,
     private router: Router,
     private store: Store<AppState>,
     private keysService: KeysService,
@@ -54,8 +51,6 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
   }
 
   ngOnInit() {
-    setTimeout(() => this.openInfoModal());
-
     this.subscription$ = this.store
      .pipe(select(state => state))
      .subscribe(state => {
@@ -117,17 +112,12 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
     publicKey.iconPosition = publicKey.iconPosition === DOWN_POSITION ? UP_POSITION : DOWN_POSITION;
   }
 
-  openInfoModal() {
-    this.modalService.open(InfoModalComponent, {size: 'lg'});
-  }
-
   goToNext() {
     this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.AuthenticationKeys));
     this.router.navigate([CreateRoutes.AuthenticationKeys]);
   }
 
   goToPrevious() {
-    this.store.dispatch(new ClearForm());
     this.router.navigate([SharedRoutes.Action]);
   }
 

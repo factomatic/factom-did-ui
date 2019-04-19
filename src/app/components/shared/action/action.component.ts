@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
@@ -7,7 +8,8 @@ import { AppState } from 'src/app/core/store/app.state';
 import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-steps-indexes';
 import { CreateBasicStepsIndexes } from 'src/app/core/enums/create-basic-steps-indexes';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
-import { MoveToStep, SelectAction } from 'src/app/core/store/action/action.actions';
+import { InfoModalComponent } from '../info-modal/info-modal.component';
+import { MoveToStep, SelectAction, ClearForm } from 'src/app/core/store/action/action.actions';
 import { KeysService } from 'src/app/core/services/keys.service';
 
 @Component({
@@ -15,11 +17,16 @@ import { KeysService } from 'src/app/core/services/keys.service';
   templateUrl: './action.component.html',
   styleUrls: ['./action.component.scss']
 })
-export class ActionComponent {
+export class ActionComponent implements OnInit {
   public actionType = ActionType.CreateBasic;
+
+  ngOnInit() {
+    this.store.dispatch(new ClearForm());
+  }
 
   constructor(
     private keysService: KeysService,
+    private modalService: NgbModal,
     private store: Store<AppState>,
     private router: Router) { }
 
@@ -34,5 +41,10 @@ export class ActionComponent {
     }
 
     this.store.dispatch(new SelectAction(this.actionType));
+    setTimeout(() => this.openInfoModal());
+  }
+
+  openInfoModal() {
+    this.modalService.open(InfoModalComponent, {size: 'lg'});
   }
 }
