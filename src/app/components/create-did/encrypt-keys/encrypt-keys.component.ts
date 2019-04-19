@@ -11,7 +11,7 @@ import { CreateBasicStepsIndexes } from 'src/app/core/enums/create-basic-steps-i
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { KeysService } from 'src/app/core/services/keys.service';
-import { MoveToStep, ClearForm } from 'src/app/core/store/action/action.actions';
+import { MoveToStep } from 'src/app/core/store/action/action.actions';
 import { SharedRoutes } from 'src/app/core/enums/shared-routes';
 import { Subscription } from 'rxjs';
 import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
@@ -30,8 +30,8 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
   public encryptedFile: string;
   public fileDowloaded: boolean;
   public keysGenerated: boolean;
-  public tooltipMessage = TooltipMessages.EncryptHeaderTooltip;
-  public boldPartTooltipMessage = TooltipMessages.EncryptHeaderBoldPartTooltip;
+  public tooltipMessage: string;
+  public boldPartTooltipMessage: string;
   public continueButtonText = 'Skip';
 
   constructor(
@@ -48,6 +48,14 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
     this.subscription$ = this.store
      .pipe(select(state => state))
      .subscribe(state => {
+        if (state.action.selectedAction === ActionType.CreateAdvanced) {
+          this.tooltipMessage = TooltipMessages.EncryptHeaderTooltipAdvancedMode;
+          this.boldPartTooltipMessage = TooltipMessages.EncryptHeaderBoldPartTooltipAdvancedMode;
+        } else if (state.action.selectedAction === ActionType.CreateBasic) {
+          this.tooltipMessage = TooltipMessages.EncryptHeaderTooltipBasicMode;
+          this.boldPartTooltipMessage = TooltipMessages.EncryptHeaderBoldPartTooltipBasicMode;
+        }
+
         if (state.form.publicKeys.length > 0 || state.form.authenticationKeys.length > 0) {
           this.keysGenerated = true;
           this.continueButtonText = 'Next';
@@ -114,7 +122,6 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
       this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.Services));
       this.router.navigate([CreateRoutes.Services]);
     } else if (selectedAction === ActionType.CreateBasic) {
-      this.store.dispatch(new ClearForm());
       this.router.navigate([SharedRoutes.Action]);
     }
   }
