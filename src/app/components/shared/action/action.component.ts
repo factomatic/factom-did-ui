@@ -5,10 +5,10 @@ import { Store } from '@ngrx/store';
 
 import { ActionType } from 'src/app/core/enums/action-type';
 import { AppState } from 'src/app/core/store/app.state';
+import { CreateAdvancedInfoModalComponent } from '../../create-did/create-advanced-info-modal/create-advanced-info-modal.component';
 import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-steps-indexes';
 import { CreateBasicStepsIndexes } from 'src/app/core/enums/create-basic-steps-indexes';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
-import { InfoModalComponent } from '../info-modal/info-modal.component';
 import { MoveToStep, SelectAction, ClearForm } from 'src/app/core/store/action/action.actions';
 import { KeysService } from 'src/app/core/services/keys.service';
 
@@ -45,6 +45,8 @@ export class ActionComponent implements OnInit {
   }
 
   openInfoModal() {
-    this.modalService.open(InfoModalComponent, {size: 'lg'});
+    if (this.actionType === ActionType.CreateAdvanced) {
+      this.modalService.open(CreateAdvancedInfoModalComponent, {size: 'lg'});
+    }
   }
 }
