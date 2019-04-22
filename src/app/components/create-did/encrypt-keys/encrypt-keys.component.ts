@@ -78,13 +78,7 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
     this.keysService
       .encryptKeys(this.password.value)
       .subscribe(encryptedFile => {
-        const parsedFile = JSON.parse(encryptedFile);
-        parsedFile.encryptionAlgo = {
-          name: 'AES-GCM',
-          tagLength: 128
-        };
-        parsedFile.did = this.didService.getId();
-        this.encryptedFile = JSON.stringify(parsedFile, null, 2);
+        this.encryptedFile = this.postProcessDidFile(encryptedFile);
         this.encryptForm.reset();
       });
   }
@@ -136,5 +130,21 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
 
   get confirmPassword () {
     return this.encryptForm.get('confirmPassword');
+  }
+
+  private postProcessDidFile(encryptedFile: string) {
+    const parsedFile = JSON.parse(encryptedFile);
+    const newKeysFile: any = { };
+
+    newKeysFile.data = parsedFile.data;
+    newKeysFile.encryptionAlgo = {
+      name: 'AES-GCM',
+      iv: parsedFile.iv,
+      salt: parsedFile.salt,
+      tagLength: 128
+    };
+    newKeysFile.did = this.didService.getId();
+
+    return JSON.stringify(newKeysFile, null, 2);
   }
 }
