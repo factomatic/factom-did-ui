@@ -12,11 +12,10 @@ import { AppComponent } from './app.component';
 import { appReducers } from './core/store/app.reducers';
 import { AppRoutingModule } from './app-routing.module';
 import { AppState } from './core/store/app.state';
-import { CreateAdvancedInfoModalComponent } from './components/create-did/create-advanced-info-modal/create-advanced-info-modal.component';
-import { CreateBasicInfoModalComponent } from './components/create-did/create-basic-info-modal/create-basic-info-modal.component';
 import { environment } from '../environments/environment';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { GuardsModule } from './core/guards/guards.module';
+import { ModalsModule } from './components/modals/modals.module';
 import { ServicesModule } from './core/services/services.module';
 import { SharedModule } from './components/shared/shared.module';
 import { storeLogger } from 'ngrx-store-logger';
@@ -29,9 +28,7 @@ export const metaReducers = environment.production || environment.staging ? [] :
 
 @NgModule({
   declarations: [
-    AppComponent,
-    CreateAdvancedInfoModalComponent,
-    CreateBasicInfoModalComponent
+    AppComponent
   ],
   imports: [
     AppRoutingModule,
@@ -40,6 +37,7 @@ export const metaReducers = environment.production || environment.staging ? [] :
     DeviceDetectorModule.forRoot(),
     GuardsModule,
     HttpClientModule,
+    ModalsModule,
     MDBBootstrapModule.forRoot(),
     NgxSpinnerModule,
     ServicesModule,
@@ -53,10 +51,6 @@ export const metaReducers = environment.production || environment.staging ? [] :
       useClass: ErrorInterceptor,
       multi: true
     }
-  ],
-  entryComponents: [
-    CreateAdvancedInfoModalComponent,
-    CreateBasicInfoModalComponent
   ],
   bootstrap: [AppComponent]
 })

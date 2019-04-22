@@ -10,13 +10,13 @@ import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-s
 import { CreateBasicStepsIndexes } from 'src/app/core/enums/create-basic-steps-indexes';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
 import CustomValidators from 'src/app/core/utils/customValidators';
+import { DIDService } from 'src/app/core/services/did.service';
 import { KeysService } from 'src/app/core/services/keys.service';
 import { MoveToStep } from 'src/app/core/store/action/action.actions';
 import { SharedRoutes } from 'src/app/core/enums/shared-routes';
 import { Subscription } from 'rxjs';
 import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
 import { WorkflowService } from 'src/app/core/services/workflow.service';
-import { DIDService } from 'src/app/core/services/did.service';
 
 @Component({
   selector: 'app-encrypt-keys',
