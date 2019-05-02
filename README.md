@@ -19,7 +19,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 ### Factom Testnet
 A live version on the Factom testnet is available at [https://factomatic.github.io/factom-did-ui](https://factomatic.github.io/factom-did-ui).
 
-It enabled a seamsless creation of DIDs, without the usage of any cryptocurrency.
+It enables a seamsless creation of DIDs, without the usage of any cryptocurrency.
 
 ### Factom Mainnet
 Coming soon!
