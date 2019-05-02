@@ -12,7 +12,9 @@ Run `ng serve` for a dev server and navigate to `http://localhost:4200/`. The ap
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `ng build --prod` for a production build.
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+
+Run `ng build --prod` for a production build. The build artifacts will be stored in the `dist/` directory.
 
 ## Deployments
 
