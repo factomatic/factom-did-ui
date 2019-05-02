@@ -4,12 +4,16 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
+import { ActionType } from 'src/app/core/enums/action-type';
 import { AppState } from 'src/app/core/store/app.state';
+import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-steps-indexes';
+import { CreateBasicStepsIndexes } from 'src/app/core/enums/create-basic-steps-indexes';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
-import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
 import { DIDService } from 'src/app/core/services/did.service';
 import { environment } from 'src/environments/environment';
 import { MoveToStep } from 'src/app/core/store/action/action.actions';
+import { SharedRoutes } from 'src/app/core/enums/shared-routes';
+import { WorkflowService } from 'src/app/core/services/workflow.service';
 
 @Component({
   selector: 'app-summary',
@@ -26,7 +30,8 @@ export class SummaryComponent implements OnInit {
     private didService: DIDService,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private store: Store<AppState>) {
+    private store: Store<AppState>,
+    private workflowService: WorkflowService) {
   }
 
   ngOnInit() {
@@ -44,12 +49,30 @@ export class SummaryComponent implements OnInit {
   recordOnChain() {
     if (!this.documentSizeExceeded) {
       this.spinner.show();
-      this.didService.recordOnChain();
+      this.didService
+        .recordOnChain()
+        .subscribe((res: any) => {
+          const selectedAction = this.workflowService.getSelectedAction();
+          if (selectedAction === ActionType.CreateAdvanced) {
+            this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.Final));
+          } else if (selectedAction === ActionType.CreateBasic) {
+            this.store.dispatch(new MoveToStep(CreateBasicStepsIndexes.Final));
+          }
+
+          this.spinner.hide();
+          this.router.navigate([SharedRoutes.Final], { queryParams: { url: res.url } });
+        });
     }
   }
 
   goToPrevious() {
-    this.store.dispatch(new MoveToStep(CreateStepsIndexes.EncryptKeys));
+    const selectedAction = this.workflowService.getSelectedAction();
+    if (selectedAction === ActionType.CreateAdvanced) {
+      this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.EncryptKeys));
+    } else if (selectedAction === ActionType.CreateBasic) {
+      this.store.dispatch(new MoveToStep(CreateBasicStepsIndexes.EncryptKeys));
+    }
+
     this.router.navigate([CreateRoutes.EncryptKeys]);
   }
 }

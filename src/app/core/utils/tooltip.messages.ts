@@ -26,8 +26,13 @@ public static SignatureTypeTooltip = 'Both signature types allow you to sign mes
 
   public static ServiceEndpointTooltip = 'Specify the URL for the service, e.g. https://example.com/KYCProvider';
 
-  public static EncryptHeaderTooltip = 'Choose a strong password to encrypt the private keys of the DID.';
+  public static EncryptHeaderTooltipAdvancedMode = 'Choose a strong password to encrypt the private keys(s) of the DID.';
 
-  public static EncryptHeaderBoldPartTooltip = 'Make sure you store the password in a safe location: ' +
-  'there is no password recovery if you lose your password and you will be unable to sign messages with your DID keys!';
+  public static EncryptHeaderBoldPartTooltipAdvancedMode = 'Make sure you store the password in a safe location: ' +
+  'there is no password recovery if you lose your password and you will be unable to sign messages with your DID keys, if you lose it!';
+
+  public static EncryptHeaderTooltipBasicMode = 'Choose a strong password to encrypt the private key of the DID.';
+
+  public static EncryptHeaderBoldPartTooltipBasicMode = 'Make sure you store the password in a safe location: ' +
+  'there is no password recovery if you lose your password and you will be unable to sign messages with your DID key, if you lose it!';
 }

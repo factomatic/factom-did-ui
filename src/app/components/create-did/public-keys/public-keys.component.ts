@@ -10,7 +10,7 @@ import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
 import { ComponentKeyModel } from 'src/app/core/models/component-key.model';
 import { CreateRoutes } from 'src/app/core/enums/create-routes';
-import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
+import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { DIDService } from 'src/app/core/services/did.service';
 import { KeysService } from 'src/app/core/services/keys.service';
@@ -113,12 +113,11 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
   }
 
   goToNext() {
-    this.store.dispatch(new MoveToStep(CreateStepsIndexes.AuthenticationKeys));
+    this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.AuthenticationKeys));
     this.router.navigate([CreateRoutes.AuthenticationKeys]);
   }
 
   goToPrevious() {
-    this.store.dispatch(new MoveToStep(CreateStepsIndexes.Action));
     this.router.navigate([SharedRoutes.Action]);
   }
 

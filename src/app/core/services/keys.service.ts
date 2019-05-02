@@ -7,15 +7,22 @@ import { defer, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 
+import { AddPublicKey } from '../store/form/form.actions';
 import { AppState } from '../store/app.state';
+import { DIDService } from './did.service';
+import { KeyModel } from '../models/key.model';
 import { KeyPairModel } from '../models/key-pair.model';
 import { SignatureType } from '../enums/signature-type';
+
+const DEFAULT_ALIAS = 'defaultpubkey';
 
 @Injectable()
 export class KeysService {
   private keys;
 
-  constructor(private store: Store<AppState>) {
+  constructor(
+    private didService: DIDService,
+    private store: Store<AppState>) {
     this.store
       .pipe(select(state => state.form))
       .subscribe(form => {
@@ -39,25 +46,23 @@ export class KeysService {
 
   generateKeyPair(type: SignatureType): KeyPairModel {
     if (type === SignatureType.EdDSA) {
-      const seed = nacl.randomBytes(32);
-      const keyPair = nacl.sign.keyPair.fromSeed(seed);
-
-      const publicKeyBase58 = base58.encode(Buffer.from(keyPair.publicKey));
-      const privateKeyBase58 = base58.encode(Buffer.from(keyPair.secretKey));
-
-      return new KeyPairModel(publicKeyBase58, privateKeyBase58);
+      return this.generateEdDSAKeyPair();
     } else if (type === SignatureType.ECDSA) {
-      const ec = new elliptic.ec('secp256k1');
-      const key = ec.genKeyPair();
-
-      const compressedPubPoint = key.getPublic(true, 'hex');
-      const privateKey = key.getPrivate('hex');
-
-      const publicKeyBase58 = base58.encode(Buffer.from(compressedPubPoint, 'hex'));
-      const privateKeyBase58 = base58.encode(Buffer.from(privateKey, 'hex'));
-
-      return new KeyPairModel(publicKeyBase58, privateKeyBase58);
+      return this.generateECDSAKeyPair();
     }
+  }
+
+  autoGeneratePublicKey(): void {
+    const keyPair = this.generateEdDSAKeyPair();
+    const generatedKey = new KeyModel(
+      DEFAULT_ALIAS,
+      SignatureType.EdDSA,
+      this.didService.getId(),
+      keyPair.publicKey,
+      keyPair.privateKey
+    );
+
+    this.store.dispatch(new AddPublicKey(generatedKey));
   }
 
   encryptKeys(password: string): Observable<string> {
@@ -65,5 +70,28 @@ export class KeysService {
       const encryptedFile = await encryptor.encrypt(password, JSON.stringify(this.keys));
       return encryptedFile;
     });
+  }
+
+  private generateEdDSAKeyPair(): KeyPairModel {
+    const seed = nacl.randomBytes(32);
+    const keyPair = nacl.sign.keyPair.fromSeed(seed);
+
+    const publicKeyBase58 = base58.encode(Buffer.from(keyPair.publicKey));
+    const privateKeyBase58 = base58.encode(Buffer.from(keyPair.secretKey));
+
+    return new KeyPairModel(publicKeyBase58, privateKeyBase58);
+  }
+
+  private generateECDSAKeyPair(): KeyPairModel {
+    const ec = new elliptic.ec('secp256k1');
+    const key = ec.genKeyPair();
+
+    const compressedPubPoint = key.getPublic(true, 'hex');
+    const privateKey = key.getPrivate('hex');
+
+    const publicKeyBase58 = base58.encode(Buffer.from(compressedPubPoint, 'hex'));
+    const privateKeyBase58 = base58.encode(Buffer.from(privateKey, 'hex'));
+
+    return new KeyPairModel(publicKeyBase58, privateKeyBase58);
   }
 }

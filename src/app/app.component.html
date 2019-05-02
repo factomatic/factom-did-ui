@@ -1,7 +1,7 @@
 <section class="app-section">
   <div class="container">
     <div class="board">
-      <app-navbar></app-navbar>
+      <app-navbar *ngIf="selectedAction"></app-navbar>
       <div class="tab-content">
         <router-outlet></router-outlet>
       </div>

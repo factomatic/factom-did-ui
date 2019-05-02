@@ -1,39 +1,55 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { ActionType } from 'src/app/core/enums/action-type';
 import { AppState } from 'src/app/core/store/app.state';
-import { CreateStepsIndexes } from 'src/app/core/enums/create-steps-indexes';
-import { InfoModalComponent } from 'src/app/components/shared/info-modal/info-modal.component';
-import { MoveToStep, SelectAction } from 'src/app/core/store/action/action.actions';
+import { ClearForm, MoveToStep, SelectAction } from 'src/app/core/store/action/action.actions';
+import { CreateAdvancedInfoModalComponent } from '../../modals/create-advanced-info-modal/create-advanced-info-modal.component';
+import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-steps-indexes';
+import { CreateBasicInfoModalComponent } from '../../modals/create-basic-info-modal/create-basic-info-modal.component';
+import { CreateBasicStepsIndexes } from 'src/app/core/enums/create-basic-steps-indexes';
+import { CreateRoutes } from 'src/app/core/enums/create-routes';
+import { KeysService } from 'src/app/core/services/keys.service';
 
 @Component({
   selector: 'app-action',
   templateUrl: './action.component.html',
   styleUrls: ['./action.component.scss']
 })
-export class ActionComponent implements AfterViewInit {
-  public actionType = ActionType.Create;
+export class ActionComponent implements OnInit {
+  public actionType = ActionType.CreateBasic;
 
-  constructor(
-    private modalService: NgbModal,
-    private store: Store<AppState>,
-    private router: Router) {
+  ngOnInit() {
+    this.store.dispatch(new ClearForm());
   }
 
-  ngAfterViewInit() {
+  constructor(
+    private keysService: KeysService,
+    private modalService: NgbModal,
+    private store: Store<AppState>,
+    private router: Router) { }
+
+  goToNext() {
+    if (this.actionType === ActionType.CreateAdvanced) {
+      this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.PublicKeys));
+      this.router.navigate([CreateRoutes.PublicKeys]);
+    } else if (this.actionType === ActionType.CreateBasic) {
+      this.keysService.autoGeneratePublicKey();
+      this.store.dispatch(new MoveToStep(CreateBasicStepsIndexes.EncryptKeys));
+      this.router.navigate([CreateRoutes.EncryptKeys]);
+    }
+
+    this.store.dispatch(new SelectAction(this.actionType));
     setTimeout(() => this.openInfoModal());
   }
 
-  goToNext() {
-    this.store.dispatch(new SelectAction(this.actionType));
-    this.store.dispatch(new MoveToStep(CreateStepsIndexes.PublicKeys));
-    this.router.navigate([`${this.actionType}/keys/public`]);
-  }
-
   openInfoModal() {
-    this.modalService.open(InfoModalComponent, {size: 'lg'});
+    if (this.actionType === ActionType.CreateAdvanced) {
+      this.modalService.open(CreateAdvancedInfoModalComponent, {size: 'lg'});
+    } else if (this.actionType === ActionType.CreateBasic) {
+      this.modalService.open(CreateBasicInfoModalComponent, {size: 'lg'});
+    }
   }
 }

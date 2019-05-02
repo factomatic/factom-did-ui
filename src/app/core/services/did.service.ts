@@ -2,19 +2,15 @@ declare const Buffer;
 import * as nacl from 'tweetnacl/nacl-fast';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 
 import { AppState } from '../store/app.state';
-import { CreateStepsIndexes } from '../enums/create-steps-indexes';
 import { DIDDocumentModel } from '../models/did-document.model';
 import { environment } from 'src/environments/environment';
 import { KeyModel } from '../models/key.model';
-import { MoveToStep } from '../store/action/action.actions';
 import { ServiceModel } from '../models/service.model';
-import { SharedRoutes } from '../enums/shared-routes';
 import { toHexString, calculateChainId } from '../utils/helpers';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class DIDService {
@@ -31,8 +27,6 @@ export class DIDService {
 
   constructor (
     private http: HttpClient,
-    private router: Router,
-    private spinner: NgxSpinnerService,
     private store: Store<AppState>) {
     this.store
      .pipe(select(state => state.form))
@@ -102,7 +96,7 @@ export class DIDService {
     return this.id;
   }
 
-  recordOnChain(): void {
+  recordOnChain(): Observable<Object> {
     const data = JSON.stringify([
       [this.CreateDIDEntry, this.version, this.nonce],
       this.didDocument
@@ -114,13 +108,13 @@ export class DIDService {
       })
     };
 
-    this.http
-      .post(this.apiUrl, data, httpOptions)
-      .subscribe((res: any) => {
-        this.store.dispatch(new MoveToStep(CreateStepsIndexes.Final));
-        this.spinner.hide();
-        this.router.navigate([SharedRoutes.Final], { queryParams: { url: res.url } });
-      });
+    return this.http.post(this.apiUrl, data, httpOptions);
+  }
+
+  clearData() {
+    this.id = undefined;
+    this.nonce = undefined;
+    this.didDocument = undefined;
   }
 
   private generateId(): string {

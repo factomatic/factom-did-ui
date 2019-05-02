@@ -15,6 +15,7 @@ import { AppState } from './core/store/app.state';
 import { environment } from '../environments/environment';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { GuardsModule } from './core/guards/guards.module';
+import { ModalsModule } from './components/modals/modals.module';
 import { ServicesModule } from './core/services/services.module';
 import { SharedModule } from './components/shared/shared.module';
 import { storeLogger } from 'ngrx-store-logger';
@@ -36,6 +37,7 @@ export const metaReducers = environment.production || environment.staging ? [] :
     DeviceDetectorModule.forRoot(),
     GuardsModule,
     HttpClientModule,
+    ModalsModule,
     MDBBootstrapModule.forRoot(),
     NgxSpinnerModule,
     ServicesModule,
