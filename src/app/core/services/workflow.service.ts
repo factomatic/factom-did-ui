@@ -6,13 +6,13 @@ import { AppState } from '../store/app.state';
 @Injectable()
 export class WorkflowService {
   private selectedAction: string;
-  private lastCompletedStepIndex: number;
+  private currentStepIndex: number;
 
   constructor (private store: Store<AppState>) {
     this.store.pipe(select(state => state.action))
       .subscribe(action => {
         this.selectedAction = action.selectedAction;
-        this.lastCompletedStepIndex = action.lastCompletedStepIndex;
+        this.currentStepIndex = action.currentStepIndex;
       });
   }
 
@@ -20,7 +20,7 @@ export class WorkflowService {
     return this.selectedAction;
   }
 
-  getLastCompletedStepIndex(): number {
-    return this.lastCompletedStepIndex;
+  getCurrentStepIndex(): number {
+    return this.currentStepIndex;
   }
 }

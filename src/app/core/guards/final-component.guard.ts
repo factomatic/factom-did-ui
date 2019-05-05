@@ -7,10 +7,11 @@ import {
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { CreateAdvancedStepsIndexes } from '../enums/create-advanced-steps-indexes';
-import { WorkflowService } from '../services/workflow.service';
 import { ActionType } from '../enums/action-type';
+import { CreateAdvancedStepsIndexes } from '../enums/create-advanced-steps-indexes';
 import { CreateBasicStepsIndexes } from '../enums/create-basic-steps-indexes';
+import { SharedRoutes } from '../enums/shared-routes';
+import { WorkflowService } from '../services/workflow.service';
 
 @Injectable({
  providedIn: 'root'
@@ -25,13 +26,14 @@ export class FinalComponentGuard implements CanActivate {
     state: RouterStateSnapshot ): Observable<boolean> | Promise<boolean> | boolean {
 
     const selectedAction = this.workflowService.getSelectedAction();
-    const summaryStepIndex = selectedAction === ActionType.CreateAdvanced
-      ? CreateAdvancedStepsIndexes.Summary
-      : CreateBasicStepsIndexes.Summary;
+    const finalStepIndex = selectedAction === ActionType.CreateAdvanced
+      ? CreateAdvancedStepsIndexes.Final
+      : CreateBasicStepsIndexes.Final;
 
-    const lastCompletedStepIndex = this.workflowService.getLastCompletedStepIndex();
-    if (lastCompletedStepIndex < summaryStepIndex) {
-      this.router.navigate(['action']);
+    const currentStepIndex = this.workflowService.getCurrentStepIndex();
+    if (currentStepIndex !== finalStepIndex) {
+      this.router.navigate([SharedRoutes.Action]);
+      return false;
     }
 
     return true;

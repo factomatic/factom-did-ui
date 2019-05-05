@@ -12,7 +12,7 @@ import { CreateRoutes } from 'src/app/core/enums/create-routes';
 })
 export class NavbarComponent implements OnInit {
   public actionType = ActionType;
-  public lastCompletedStepIndex: number;
+  public currentStepIndex: number;
   public selectedAction: string;
   public firstTabLink: string;
   public secondTabLink: string;
@@ -26,7 +26,7 @@ export class NavbarComponent implements OnInit {
     this.store
      .pipe(select(state => state.action))
      .subscribe(action => {
-       this.lastCompletedStepIndex = action.lastCompletedStepIndex;
+       this.currentStepIndex = action.currentStepIndex;
        this.selectedAction = action.selectedAction;
 
        if (action.selectedAction === ActionType.CreateAdvanced) {

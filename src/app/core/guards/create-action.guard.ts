@@ -8,6 +8,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ActionType } from '../enums/action-type';
+import { SharedRoutes } from '../enums/shared-routes';
 import { WorkflowService } from '../services/workflow.service';
 
 @Injectable({
@@ -27,7 +28,7 @@ export class CreateActionGuard implements CanActivate {
       return true;
     }
 
-    this.router.navigate(['action']);
+    this.router.navigate([SharedRoutes.Action]);
     return false;
   }
 }
