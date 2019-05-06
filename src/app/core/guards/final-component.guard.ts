@@ -8,8 +8,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ActionType } from '../enums/action-type';
-import { CreateAdvancedStepsIndexes } from '../enums/create-advanced-steps-indexes';
-import { CreateBasicStepsIndexes } from '../enums/create-basic-steps-indexes';
 import { SharedRoutes } from '../enums/shared-routes';
 import { WorkflowService } from '../services/workflow.service';
 
@@ -17,6 +15,9 @@ import { WorkflowService } from '../services/workflow.service';
  providedIn: 'root'
 })
 export class FinalComponentGuard implements CanActivate {
+  private CreateAdvancedFinalStepIndex = 6;
+  private CreateBasicFinalStepIndex = 3;
+
   constructor(
     private router: Router,
     private workflowService: WorkflowService) { }
@@ -27,8 +28,8 @@ export class FinalComponentGuard implements CanActivate {
 
     const selectedAction = this.workflowService.getSelectedAction();
     const finalStepIndex = selectedAction === ActionType.CreateAdvanced
-      ? CreateAdvancedStepsIndexes.Final
-      : CreateBasicStepsIndexes.Final;
+      ? this.CreateAdvancedFinalStepIndex
+      : this.CreateBasicFinalStepIndex;
 
     const currentStepIndex = this.workflowService.getCurrentStepIndex();
     if (currentStepIndex !== finalStepIndex) {
