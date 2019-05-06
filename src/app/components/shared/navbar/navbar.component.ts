@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 
+import { actionRoutes } from 'src/app/core/enums/action-routes';
 import { ActionType } from 'src/app/core/enums/action-type';
 import { AppState } from 'src/app/core/store/app.state';
-import { CreateRoutes } from 'src/app/core/enums/create-routes';
 
 @Component({
   selector: 'app-navbar',
@@ -14,11 +14,7 @@ export class NavbarComponent implements OnInit {
   public actionType = ActionType;
   public currentStepIndex: number;
   public selectedAction: string;
-  public firstTabLink: string;
-  public secondTabLink: string;
-  public thirdTabLink: string;
-  public forthTabLink: string;
-  public fifthTabLink: string;
+  public tabLinks: Array<string> = [];
 
   constructor(private store: Store<AppState>) { }
 
@@ -26,19 +22,31 @@ export class NavbarComponent implements OnInit {
     this.store
      .pipe(select(state => state.action))
      .subscribe(action => {
-       this.currentStepIndex = action.currentStepIndex;
-       this.selectedAction = action.selectedAction;
+        this.currentStepIndex = action.currentStepIndex;
+        this.selectedAction = action.selectedAction;
 
-       if (action.selectedAction === ActionType.CreateAdvanced) {
-        this.firstTabLink = CreateRoutes.PublicKeys.toString();
-        this.secondTabLink = CreateRoutes.AuthenticationKeys.toString();
-        this.thirdTabLink = CreateRoutes.Services.toString();
-        this.forthTabLink = CreateRoutes.EncryptKeys.toString();
-        this.fifthTabLink = CreateRoutes.Summary.toString();
-       } else if (action.selectedAction === ActionType.CreateBasic) {
-         this.firstTabLink = CreateRoutes.EncryptKeys.toString();
-         this.secondTabLink = CreateRoutes.Summary.toString();
-       }
+        const currentRoutes = actionRoutes[this.selectedAction];
+        for (let i = 1; i < currentRoutes.length; i++) {
+          this.tabLinks[i - 1] = currentRoutes[i].toString();
+        }
      });
+  }
+
+  getTabsCss() {
+    switch (this.selectedAction) {
+      case ActionType.CreateBasic:
+        return 'basic-mode-tabs';
+      default:
+        return null;
+    }
+  }
+
+  getLinerCss() {
+    switch (this.selectedAction) {
+      case ActionType.CreateBasic:
+        return 'basic-mode-liner';
+      default:
+        return null;
+    }
   }
 }

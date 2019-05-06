@@ -1,83 +1,16 @@
 <div class="board-inner" id="status-buttons">
-  <ul class="nav nav-tabs" id="advancedTabs" *ngIf="selectedAction === actionType.CreateAdvanced">
-    <div class="liner"></div>
+  <ul class="nav nav-tabs" [ngClass]="getTabsCss()">
+    <div class="liner" [ngClass]="getLinerCss()"></div>
                   
-    <li class="inactiveLink" routerLink="{{firstTabLink}}" routerLinkActive="active">
-      <a [ngClass]="{ 'active': lastCompletedStepIndex >= 0 }" data-toggle="tab">
+    <li class="inactiveLink" routerLink="{{tabLink}}" routerLinkActive="active" *ngFor="let tabLink of tabLinks; let i = index">
+      <a [ngClass]="{ 'active': currentStepIndex >= i + 1 }" data-toggle="tab">
         <span class="round-tabs mdblue">
-          <span class="circle">1</span>
-        </span>
-      </a>
-    </li>
-
-    <li class="inactiveLink" routerLink="{{secondTabLink}}" routerLinkActive="active">
-      <a [ngClass]="{ 'active': lastCompletedStepIndex >= 1 }" data-toggle="tab">
-        <span class="round-tabs mdblue">
-          <span class="circle">2</span>
-        </span> 
-      </a>
-    </li>
-
-    <li class="inactiveLink" routerLink="{{thirdTabLink}}" routerLinkActive="active">
-      <a [ngClass]="{ 'active': lastCompletedStepIndex >= 2 }" data-toggle="tab">
-        <span class="round-tabs mdblue">
-          <span class="circle">3</span>
-        </span>
-      </a>
-    </li>
-
-    <li class="inactiveLink" routerLink="{{forthTabLink}}" routerLinkActive="active">
-      <a [ngClass]="{ 'active': lastCompletedStepIndex >= 3 }" data-toggle="tab">
-        <span class="round-tabs mdblue">
-          <span class="circle">4</span>
-        </span>
-      </a>
-    </li>
-
-    <li class="inactiveLink" routerLink="{{fifthTabLink}}" routerLinkActive="active">
-      <a [ngClass]="{ 'active': lastCompletedStepIndex >= 4 }" data-toggle="tab">
-        <span class="round-tabs mdblue">
-          <span class="circle">5</span>
-        </span>
-      </a>
-    </li>
-    
-    <li class="inactiveLink" routerLink="/final" routerLinkActive="active">
-      <a [ngClass]="{ 'active': lastCompletedStepIndex >= 5 }" data-toggle="tab">
-        <span class="round-tabs mdblue">
-          <span class="circle">6</span>
+          <span class="circle">{{i + 1}}</span>
         </span>
       </a>
     </li>
   </ul>
 
-  <ul class="nav nav-tabs basic-mode-tabs" id="basicTabs" *ngIf="selectedAction === actionType.CreateBasic">
-    <div class="liner basic-mode-liner"></div>
-                  
-    <li class="inactiveLink" routerLink="{{firstTabLink}}" routerLinkActive="active">
-      <a [ngClass]="{ 'active': lastCompletedStepIndex >= 0 }" data-toggle="tab">
-        <span class="round-tabs mdblue">
-          <span class="circle">1</span>
-        </span>
-      </a>
-    </li>
-  
-    <li class="inactiveLink" routerLink="{{secondTabLink}}" routerLinkActive="active">
-      <a [ngClass]="{ 'active': lastCompletedStepIndex >= 1 }" data-toggle="tab">
-        <span class="round-tabs mdblue">
-          <span class="circle">2</span>
-        </span> 
-      </a>
-    </li>
-    
-    <li class="inactiveLink" routerLink="/final" routerLinkActive="active">
-      <a [ngClass]="{ 'active': lastCompletedStepIndex >= 2 }" data-toggle="tab">
-        <span class="round-tabs mdblue">
-          <span class="circle">3</span>
-        </span>
-      </a>
-    </li>
-  </ul>
   <div class="clearfix"></div>
 </div>
 
