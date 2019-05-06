@@ -1,19 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 
 import { ActionType } from 'src/app/core/enums/action-type';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from '../../base.component';
-import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-steps-indexes';
-import { CreateBasicStepsIndexes } from 'src/app/core/enums/create-basic-steps-indexes';
-import { CreateRoutes } from 'src/app/core/enums/create-routes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { DIDService } from 'src/app/core/services/did.service';
 import { KeysService } from 'src/app/core/services/keys.service';
-import { MoveToStep } from 'src/app/core/store/action/action.actions';
-import { SharedRoutes } from 'src/app/core/enums/shared-routes';
 import { Subscription } from 'rxjs';
 import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
 import { WorkflowService } from 'src/app/core/services/workflow.service';
@@ -25,19 +19,19 @@ import { WorkflowService } from 'src/app/core/services/workflow.service';
 })
 export class EncryptKeysComponent extends BaseComponent implements OnInit {
   private subscription$: Subscription;
-  public currentStepIndex = CreateAdvancedStepsIndexes.EncryptKeys;
+  private tooltipMessages = { };
+  public currentStepIndex: number;
   public encryptForm;
   public encryptedFile: string;
   public fileDowloaded: boolean;
   public keysGenerated: boolean;
-  public tooltipMessage: string;
+  public headerTooltipMessage: string;
   public boldPartTooltipMessage: string;
   public continueButtonText = 'Skip';
 
   constructor(
     private didService: DIDService,
     private fb: FormBuilder,
-    private router: Router,
     private store: Store<AppState>,
     private keysService: KeysService,
     private workflowService: WorkflowService) {
@@ -45,16 +39,14 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.registerTooltipMessages();
     this.subscription$ = this.store
      .pipe(select(state => state))
      .subscribe(state => {
-        if (state.action.selectedAction === ActionType.CreateAdvanced) {
-          this.tooltipMessage = TooltipMessages.EncryptHeaderTooltipAdvancedMode;
-          this.boldPartTooltipMessage = TooltipMessages.EncryptHeaderBoldPartTooltipAdvancedMode;
-        } else if (state.action.selectedAction === ActionType.CreateBasic) {
-          this.tooltipMessage = TooltipMessages.EncryptHeaderTooltipBasicMode;
-          this.boldPartTooltipMessage = TooltipMessages.EncryptHeaderBoldPartTooltipBasicMode;
-        }
+        this.currentStepIndex = state.action.currentStepIndex;
+        const selectedAction = state.action.selectedAction;
+        this.headerTooltipMessage = this.tooltipMessages[selectedAction][0];
+        this.boldPartTooltipMessage = this.tooltipMessages[selectedAction][1];
 
         if (state.form.publicKeys.length > 0 || state.form.authenticationKeys.length > 0) {
           this.keysGenerated = true;
@@ -103,25 +95,12 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
 
   goToNext() {
     if (this.fileDowloaded || !this.keysGenerated) {
-      const selectedAction = this.workflowService.getSelectedAction();
-      if (selectedAction === ActionType.CreateAdvanced) {
-        this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.Summary));
-      } else if (selectedAction === ActionType.CreateBasic) {
-        this.store.dispatch(new MoveToStep(CreateBasicStepsIndexes.Summary));
-      }
-
-      this.router.navigate([CreateRoutes.Summary]);
+      this.workflowService.moveToNextStep();
     }
   }
 
   goToPrevious() {
-    const selectedAction = this.workflowService.getSelectedAction();
-    if (selectedAction === ActionType.CreateAdvanced) {
-      this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.Services));
-      this.router.navigate([CreateRoutes.Services]);
-    } else if (selectedAction === ActionType.CreateBasic) {
-      this.router.navigate([SharedRoutes.Action]);
-    }
+    this.workflowService.moveToPreviousStep();
   }
 
   get password () {
@@ -146,5 +125,17 @@ export class EncryptKeysComponent extends BaseComponent implements OnInit {
     newKeysFile.did = this.didService.getId();
 
     return JSON.stringify(newKeysFile, null, 2);
+  }
+
+  private registerTooltipMessages() {
+    this.tooltipMessages[ActionType.CreateAdvanced] = [
+      TooltipMessages.EncryptHeaderTooltipAdvancedMode,
+      TooltipMessages.EncryptHeaderBoldPartTooltipAdvancedMode
+    ];
+
+    this.tooltipMessages[ActionType.CreateBasic] = [
+      TooltipMessages.EncryptHeaderTooltipBasicMode,
+      TooltipMessages.EncryptHeaderBoldPartTooltipBasicMode
+    ];
   }
 }

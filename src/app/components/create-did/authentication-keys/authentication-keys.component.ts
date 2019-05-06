@@ -1,23 +1,20 @@
 import { CollapseComponent } from 'angular-bootstrap-md';
 import { Component, OnInit, AfterViewInit, ViewChildren, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 
 import { AddAuthenticationKey, RemoveAuthenticationKey } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
-import { MoveToStep } from 'src/app/core/store/action/action.actions';
 import { ComponentKeyModel } from 'src/app/core/models/component-key.model';
-import { CreateRoutes } from 'src/app/core/enums/create-routes';
-import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { DIDService } from 'src/app/core/services/did.service';
 import { KeyModel } from 'src/app/core/models/key.model';
 import { KeysService } from 'src/app/core/services/keys.service';
 import { SignatureType } from 'src/app/core/enums/signature-type';
 import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
+import { WorkflowService } from 'src/app/core/services/workflow.service';
 
 const GENERATE_ACTION = 'generate';
 const UP_POSITION = 'up';
@@ -42,11 +39,11 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
     private zone: NgZone,
     private store: Store<AppState>,
     private keysService: KeysService,
-    private didService: DIDService) {
+    private didService: DIDService,
+    private workflowService: WorkflowService) {
     super();
   }
 
@@ -158,13 +155,11 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   }
 
   goToNext() {
-    this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.Services));
-    this.router.navigate([CreateRoutes.Services]);
+    this.workflowService.moveToNextStep();
   }
 
   goToPrevious() {
-    this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.PublicKeys));
-    this.router.navigate([CreateRoutes.PublicKeys]);
+    this.workflowService.moveToPreviousStep();
   }
 
   get type () {
