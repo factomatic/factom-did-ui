@@ -25,9 +25,11 @@ export class NavbarComponent implements OnInit {
         this.currentStepIndex = action.currentStepIndex;
         this.selectedAction = action.selectedAction;
 
-        const currentRoutes = actionRoutes[this.selectedAction];
-        for (let i = 1; i < currentRoutes.length; i++) {
-          this.tabLinks[i - 1] = currentRoutes[i].toString();
+        if (this.selectedAction) {
+          const currentRoutes = actionRoutes[this.selectedAction];
+          for (let i = 1; i < currentRoutes.length; i++) {
+            this.tabLinks[i - 1] = currentRoutes[i].toString();
+          }
         }
      });
   }
