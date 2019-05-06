@@ -7,7 +7,7 @@ import { PublicKeysComponent } from './public-keys/public-keys.component';
 import { ServicesComponent } from './services/services.component';
 import { SummaryComponent } from './summary/summary.component';
 
-const didCreationRoutes: Routes = [
+const didRoutes: Routes = [
   { path: 'keys/authentication', component: AuthenticationKeysComponent },
   { path: 'keys/encrypt', component: EncryptKeysComponent },
   { path: 'keys/public', component: PublicKeysComponent },
@@ -16,7 +16,7 @@ const didCreationRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(didCreationRoutes)],
+  imports: [RouterModule.forChild(didRoutes)],
   exports: [RouterModule]
 })
 export class CreateDIDRoutingModule { }
