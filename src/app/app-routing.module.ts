@@ -9,7 +9,7 @@ import { FinalComponentGuard } from './core/guards/final-component.guard';
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'action' },
   { path: 'action', component: ActionComponent },
-  { path: 'create', loadChildren: './components/create-did/create-did.module#CreateDIDModule', canActivate: [ CreateActionGuard ] },
+  { path: 'create', loadChildren: './components/did/did.module#DIDModule', canActivate: [ CreateActionGuard ] },
   { path: 'final', component: FinalComponent, canActivate: [ FinalComponentGuard ] },
   { path: '**', redirectTo: 'action' }
 ];

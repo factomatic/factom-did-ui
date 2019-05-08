@@ -1,20 +1,17 @@
 import { CollapseComponent } from 'angular-bootstrap-md';
 import { Component, OnInit, AfterViewInit, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 
 import { AddService, RemoveService } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
 import { ComponentServiceModel } from 'src/app/core/models/component-service.model';
-import { CreateRoutes } from 'src/app/core/enums/create-routes';
-import { CreateAdvancedStepsIndexes } from 'src/app/core/enums/create-advanced-steps-indexes';
 import CustomValidators from 'src/app/core/utils/customValidators';
-import { MoveToStep } from 'src/app/core/store/action/action.actions';
 import { ServiceModel } from 'src/app/core/models/service.model';
 import { Subscription } from 'rxjs';
 import { TooltipMessages } from 'src/app/core/utils/tooltip.messages';
+import { WorkflowService } from 'src/app/core/services/workflow.service';
 
 const UP_POSITION = 'up';
 const DOWN_POSITION = 'down';
@@ -37,8 +34,8 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
-    private store: Store<AppState>) {
+    private store: Store<AppState>,
+    private workflowService: WorkflowService) {
     super();
   }
 
@@ -98,13 +95,11 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   goToNext() {
-    this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.EncryptKeys));
-    this.router.navigate([CreateRoutes.EncryptKeys]);
+    this.workflowService.moveToNextStep();
   }
 
   goToPrevious() {
-    this.store.dispatch(new MoveToStep(CreateAdvancedStepsIndexes.AuthenticationKeys));
-    this.router.navigate([CreateRoutes.AuthenticationKeys]);
+    this.workflowService.moveToPreviousStep();
   }
 
   get type () {

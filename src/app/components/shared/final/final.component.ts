@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 
 import { BaseComponent } from 'src/app/components/base.component';
 import { DIDService } from 'src/app/core/services/did.service';
+import { SharedRoutes } from 'src/app/core/enums/shared-routes';
 
 @Component({
   selector: 'app-final',
@@ -34,6 +35,6 @@ export class FinalComponent extends BaseComponent implements OnInit {
 
   chooseAnotherAction() {
     this.didService.clearData();
-    this.router.navigate(['action']);
+    this.router.navigate([SharedRoutes.Action]);
   }
 }

@@ -3,7 +3,7 @@ import { CLEAR_FORM, MOVE_TO_STEP, SELECT_ACTION } from './action.actions';
 
 const initialState = {
   selectedAction: undefined,
-  lastCompletedStepIndex: 0
+  currentStepIndex: 0
 };
 
 export function actionReducers(state: ActionState = initialState, action) {
@@ -12,7 +12,7 @@ export function actionReducers(state: ActionState = initialState, action) {
       return initialState;
     case MOVE_TO_STEP:
       return Object.assign({}, state, {
-        lastCompletedStepIndex: action.payload - 1
+        currentStepIndex: action.payload
       });
     case SELECT_ACTION:
       return Object.assign({}, state, {
