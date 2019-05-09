@@ -1,6 +1,7 @@
 import { ActionType } from './action-type';
 import { CreateRoutes } from './create-routes';
 import { SharedRoutes } from './shared-routes';
+import { UpdateRoutes } from './update-routes';
 
 const actionRoutes = {
   [ActionType.CreateAdvanced]: [
@@ -16,6 +17,16 @@ const actionRoutes = {
     SharedRoutes.Action,
     CreateRoutes.EncryptKeys,
     CreateRoutes.Summary,
+    SharedRoutes.Final
+  ],
+  [ActionType.Update]: [
+    SharedRoutes.Action,
+    UpdateRoutes.Upload,
+    UpdateRoutes.PublicKeys,
+    UpdateRoutes.AuthenticationKeys,
+    UpdateRoutes.Services,
+    UpdateRoutes.EncryptKeys,
+    UpdateRoutes.Summary,
     SharedRoutes.Final
   ]
 };
