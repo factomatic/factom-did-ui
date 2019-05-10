@@ -1,5 +1,5 @@
 export enum UpdateRoutes {
-  Upload = '/update/upload',
+  Provide = '/update/did',
   PublicKeys = '/update/keys/public',
   AuthenticationKeys = '/update/keys/authentication',
   Services = '/update/services',

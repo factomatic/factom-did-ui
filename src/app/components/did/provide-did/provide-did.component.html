@@ -1,0 +1,31 @@
+<div class="tab-pane fade in active">
+  <h4 class="head text-center">
+    Provide DID
+  </h4>
+  <br/>
+  <div class="row">
+    <div class="col-xs-offset-1 col-xs-10 col-sm-offset-3 col-sm-6">
+      <form [formGroup]="provideForm">
+        <div class="form-group">
+          <label class="control-label" for="didId">Enter DID Id</label>
+          <input 
+            type="text" 
+            class="form-control input-md" 
+            formControlName="didId" 
+            id="didId" 
+            placeholder="DID Id"
+            pattern="^did:fctr:[abcdef0-9]{64}$"
+            [ngClass]="{ 'is-invalid': didId.touched && didId.errors }" />
+          <div *ngIf="didId.errors" class="invalid-feedback">
+            <div *ngIf="didId.errors['required']">DID Id is required!</div>
+            <div *ngIf="didId.errors['pattern']">DID Id must be a valid DID!</div>
+          </div>
+        </div>
+      </form>
+      <div class="row justify-content-between mt-4">
+        <button class="btn-md-blue" mdbBtn type="button" color="primary" mdbWavesEffect (click)="goToPrevious()"> <span class="glyphicon glyphicon-arrow-left mr-3"></span> Back</button>
+        <button class="btn-md-blue" mdbBtn type="button" color="primary" mdbWavesEffect (click)="goToNext()" [disabled]="!didId.valid"> Next <span class="glyphicon glyphicon-arrow-right ml-3"></span></button>
+      </div>
+    </div>
+  </div>
+</div>

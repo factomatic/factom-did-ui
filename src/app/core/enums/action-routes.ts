@@ -21,7 +21,7 @@ const actionRoutes = {
   ],
   [ActionType.Update]: [
     SharedRoutes.Action,
-    UpdateRoutes.Upload,
+    UpdateRoutes.Provide,
     UpdateRoutes.PublicKeys,
     UpdateRoutes.AuthenticationKeys,
     UpdateRoutes.Services,
