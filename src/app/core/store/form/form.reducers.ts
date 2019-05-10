@@ -1,4 +1,5 @@
 import { ADD_AUTHENTICATION_KEY, ADD_PUBLIC_KEY, ADD_SERVICE,
+  ADD_ORIGINAL_AUTHENTICATION_KEYS, ADD_ORIGINAL_PUBLIC_KEYS, ADD_ORIGINAL_SERVICES,
   REMOVE_AUTHENTICATION_KEY, REMOVE_PUBLIC_KEY, REMOVE_SERVICE } from './form.actions';
 import { CLEAR_FORM } from '../action/action.actions';
 import { FormState } from './form.state';
@@ -8,7 +9,10 @@ import { ServiceModel } from '../../models/service.model';
 const initialState: FormState = {
   authenticationKeys: [],
   publicKeys: [],
-  services: []
+  services: [],
+  originalAuthenticationKeys: [],
+  originalPublicKeys: [],
+  originalServices: []
 };
 
 function addAuthenticationKey(state: FormState, authenticationKey: KeyModel) {
@@ -29,6 +33,30 @@ function addService(state: FormState, service: ServiceModel) {
   return {
     ...state,
     services: [...state.services, service]
+  };
+}
+
+function addOriginalAuthenticationKeys(state: FormState, authenticationKeys: KeyModel[]) {
+  return {
+    ...state,
+    authenticationKeys: authenticationKeys,
+    originalAuthenticationKeys: authenticationKeys
+  };
+}
+
+function addOriginalPublicKey(state: FormState, publicKeys: KeyModel[]) {
+  return {
+    ...state,
+    publicKeys: publicKeys,
+    originalPublicKeys: publicKeys
+  };
+}
+
+function addOriginalService(state: FormState, services: ServiceModel[]) {
+  return {
+    ...state,
+    services: services,
+    originalServices: services
   };
 }
 
@@ -62,6 +90,12 @@ export function formReducers(state: FormState = initialState, action) {
       return addPublicKey(state, action.payload);
     case ADD_SERVICE:
       return addService(state, action.payload);
+    case ADD_ORIGINAL_AUTHENTICATION_KEYS:
+      return addOriginalAuthenticationKeys(state, action.payload);
+    case ADD_ORIGINAL_PUBLIC_KEYS:
+      return addOriginalPublicKey(state, action.payload);
+    case ADD_ORIGINAL_SERVICES:
+      return addOriginalService(state, action.payload);
     case CLEAR_FORM:
       return initialState;
     case REMOVE_AUTHENTICATION_KEY:
