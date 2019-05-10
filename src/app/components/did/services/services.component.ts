@@ -3,6 +3,7 @@ import { Component, OnInit, AfterViewInit, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store, select } from '@ngrx/store';
 
+import { ActionType } from 'src/app/core/enums/action-type';
 import { AddService, RemoveService } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
@@ -26,11 +27,13 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
   private subscription$: Subscription;
   public services: ComponentServiceModel[] = [];
   public serviceForm: FormGroup;
+  public actionType = ActionType;
   public headerTooltipMessage = TooltipMessages.ServicesHeaderTooltip;
   public headerBoldPartTooltipMessage = TooltipMessages.ServicesHeaderBoldPartTooltip;
   public typeTooltipMessage = TooltipMessages.ServiceTypeTooltip;
   public endpointTooltipMessage = TooltipMessages.ServiceEndpointTooltip;
   public continueButtonText: string;
+  public selectedAction: string;
 
   constructor(
     private fb: FormBuilder,
@@ -45,6 +48,7 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
       .subscribe(state => {
         this.services = state.form.services.map(service => new ComponentServiceModel(service, DOWN_POSITION));
         this.continueButtonText = this.services.length > 0 ? 'Next' : 'Skip';
+        this.selectedAction = state.action.selectedAction;
       });
 
     this.subscriptions.push(this.subscription$);

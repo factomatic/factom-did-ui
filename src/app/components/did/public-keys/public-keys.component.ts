@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store, select } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 
+import { ActionType } from 'src/app/core/enums/action-type';
 import { AddPublicKey, RemovePublicKey } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
@@ -32,10 +33,12 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
   private authenticationKeys: KeyModel[] = [];
   public publicKeys: ComponentKeyModel[] = [];
   public keyForm: FormGroup;
+  public actionType = ActionType;
   public aliasTooltipMessage = TooltipMessages.AliasTooltip;
   public controllerTooltipMessage = TooltipMessages.ControllerTooltip;
   public signatureTypeTooltipMessage = TooltipMessages.SignatureTypeTooltip;
   public continueButtonText: string;
+  public selectedAction: string;
 
   constructor(
     private fb: FormBuilder,
@@ -54,6 +57,7 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
         this.authenticationKeys = state.form.authenticationKeys;
 
         this.continueButtonText = this.publicKeys.length > 0 ? 'Next' : 'Skip';
+        this.selectedAction = state.action.selectedAction;
      });
 
     this.subscriptions.push(this.subscription$);

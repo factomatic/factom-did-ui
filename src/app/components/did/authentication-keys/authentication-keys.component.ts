@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store, select } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 
+import { ActionType } from 'src/app/core/enums/action-type';
 import { AddAuthenticationKey, RemoveAuthenticationKey } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
@@ -30,12 +31,14 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   private subscription$: Subscription;
   private didId: string;
   public keyForm: FormGroup;
-  public selectedAction = GENERATE_ACTION;
+  public actionType = ActionType;
+  public componentAction = GENERATE_ACTION;
   public selectedKey: KeyModel;
   public authenticationKeys: ComponentKeyModel[] = [];
   public availablePublicKeys: ComponentKeyModel[] = [];
   public actionDropdownTooltipMessage = TooltipMessages.AuthenticationDropdownTooltip;
   public continueButtonText: string;
+  public selectedAction: string;
 
   constructor(
     private fb: FormBuilder,
@@ -59,6 +62,7 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
           .map(key => new ComponentKeyModel(key, DOWN_POSITION));
 
         this.continueButtonText = this.authenticationKeys.length > 0 ? 'Next' : 'Skip';
+        this.selectedAction = state.action.selectedAction;
       });
 
     this.subscriptions.push(this.subscription$);
@@ -110,9 +114,9 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   }
 
   changeAction(event) {
-    this.selectedAction = event.target.value;
-    if (this.selectedAction !== GENERATE_ACTION) {
-      this.selectedKey = this.availablePublicKeys.find(k => k.keyModel.publicKey === this.selectedAction).keyModel;
+    this.componentAction = event.target.value;
+    if (this.componentAction !== GENERATE_ACTION) {
+      this.selectedKey = this.availablePublicKeys.find(k => k.keyModel.publicKey === this.componentAction).keyModel;
     } else {
       this.selectedKey = undefined;
     }
@@ -131,7 +135,7 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   addSelectedKey() {
     this.store.dispatch(new AddAuthenticationKey(this.selectedKey));
     this.selectedKey = undefined;
-    this.selectedAction = GENERATE_ACTION;
+    this.componentAction = GENERATE_ACTION;
 
     setTimeout(() => {
       this.collapses.forEach((collapse: CollapseComponent, index) => {
