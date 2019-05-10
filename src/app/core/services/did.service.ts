@@ -5,7 +5,6 @@ import { Injectable } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 
 import { AppState } from '../store/app.state';
-import { DIDDocumentModel } from '../models/did-document.model';
 import { environment } from 'src/environments/environment';
 import { KeyModel } from '../models/key.model';
 import { ServiceModel } from '../models/service.model';
@@ -37,7 +36,7 @@ export class DIDService {
      });
   }
 
-  generateDocument(): DIDDocumentModel {
+  generateDocument(): string {
     const publicKeys = this.formPublicKeys.map(k => ({
       id: `${this.id}#${k.alias}`,
       type: `${k.type}${this.VerificationKeySuffix}`,
@@ -77,15 +76,7 @@ export class DIDService {
       'service': services
     };
 
-    const document = JSON.stringify(this.didDocument, null, 2);
-
-    const documentSize = this.calculateEntrySize(
-      [this.nonce],
-      [this.CreateDIDEntry, this.version],
-      JSON.stringify(this.didDocument)
-    );
-
-    return new DIDDocumentModel(document, documentSize);
+    return JSON.stringify(this.didDocument, null, 2);
   }
 
   getId(): string {
@@ -94,6 +85,14 @@ export class DIDService {
     }
 
     return this.id;
+  }
+
+  getDocumentSize(): number {
+    return this.calculateEntrySize(
+      [this.nonce],
+      [this.CreateDIDEntry, this.version],
+      JSON.stringify(this.didDocument)
+    );
   }
 
   recordOnChain(): Observable<Object> {

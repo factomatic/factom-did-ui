@@ -28,10 +28,9 @@ export class SummaryComponent implements OnInit {
       this.recordOnChainButtonName = 'Record';
     }
 
-    const didDocumentResult = this.didService.generateDocument();
-    this.didDocument = didDocumentResult.document;
+    this.didDocument = this.didService.generateDocument();
 
-    if (didDocumentResult.size > environment.entrySizeLimit) {
+    if (this.didService.getDocumentSize() > environment.entrySizeLimit) {
       this.documentSizeExceeded = true;
     }
   }
