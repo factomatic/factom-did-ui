@@ -2,14 +2,16 @@ declare const Buffer;
 import * as nacl from 'tweetnacl/nacl-fast';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 
+import { AddOriginalAuthenticationKeys, AddOriginalPublicKeys, AddOriginalServices } from '../store/form/form.actions';
 import { AppState } from '../store/app.state';
+import { DIDDocument } from '../interfaces/did-document';
 import { environment } from 'src/environments/environment';
 import { KeyModel } from '../models/key.model';
 import { ServiceModel } from '../models/service.model';
 import { toHexString, calculateChainId } from '../utils/helpers';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class DIDService {
@@ -22,7 +24,7 @@ export class DIDService {
   private formPublicKeys: KeyModel[];
   private formAuthenticationKeys: KeyModel[];
   private formServices: ServiceModel[];
-  private didDocument: Object;
+  private didDocument: DIDDocument;
 
   constructor (
     private http: HttpClient,
@@ -116,6 +118,16 @@ export class DIDService {
     this.didDocument = undefined;
   }
 
+  upload(didId: string) {
+    console.log(didId);
+    // call resolver to get did document
+    // tslint:disable-next-line:max-line-length
+    const response = `{"@context":"https://w3id.org/did/v1","id":"did:fctr:f7a3860023452c7db222c7fd9d0e055b9ba3f9f9db02692b2eec8351c71b8e5c","publicKey":[{"id":"did:fctr:f7a3860023452c7db222c7fd9d0e055b9ba3f9f9db02692b2eec8351c71b8e5c#myfirstkey","type":"Ed25519VerificationKey","controller":"did:fctr:f7a3860023452c7db222c7fd9d0e055b9ba3f9f9db02692b2eec8351c71b8e5c","publicKeyBase58":"GtRQwPQ6a8Qe9DbzBCTmBERovZ4URh7BvwziQMURRaEQ"},{"id":"did:fctr:f7a3860023452c7db222c7fd9d0e055b9ba3f9f9db02692b2eec8351c71b8e5c#mysecondkey","type":"ECDSASecp256k1VerificationKey","controller":"did:fctr:f7a3860023452c7db222c7fd9d0e055b9ba3f9f9db02692b2eec8351c71b8e5c","publicKeyBase58":"eeK7Saop24d3hej7r4BNgyna6pXrCEbgCTZYHj7ApkRh"}],"authentication":["did:fctr:f7a3860023452c7db222c7fd9d0e055b9ba3f9f9db02692b2eec8351c71b8e5c#myfirstkey",{"id":"did:fctr:f7a3860023452c7db222c7fd9d0e055b9ba3f9f9db02692b2eec8351c71b8e5c#mythirdkey","type":"Ed25519VerificationKey","controller":"did:fctr:f7a3860023452c7db222c7fd9d0e055b9ba3f9f9db02692b2eec8351c71b8e5c","publicKeyBase58":"2reWgag62C9ryZcCmheyzDVvQE5j9j1HCgVMbJBmoPvx"}],"service":[{"id":"did:fctr:f7a3860023452c7db222c7fd9d0e055b9ba3f9f9db02692b2eec8351c71b8e5c#myservice","type":"PhotoStreamService","serviceEndpoint":"https://example.org/photos/379283"}]}`;
+    this.id = didId;
+    this.didDocument = JSON.parse(response);
+    this.parseDocument();
+  }
+
   private generateId(): string {
     this.nonce = toHexString(nacl.randomBytes(32));
 
@@ -144,5 +156,39 @@ export class DIDService {
 
   private getBinarySize(string): number {
     return Buffer.byteLength(string, 'utf8');
+  }
+
+  private parseDocument() {
+    const publicKeys = this.didDocument.publicKey.map(k => new KeyModel(
+      k.id.split('#')[1],
+      k.type,
+      k.controller,
+      k.publicKeyBase58
+    ));
+
+    const authenticationKeys = [];
+    this.didDocument.authentication.forEach(k => {
+      if (typeof k === 'string') {
+        const key = publicKeys.find(pk => pk.alias === k.split('#')[1]);
+        authenticationKeys.push(key);
+      } else {
+        authenticationKeys.push(new KeyModel(
+          k.id.split('#')[1],
+          k.type,
+          k.controller,
+          k.publicKeyBase58
+        ));
+      }
+    });
+
+    const services = this.didDocument.service.map(s => new ServiceModel(
+      s.type,
+      s.serviceEndpoint,
+      s.id.split('#')[1]
+    ));
+
+    this.store.dispatch(new AddOriginalAuthenticationKeys(authenticationKeys));
+    this.store.dispatch(new AddOriginalPublicKeys(publicKeys));
+    this.store.dispatch(new AddOriginalServices(services));
   }
 }
