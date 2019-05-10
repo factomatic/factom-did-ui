@@ -19,9 +19,9 @@
               </label>
             </div>
             <div class="radio mt-3">
-              <label id="update-did-label" class="text-black-50">
-                <input type="radio" required name="action" value="update" disabled>
-                Update Existing DID ( Coming soon! )
+              <label>
+                <input type="radio" #action="ngModel" required name="action" [(ngModel)]="actionType" value="update">
+                Update Existing DID
               </label>
             </div>
           </div>
