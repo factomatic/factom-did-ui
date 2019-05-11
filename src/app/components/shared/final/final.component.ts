@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { BaseComponent } from 'src/app/components/base.component';
-import { DIDService } from 'src/app/core/services/did.service';
 import { SharedRoutes } from 'src/app/core/enums/shared-routes';
 
 @Component({
@@ -17,24 +16,21 @@ export class FinalComponent extends BaseComponent implements OnInit {
   public didId: string;
 
   constructor(
-    private didService: DIDService,
     private route: ActivatedRoute,
     private router: Router) {
     super();
   }
 
   ngOnInit() {
-    this.didId = this.didService.getId();
-
     this.subscription$ = this.route.queryParams.subscribe(params => {
       this.externalLink = params.url;
+      this.didId = params.didId;
     });
 
     this.subscriptions.push(this.subscription$);
   }
 
   chooseAnotherAction() {
-    this.didService.clearData();
     this.router.navigate([SharedRoutes.Action]);
   }
 }
