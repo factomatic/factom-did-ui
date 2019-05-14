@@ -97,9 +97,9 @@ export class DIDService {
   }
 
   private generateDocument(): DIDDocument {
-    const publicKeys = this.getPublicKeysEntryObjects(this.formPublicKeys);
-    const authenticationKeys = this.getAuthenticationKeysEntryObjects(this.formAuthenticationKeys, this.formPublicKeys);
-    const services = this.getServicesEntryObjects(this.formServices);
+    const publicKeys = this.transformPublicKeysToEntryObjects(this.formPublicKeys);
+    const authenticationKeys = this.transformAuthenticationKeysToEntryObjects(this.formAuthenticationKeys, this.formPublicKeys);
+    const services = this.transformServicesToEntryObjects(this.formServices);
 
     const didDocument: DIDDocument = {
       '@context': 'https://w3id.org/did/v1',
@@ -113,7 +113,6 @@ export class DIDService {
   }
 
   private generateUpdateEntry(): {} {
-    this.nonce = toHexString(nacl.randomBytes(32));
     const newPublicKeys = this.getNew(this.originalPublicKeys, this.formPublicKeys);
     const newAuthenticationKeys = this.getNew(this.originalAuthenticationKeys, this.formAuthenticationKeys);
     const newServices = this.getNew(this.originalServices, this.formServices);
@@ -124,7 +123,7 @@ export class DIDService {
     const updateEntry = {};
 
     if (newPublicKeys.length > 0 || newAuthenticationKeys.length > 0 || newServices.length > 0) {
-      updateEntry['add'] = this.getAddObject(
+      updateEntry['add'] = this.constructAddObject(
         newPublicKeys as KeyModel[],
         newAuthenticationKeys as KeyModel[],
         newServices as ServiceModel[]
@@ -132,22 +131,17 @@ export class DIDService {
     }
 
     if (revokedPublicKeys.length > 0 || revokedAuthenticationKeys.length > 0 || revokedServices.length > 0) {
-      updateEntry['revoke'] = this.getRevokeObject(revokedPublicKeys, revokedAuthenticationKeys, revokedServices);
+      updateEntry['revoke'] = this.constructRevokeObject(revokedPublicKeys, revokedAuthenticationKeys, revokedServices);
     }
 
     return updateEntry;
   }
 
-  private getPublicKeysEntryObjects(publicKeys: KeyModel[]): Array<{}> {
-    return publicKeys.map(k => ({
-      id: `${this.id}#${k.alias}`,
-      type: `${k.type}${this.VerificationKeySuffix}`,
-      controller: k.controller,
-      publicKeyBase58: k.publicKey
-    }));
+  private transformPublicKeysToEntryObjects(publicKeys: KeyModel[]): Array<{}> {
+    return publicKeys.map(k => (this.buildKeyEntryObject(k)));
   }
 
-  private getAuthenticationKeysEntryObjects(authenticationKeys: KeyModel[], publicKeys: KeyModel[]) {
+  private transformAuthenticationKeysToEntryObjects(authenticationKeys: KeyModel[], publicKeys: KeyModel[]) {
     /** Divided in two separate arrays because the embeddedKeys must be included first in the final array. */
     const embeddedAuthenticationKeys = [];
     const fullAuthenticationKeys = [];
@@ -155,19 +149,14 @@ export class DIDService {
       if (publicKeys.includes(k)) {
         embeddedAuthenticationKeys.push(`${this.id}#${k.alias}`);
       } else {
-        fullAuthenticationKeys.push({
-          id: `${this.id}#${k.alias}`,
-          type: `${k.type}${this.VerificationKeySuffix}`,
-          controller: k.controller,
-          publicKeyBase58: k.publicKey
-         });
+        fullAuthenticationKeys.push(this.buildKeyEntryObject(k));
       }
     });
 
     return embeddedAuthenticationKeys.concat(fullAuthenticationKeys);
   }
 
-  private getServicesEntryObjects(services: ServiceModel[]): Array<{}> {
+  private transformServicesToEntryObjects(services: ServiceModel[]): Array<{}> {
     return services.map(s => ({
       id: `${this.id}#${s.alias}`,
       type: s.type,
@@ -208,25 +197,25 @@ export class DIDService {
     return revoked;
   }
 
-  private getAddObject(newPublicKeys: KeyModel[], newAuthenticationKeys: KeyModel[], newServices: ServiceModel[]): {} {
+  private constructAddObject(newPublicKeys: KeyModel[], newAuthenticationKeys: KeyModel[], newServices: ServiceModel[]): {} {
     const add = {};
 
     if (newPublicKeys.length > 0) {
-      add['publicKey'] = this.getPublicKeysEntryObjects(newPublicKeys as KeyModel[]);
+      add['publicKey'] = this.transformPublicKeysToEntryObjects(newPublicKeys as KeyModel[]);
     }
 
     if (newAuthenticationKeys.length > 0) {
-      add['authentication'] = this.getAuthenticationKeysEntryObjects(newAuthenticationKeys as KeyModel[], this.formPublicKeys);
+      add['authentication'] = this.transformAuthenticationKeysToEntryObjects(newAuthenticationKeys as KeyModel[], this.formPublicKeys);
     }
 
     if (newServices.length > 0) {
-      add['service'] = this.getServicesEntryObjects(newServices as ServiceModel[]);
+      add['service'] = this.transformServicesToEntryObjects(newServices as ServiceModel[]);
     }
 
     return add;
   }
 
-  private getRevokeObject(revokedPublicKeys: string[], revokedAuthenticationKeys: string[], revokedServices: string[]): {} {
+  private constructRevokeObject(revokedPublicKeys: string[], revokedAuthenticationKeys: string[], revokedServices: string[]): {} {
     const revoke = {};
 
     if (revokedPublicKeys.length > 0) {
@@ -275,15 +264,27 @@ export class DIDService {
   }
 
   private parseDocument(didDocument: DIDDocument) {
-    const publicKeys = didDocument.publicKey.map(k => new KeyModel(
+    const publicKeys = this.extractPublicKeys(didDocument.publicKey);
+    const authenticationKeys = this.extractAuthenticationKeys(didDocument.authentication, publicKeys);
+    const services = this.extractServices(didDocument.service);
+
+    this.store.dispatch(new AddOriginalAuthenticationKeys(authenticationKeys));
+    this.store.dispatch(new AddOriginalPublicKeys(publicKeys));
+    this.store.dispatch(new AddOriginalServices(services));
+  }
+
+  private extractPublicKeys(documentPubKeys: any[]): KeyModel[] {
+    return documentPubKeys.map(k => new KeyModel(
       k.id.split('#')[1],
       k.type,
       k.controller,
       k.publicKeyBase58
     ));
+  }
 
-    const authenticationKeys = [];
-    didDocument.authentication.forEach(k => {
+  private extractAuthenticationKeys(documentAuthKeys: any[], publicKeys: KeyModel[]): KeyModel[] {
+    const authenticationKeys: KeyModel[] = [];
+    documentAuthKeys.forEach(k => {
       if (typeof k === 'string') {
         const key = publicKeys.find(pk => pk.alias === k.split('#')[1]);
         authenticationKeys.push(key);
@@ -297,14 +298,14 @@ export class DIDService {
       }
     });
 
-    const services = didDocument.service.map(s => new ServiceModel(
+    return authenticationKeys;
+  }
+
+  private extractServices(documentServices: any[]): ServiceModel[] {
+    return documentServices.map(s => new ServiceModel(
       s.type,
       s.serviceEndpoint,
       s.id.split('#')[1]
     ));
-
-    this.store.dispatch(new AddOriginalAuthenticationKeys(authenticationKeys));
-    this.store.dispatch(new AddOriginalPublicKeys(publicKeys));
-    this.store.dispatch(new AddOriginalServices(services));
   }
 }
