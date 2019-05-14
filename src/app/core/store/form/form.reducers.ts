@@ -1,5 +1,6 @@
 import { ADD_AUTHENTICATION_KEY, ADD_PUBLIC_KEY, ADD_SERVICE,
   ADD_ORIGINAL_AUTHENTICATION_KEYS, ADD_ORIGINAL_PUBLIC_KEYS, ADD_ORIGINAL_SERVICES,
+  UPDATE_PUBLIC_KEY,
   REMOVE_AUTHENTICATION_KEY, REMOVE_PUBLIC_KEY, REMOVE_SERVICE } from './form.actions';
 import { CLEAR_FORM } from '../action/action.actions';
 import { FormState } from './form.state';
@@ -60,6 +61,21 @@ function addOriginalService(state: FormState, services: ServiceModel[]) {
   };
 }
 
+function updatePublicKey(state: FormState, key: KeyModel) {
+  if (state.authenticationKeys.find(k => k.publicKey === key.publicKey)) {
+    return {
+      ...state,
+      authenticationKeys: [...state.authenticationKeys.filter(k => k.publicKey !== key.publicKey), key],
+      publicKeys: [...state.publicKeys.filter(k => k.publicKey !== key.publicKey), key]
+    };
+  }
+
+  return {
+    ...state,
+    publicKeys: [...state.publicKeys.filter(k => k.publicKey !== key.publicKey), key]
+  };
+}
+
 function removeAuthenticationKey(state: FormState, key: KeyModel) {
   return {
     ...state,
@@ -70,8 +86,8 @@ function removeAuthenticationKey(state: FormState, key: KeyModel) {
 function removePublicKey(state: FormState, key: KeyModel) {
   return {
     ...state,
-    authenticationKeys: state.authenticationKeys.filter(k => k !== key),
-    publicKeys: state.publicKeys.filter(k => k !== key)
+    authenticationKeys: state.authenticationKeys.filter(k => k.publicKey !== key.publicKey),
+    publicKeys: state.publicKeys.filter(k => k.publicKey !== key.publicKey)
   };
 }
 
@@ -96,6 +112,8 @@ export function formReducers(state: FormState = initialState, action) {
       return addOriginalPublicKey(state, action.payload);
     case ADD_ORIGINAL_SERVICES:
       return addOriginalService(state, action.payload);
+    case UPDATE_PUBLIC_KEY:
+      return updatePublicKey(state, action.payload);
     case CLEAR_FORM:
       return initialState;
     case REMOVE_AUTHENTICATION_KEY:
