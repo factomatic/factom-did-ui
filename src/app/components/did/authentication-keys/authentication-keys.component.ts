@@ -55,11 +55,11 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
       .pipe(select(state => state))
       .subscribe(state => {
         this.authenticationKeys = state.form.authenticationKeys
-          .map(key => new ComponentKeyModel(key, DOWN_POSITION));
+          .map(key => new ComponentKeyModel(key, DOWN_POSITION, true));
 
         this.availablePublicKeys = state.form.publicKeys
           .filter(k => !state.form.authenticationKeys.includes(k))
-          .map(key => new ComponentKeyModel(key, DOWN_POSITION));
+          .map(key => new ComponentKeyModel(key, DOWN_POSITION, true));
 
         this.continueButtonText = this.authenticationKeys.length > 0 ? 'Next' : 'Skip';
         this.selectedAction = state.action.selectedAction;
