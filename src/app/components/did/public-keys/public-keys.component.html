@@ -4,7 +4,7 @@
   <br/>
   <div class="row">
     <div class="col-xs-offset-1 col-xs-10 col-sm-offset-3 col-sm-6">
-      <fieldset class="collapsible collapsed mb-5" *ngFor="let key of publicKeys">
+      <fieldset class="collapsible collapsed mb-5" *ngFor="let key of componentKeys">
         <legend (click)="collapse.toggle(); toggleKey(key.keyModel);">
           {{key.keyModel.alias}}
           <i class="fas fa-caret-{{key.iconPosition}} ml-2"></i>
@@ -19,18 +19,53 @@
           </div>
   
           <div class="form-group">
-            <label class="control-label" for="controller">Key controller</label>
-            <input type="text" class="form-control input-md" id="controller" value="{{key.keyModel.controller}}" disabled />
+            <label class="control-label" for="keyController">Key controller</label>
+            <input 
+              type="text"
+              class="form-control input-md"
+              id="keyController"
+              #keyController="ngModel"
+              [(ngModel)]="key.keyModel.controller"
+              pattern="^did:fctr:[abcdef0-9]{64}$"
+              [ngClass]="{ 'invalid-border': keyController.invalid, 'disabled': key.disabled }"
+              required />
+            <div class="invalid-alert" *ngIf="keyController.errors && (keyController.dirty || keyController.touched)">  
+              <p *ngIf="keyController?.errors.required">Key controller is required!</p>
+              <p *ngIf="keyController?.errors.pattern">Key controller must be a valid DID!</p>
+            </div>
           </div>
 
           <div class="form-group">
-            <label class="control-label" for="alias">Alias</label>
-            <input type="text" class="form-control input-md" id="alias" value="{{key.keyModel.alias}}" disabled />
+            <label class="control-label" for="keyAlias">Alias</label>
+            <input 
+              type="text"
+              class="form-control input-md"
+              id="keyAlias"
+              #keyAlias="ngModel"
+              [(ngModel)]="key.keyModel.alias"
+              pattern="^[a-z0-9-]{1,32}$"
+              [ngClass]="{ 'invalid-border': keyAlias.invalid, 'disabled': key.disabled }"
+              aliasvalidator
+              required />
+            <div class="invalid-alert" *ngIf="keyAlias.errors && (keyAlias.dirty || keyAlias.touched)">  
+              <p *ngIf="keyAlias?.errors.required">Alias is required!</p>
+              <p *ngIf="keyAlias?.errors.pattern">Alias must not be more than 32 characters long and must contain only lower-case letters, digits and hyphens!</p>
+              <p *ngIf="keyAlias?.errors.aliasvalidator">You have already used this alias!</p>
+            </div>
           </div>
 
           <div class="form-group">
             <label class="control-label" for="controller">Key (Base58)</label>
             <input type="text" class="form-control input-md" id="controller" value="{{key.keyModel.publicKey}}" disabled />
+          </div>
+
+          <div class="form-group text-center">
+            <button type="button" mdbBtn color="warning" mdbWavesEffect (click)="edit(key)" *ngIf="key.disabled">
+              <span class="glyphicon glyphicon-pencil"></span>
+            </button>
+            <button type="button" mdbBtn color="success" mdbWavesEffect (click)="confirm(key)" *ngIf="!key.disabled" [disabled]="keyController.invalid || keyAlias.invalid">
+              <span class="glyphicon glyphicon-ok"></span>
+            </button>
           </div>
         </div>
       </fieldset>
