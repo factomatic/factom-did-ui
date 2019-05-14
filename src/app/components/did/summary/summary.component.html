@@ -8,6 +8,17 @@
         You have exceeded the entry size limit! Please remove some of your keys or services.
       </div>
       <pre><code mwlHighlightJs [source]='entryPretified' language="json"></code></pre>
+      <div class="text-center">
+        <button 
+          type="button" 
+          mdbBtn 
+          color="success" 
+          mdbWavesEffect 
+          (click)="signData()" 
+          *ngIf="selectedAction === actionType.Update">
+          Sign Data
+        </button>
+      </div>
       <div class="row justify-content-between mt-4">
         <button class="btn-md-blue" mdbBtn type="button" color="primary" mdbWavesEffect (click)="goToPrevious()"> <span class="glyphicon glyphicon-arrow-left mr-3"></span> Back</button>
         <button class="btn-md-blue" mdbBtn type="button" color="primary" mdbWavesEffect (click)="recordOnChain()" [disabled]="entrySizeExceeded">{{recordOnChainButtonName}}</button>

@@ -12,7 +12,7 @@ import { EntryType } from '../enums/entry-type';
 import { environment } from 'src/environments/environment';
 import { KeyModel } from '../models/key.model';
 import { ServiceModel } from '../models/service.model';
-import { toHexString, calculateChainId } from '../utils/helpers';
+import { toHexString, calculateChainId, calculateSha512 } from '../utils/helpers';
 
 @Injectable()
 export class DIDService {
@@ -89,6 +89,13 @@ export class DIDService {
     this.id = didId;
     const didDocument: DIDDocument = JSON.parse(response);
     this.parseDocument(didDocument);
+  }
+
+  sendUpdateEntryForSigning(entry: {}) {
+    this.nonce = toHexString(nacl.randomBytes(32));
+    const dataHash = calculateSha512(`${this.nonce}${JSON.stringify(entry)}`);
+    const event = new CustomEvent('ContentToSign', { detail: dataHash });
+    window.dispatchEvent(event);
   }
 
   clearData() {
