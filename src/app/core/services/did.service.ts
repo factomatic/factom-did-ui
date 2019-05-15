@@ -24,9 +24,9 @@ export class DIDService {
   private formPublicKeys: KeyModel[];
   private formAuthenticationKeys: KeyModel[];
   private formServices: ServiceModel[];
-  private originalPublicKeys: KeyModel[];
-  private originalAuthenticationKeys: KeyModel[];
-  private originalServices: ServiceModel[];
+  private originalPublicKeys: Set<KeyModel>;
+  private originalAuthenticationKeys: Set<KeyModel>;
+  private originalServices: Set<ServiceModel>;
 
   constructor (
     private http: HttpClient,
@@ -37,9 +37,9 @@ export class DIDService {
         this.formPublicKeys = form.publicKeys;
         this.formAuthenticationKeys = form.authenticationKeys;
         this.formServices = form.services;
-        this.originalPublicKeys = form.originalPublicKeys;
-        this.originalAuthenticationKeys = form.originalAuthenticationKeys;
-        this.originalServices = form.originalServices;
+        this.originalPublicKeys = new Set(form.originalPublicKeys);
+        this.originalAuthenticationKeys = new Set(form.originalAuthenticationKeys);
+        this.originalServices = new Set(form.originalServices);
      });
   }
 
@@ -123,9 +123,9 @@ export class DIDService {
     const newPublicKeys = this.getNew(this.originalPublicKeys, this.formPublicKeys);
     const newAuthenticationKeys = this.getNew(this.originalAuthenticationKeys, this.formAuthenticationKeys);
     const newServices = this.getNew(this.originalServices, this.formServices);
-    const revokedPublicKeys = this.getRevoked(this.originalPublicKeys, this.formPublicKeys);
-    const revokedAuthenticationKeys = this.getRevoked(this.originalAuthenticationKeys, this.formAuthenticationKeys);
-    const revokedServices = this.getRevoked(this.originalServices, this.formServices);
+    const revokedPublicKeys = this.getRevoked(this.originalPublicKeys, new Set(this.formPublicKeys));
+    const revokedAuthenticationKeys = this.getRevoked(this.originalAuthenticationKeys, new Set(this.formAuthenticationKeys));
+    const revokedServices = this.getRevoked(this.originalServices, new Set(this.formServices));
 
     const updateEntry = {};
 
@@ -184,7 +184,7 @@ export class DIDService {
     const _new = [];
 
     current.forEach(obj => {
-      if (!original.includes(obj)) {
+      if (!original.has(obj)) {
         _new.push(obj);
       }
     });
@@ -196,7 +196,7 @@ export class DIDService {
     const revoked: string[] = [];
 
     original.forEach(obj => {
-      if (!current.includes(obj)) {
+      if (!current.has(obj)) {
         revoked.push(obj.alias);
       }
     });
