@@ -1,11 +1,11 @@
 import { CollapseComponent } from 'angular-bootstrap-md';
-import { Component, OnInit, AfterViewInit, ViewChildren, NgZone } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChildren, NgZone, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store, select } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 
 import { ActionType } from 'src/app/core/enums/action-type';
-import { AddAuthenticationKey, RemoveAuthenticationKey } from 'src/app/core/store/form/form.actions';
+import { AddAuthenticationKey, RemoveAuthenticationKey, UpdateAuthenticationKey } from 'src/app/core/store/form/form.actions';
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
 import { ComponentKeyModel } from 'src/app/core/models/component-key.model';
@@ -34,13 +34,15 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   public actionType = ActionType;
   public componentAction = GENERATE_ACTION;
   public selectedKey: KeyModel;
-  public authenticationKeys: ComponentKeyModel[] = [];
+  public authenticationKeys: KeyModel[] = [];
+  public componentKeys: ComponentKeyModel[] = [];
   public availablePublicKeys: ComponentKeyModel[] = [];
   public actionDropdownTooltipMessage = TooltipMessages.AuthenticationDropdownTooltip;
   public continueButtonText: string;
   public selectedAction: string;
 
   constructor(
+    private cd: ChangeDetectorRef,
     private fb: FormBuilder,
     private zone: NgZone,
     private store: Store<AppState>,
@@ -54,14 +56,15 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
     this.subscription$ = this.store
       .pipe(select(state => state))
       .subscribe(state => {
-        this.authenticationKeys = state.form.authenticationKeys
-          .map(key => new ComponentKeyModel(key, DOWN_POSITION, true));
+        this.componentKeys = state.form.authenticationKeys
+          .map(key => new ComponentKeyModel(Object.assign({}, key), DOWN_POSITION, true));
 
         this.availablePublicKeys = state.form.publicKeys
           .filter(k => !state.form.authenticationKeys.includes(k))
           .map(key => new ComponentKeyModel(key, DOWN_POSITION, true));
 
-        this.continueButtonText = this.authenticationKeys.length > 0 ? 'Next' : 'Skip';
+        this.authenticationKeys = state.form.authenticationKeys;
+        this.continueButtonText = this.componentKeys.length > 0 ? 'Next' : 'Skip';
         this.selectedAction = state.action.selectedAction;
       });
 
@@ -89,10 +92,12 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
         Validators.required,
         CustomValidators.uniqueKeyAlias(
           this.availablePublicKeys.map(key => key.keyModel),
-          this.authenticationKeys.map(key => key.keyModel)
+          this.componentKeys.map(key => key.keyModel)
         )
       ]]
     });
+
+    this.cd.detectChanges();
   }
 
   generateKey() {
@@ -146,6 +151,8 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
         }
       });
     });
+
+    this.cd.detectChanges();
   }
 
   removeKey(key: KeyModel) {
@@ -154,8 +161,23 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   }
 
   toggleKey(keyModel) {
-    const publicKey = this.authenticationKeys.find(k => k.keyModel === keyModel);
+    const publicKey = this.componentKeys.find(k => k.keyModel === keyModel);
     publicKey.iconPosition = publicKey.iconPosition === DOWN_POSITION ? UP_POSITION : DOWN_POSITION;
+  }
+
+  edit(componentKey: ComponentKeyModel) {
+    componentKey.disabled = false;
+  }
+
+  confirm(componentKey: ComponentKeyModel) {
+    componentKey.disabled = true;
+    const updatedKey = componentKey.keyModel;
+    const originalKey = this.authenticationKeys.find(k => k.publicKey === updatedKey.publicKey);
+
+    if (updatedKey.alias !== originalKey.alias || updatedKey.controller !== originalKey.controller) {
+      this.store.dispatch(new UpdateAuthenticationKey(componentKey.keyModel));
+      this.cd.detectChanges();
+    }
   }
 
   goToNext() {
