@@ -62,17 +62,20 @@ function addOriginalService(state: FormState, services: ServiceModel[]) {
 }
 
 function updatePublicKey(state: FormState, key: KeyModel) {
-  if (state.authenticationKeys.find(k => k.publicKey === key.publicKey)) {
-    return {
-      ...state,
-      authenticationKeys: [...state.authenticationKeys.filter(k => k.publicKey !== key.publicKey), key],
-      publicKeys: [...state.publicKeys.filter(k => k.publicKey !== key.publicKey), key]
-    };
+  const pubKeyIndex = state.publicKeys.findIndex(k => k.publicKey === key.publicKey);
+  const publicKeys = state.publicKeys.slice();
+  publicKeys[pubKeyIndex] = key;
+
+  const authenticationKeys = state.authenticationKeys.slice();
+  const authKeyIndex = authenticationKeys.findIndex(k => k.publicKey === key.publicKey);
+  if (authKeyIndex > -1) {
+    authenticationKeys[authKeyIndex] = key;
   }
 
   return {
     ...state,
-    publicKeys: [...state.publicKeys.filter(k => k.publicKey !== key.publicKey), key]
+    publicKeys: publicKeys,
+    authenticationKeys: authenticationKeys
   };
 }
 
