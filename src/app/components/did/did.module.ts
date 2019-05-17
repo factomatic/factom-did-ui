@@ -7,7 +7,7 @@ import { HighlightJsModule, HIGHLIGHT_JS } from 'angular-highlight-js';
 import hljs from 'highlight.js/lib/highlight';
 import json from 'highlight.js/lib/languages/json';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
-import {NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from '@angular/core';
 
 hljs.registerLanguage('json', json);
@@ -30,7 +30,7 @@ export function highlightJsFactory() {
       useFactory: highlightJsFactory
     }),
     MDBBootstrapModule.forRoot(),
-    NgbTooltipModule,
+    NgbModule,
     ReactiveFormsModule
   ],
   exports: [
