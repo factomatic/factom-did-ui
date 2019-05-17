@@ -27,8 +27,13 @@ function calculateSha512(content: string): string {
   return hash.hex();
 }
 
+function capitalize(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 export {
   toHexString,
   calculateChainId,
-  calculateSha512
+  calculateSha512,
+  capitalize
 };
