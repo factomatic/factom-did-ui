@@ -1,6 +1,7 @@
 import { CollapseComponent } from 'angular-bootstrap-md';
 import { Component, OnInit, AfterViewInit, ViewChildren, NgZone, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store, select } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 
@@ -9,6 +10,7 @@ import { AddAuthenticationKey, RemoveAuthenticationKey, UpdateAuthenticationKey 
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
 import { ComponentKeyModel } from 'src/app/core/models/component-key.model';
+import { ConfirmModalComponent } from '../../modals/confirm-modal/confirm-modal.component';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { DIDService } from 'src/app/core/services/did.service';
 import { KeyModel } from 'src/app/core/models/key.model';
@@ -44,6 +46,7 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   constructor(
     private cd: ChangeDetectorRef,
     private fb: FormBuilder,
+    private modalService: NgbModal,
     private zone: NgZone,
     private store: Store<AppState>,
     private keysService: KeysService,
@@ -156,8 +159,13 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
   }
 
   removeKey(key: KeyModel) {
-    this.store.dispatch(new RemoveAuthenticationKey(key));
-    this.createForm();
+    const confirmRef = this.modalService.open(ConfirmModalComponent);
+    confirmRef.componentInstance.objectType = 'key';
+    confirmRef.result.then((result) => {
+      this.store.dispatch(new RemoveAuthenticationKey(key));
+      this.createForm();
+    }).catch((error) => {
+    });
   }
 
   toggleKey(keyModel) {

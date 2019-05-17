@@ -100,7 +100,7 @@ function updatePublicKey(state: FormState, key: KeyModel) {
 function removeAuthenticationKey(state: FormState, key: KeyModel) {
   return {
     ...state,
-    authenticationKeys: state.authenticationKeys.filter(k => k !== key),
+    authenticationKeys: state.authenticationKeys.filter(k => k.publicKey !== key.publicKey),
   };
 }
 
