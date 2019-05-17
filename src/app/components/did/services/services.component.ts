@@ -1,6 +1,7 @@
 import { CollapseComponent } from 'angular-bootstrap-md';
 import { Component, OnInit, AfterViewInit, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store, select } from '@ngrx/store';
 
 import { ActionType } from 'src/app/core/enums/action-type';
@@ -8,6 +9,7 @@ import { AddService, RemoveService } from 'src/app/core/store/form/form.actions'
 import { AppState } from 'src/app/core/store/app.state';
 import { BaseComponent } from 'src/app/components/base.component';
 import { ComponentServiceModel } from 'src/app/core/models/component-service.model';
+import { ConfirmModalComponent } from '../../modals/confirm-modal/confirm-modal.component';
 import CustomValidators from 'src/app/core/utils/customValidators';
 import { ServiceModel } from 'src/app/core/models/service.model';
 import { Subscription } from 'rxjs';
@@ -37,6 +39,7 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
 
   constructor(
     private fb: FormBuilder,
+    private modalService: NgbModal,
     private store: Store<AppState>,
     private workflowService: WorkflowService) {
     super();
@@ -89,8 +92,13 @@ export class ServicesComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   removeService(service: ServiceModel) {
-    this.store.dispatch(new RemoveService(service));
-    this.createForm();
+    const confirmRef = this.modalService.open(ConfirmModalComponent);
+    confirmRef.componentInstance.objectType = 'service';
+    confirmRef.result.then((result) => {
+      this.store.dispatch(new RemoveService(service));
+      this.createForm();
+    }).catch((error) => {
+    });
   }
 
   toggleService(serviceModel) {
