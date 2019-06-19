@@ -4,5 +4,5 @@ export class KeyModel {
     public type: string,
     public controller: string,
     public publicKey: string,
-    public privateKey: string) {}
+    public privateKey?: string) {}
 }

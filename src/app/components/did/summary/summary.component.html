@@ -3,14 +3,25 @@
   <br/>
   <div class="row">
     <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8">
-      <div class="alert alert-danger" role="alert" *ngIf="documentSizeExceeded">
+      <div class="alert alert-danger" role="alert" *ngIf="entrySizeExceeded">
         <i class="fas fa-exclamation-circle mr-2"></i>
-        You have exceeded the document size limit! Please remove some of your keys or services.
+        You have exceeded the entry size limit! Please remove some of your keys or services.
       </div>
-      <pre><code mwlHighlightJs [source]='didDocument' language="json"></code></pre>
+      <pre><code mwlHighlightJs [source]='entryPretified' language="json"></code></pre>
+      <div class="text-center">
+        <button 
+          type="button" 
+          mdbBtn 
+          color="success" 
+          mdbWavesEffect 
+          (click)="signData()" 
+          *ngIf="selectedAction === actionType.Update">
+          Sign Data
+        </button>
+      </div>
       <div class="row justify-content-between mt-4">
         <button class="btn-md-blue" mdbBtn type="button" color="primary" mdbWavesEffect (click)="goToPrevious()"> <span class="glyphicon glyphicon-arrow-left mr-3"></span> Back</button>
-        <button class="btn-md-blue" mdbBtn type="button" color="primary" mdbWavesEffect (click)="recordOnChain()" [disabled]="documentSizeExceeded">{{recordOnChainButtonName}}</button>
+        <button class="btn-md-blue" mdbBtn type="button" color="primary" mdbWavesEffect (click)="recordOnChain()" [disabled]="entrySizeExceeded">{{recordOnChainButtonName}}</button>
       </div>
     </div>
   </div>

@@ -1,4 +1,5 @@
 import { sha256 } from 'js-sha256';
+import { sha512 } from 'js-sha512';
 
 function toHexString(byteArray) {
   return Array.from(byteArray, function(byte: any) {
@@ -20,7 +21,19 @@ function calculateChainId(extIds) {
   return fullHash.hex();
 }
 
+function calculateSha512(content: string): string {
+  const hash = sha512.create();
+  hash.update(content);
+  return hash.hex();
+}
+
+function capitalize(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 export {
   toHexString,
-  calculateChainId
+  calculateChainId,
+  calculateSha512,
+  capitalize
 };

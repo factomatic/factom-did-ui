@@ -5,4 +5,7 @@ export interface FormState {
   readonly authenticationKeys: KeyModel[];
   readonly publicKeys: KeyModel[];
   readonly services: ServiceModel[];
+  readonly originalAuthenticationKeys: KeyModel[];
+  readonly originalPublicKeys: KeyModel[];
+  readonly originalServices: ServiceModel[];
 }

@@ -7,13 +7,6 @@
   margin-bottom: 8px;
 }
 
-.ng-valid[required], .ng-valid.required  {
-  border-left: 5px solid #42A948; /* green */
-}
-.ng-invalid:not(form)  {
-  border-left: 5px solid #a94442; /* red */
-}
-
 fieldset {
   display: block;
   margin-inline-start: 2px;

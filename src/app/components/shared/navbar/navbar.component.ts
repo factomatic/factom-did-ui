@@ -38,6 +38,8 @@ export class NavbarComponent implements OnInit {
     switch (this.selectedAction) {
       case ActionType.CreateBasic:
         return 'basic-mode-tabs';
+      case ActionType.Update:
+        return 'update-tabs';
       default:
         return null;
     }
@@ -47,6 +49,8 @@ export class NavbarComponent implements OnInit {
     switch (this.selectedAction) {
       case ActionType.CreateBasic:
         return 'basic-mode-liner';
+      case ActionType.Update:
+        return 'update-liner';
       default:
         return null;
     }
