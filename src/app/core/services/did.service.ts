@@ -12,6 +12,7 @@ import { EntryType } from '../enums/entry-type';
 import { environment } from 'src/environments/environment';
 import { KeyModel } from '../models/key.model';
 import { ServiceModel } from '../models/service.model';
+import { SignatureType } from '../enums/signature-type';
 import { toHexString, calculateChainId, calculateSha512 } from '../utils/helpers';
 
 @Injectable()
@@ -28,19 +29,19 @@ export class DIDService {
   private originalAuthenticationKeys: Set<KeyModel>;
   private originalServices: Set<ServiceModel>;
 
-  constructor (
+  constructor(
     private http: HttpClient,
     private store: Store<AppState>) {
     this.store
-     .pipe(select(state => state.form))
-     .subscribe(form => {
+      .pipe(select(state => state.form))
+      .subscribe(form => {
         this.formPublicKeys = form.publicKeys;
         this.formAuthenticationKeys = form.authenticationKeys;
         this.formServices = form.services;
         this.originalPublicKeys = new Set(form.originalPublicKeys);
         this.originalAuthenticationKeys = new Set(form.originalAuthenticationKeys);
         this.originalServices = new Set(form.originalServices);
-     });
+      });
   }
 
   getId(): string {
@@ -75,7 +76,7 @@ export class DIDService {
 
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type':  'application/json'
+        'Content-Type': 'application/json'
       })
     };
 
@@ -172,12 +173,14 @@ export class DIDService {
   }
 
   private buildKeyEntryObject(key: KeyModel): {} {
+    const publicKeyProperty = key.type == SignatureType.RSA ? 'publicKeyPem' : 'publicKeyBase58';
+
     return {
       id: `${this.id}#${key.alias}`,
       type: `${key.type}${this.VerificationKeySuffix}`,
       controller: key.controller,
-      publicKeyBase58: key.publicKey
-     };
+      [publicKeyProperty]: key.publicKey
+    };
   }
 
   private getNew(original, current): Array<{}> {
