@@ -10,6 +10,7 @@ import { Store, select } from '@ngrx/store';
 import { AddPublicKey } from '../store/form/form.actions';
 import { AppState } from '../store/app.state';
 import { DIDService } from './did.service';
+import { exportPemKeys } from '../utils/helpers';
 import { KeyModel } from '../models/key.model';
 import { KeyPairModel } from '../models/key-pair.model';
 import { SignatureType } from '../enums/signature-type';
@@ -41,14 +42,16 @@ export class KeysService {
             });
           }
         });
-     });
+      });
   }
 
-  generateKeyPair(type: SignatureType): KeyPairModel {
+  async generateKeyPair(type: SignatureType): Promise<KeyPairModel> {
     if (type === SignatureType.EdDSA) {
       return this.generateEdDSAKeyPair();
     } else if (type === SignatureType.ECDSA) {
       return this.generateECDSAKeyPair();
+    } else if (type === SignatureType.RSA) {
+      return await this.generateRSAKeyPair();
     }
   }
 
@@ -93,5 +96,20 @@ export class KeysService {
     const privateKeyBase58 = base58.encode(Buffer.from(privateKey, 'hex'));
 
     return new KeyPairModel(publicKeyBase58, privateKeyBase58);
+  }
+
+  private async generateRSAKeyPair(): Promise<KeyPairModel> {
+    const keyPair = await window.crypto.subtle.generateKey(
+      {
+        name: "RSA-OAEP",
+        modulusLength: 4096,
+        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+        hash: { name: "SHA-256" }
+      },
+      true,
+      ["encrypt", "decrypt"]);
+
+    const exportedKeys = await exportPemKeys(keyPair);
+    return new KeyPairModel(exportedKeys.publicKey, exportedKeys.privateKey);
   }
 }
