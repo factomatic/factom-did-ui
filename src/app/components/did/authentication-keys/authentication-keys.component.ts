@@ -108,17 +108,19 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
       return;
     }
 
-    const keyPair = this.keysService.generateKeyPair(this.type.value);
-    const generatedKey = new KeyModel(
-      this.alias.value,
-      this.type.value,
-      this.controller.value,
-      keyPair.publicKey,
-      keyPair.privateKey
-    );
+    this.keysService.generateKeyPair(this.type.value)
+      .then(keyPair => {
+        const generatedKey = new KeyModel(
+          this.alias.value,
+          this.type.value,
+          this.controller.value,
+          keyPair.publicKey,
+          keyPair.privateKey
+        );
 
-    this.store.dispatch(new AddAuthenticationKey(generatedKey));
-    this.createForm();
+        this.store.dispatch(new AddAuthenticationKey(generatedKey));
+        this.createForm();
+      });
   }
 
   changeAction(event) {
@@ -196,15 +198,15 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
     this.workflowService.moveToPreviousStep();
   }
 
-  get type () {
+  get type() {
     return this.keyForm.get('type');
   }
 
-  get alias () {
+  get alias() {
     return this.keyForm.get('alias');
   }
 
-  get controller () {
+  get controller() {
     return this.keyForm.get('controller');
   }
 }
