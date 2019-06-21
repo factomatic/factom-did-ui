@@ -101,13 +101,13 @@ export class KeysService {
   private async generateRSAKeyPair(): Promise<KeyPairModel> {
     const keyPair = await window.crypto.subtle.generateKey(
       {
-        name: "RSA-OAEP",
+        name: "RSASSA-PKCS1-v1_5",
         modulusLength: 4096,
         publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
         hash: { name: "SHA-256" }
       },
       true,
-      ["encrypt", "decrypt"]);
+      ["sign", "verify"]);
 
     const exportedKeys = await exportPemKeys(keyPair);
     return new KeyPairModel(exportedKeys.publicKey, exportedKeys.privateKey);
