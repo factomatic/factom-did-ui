@@ -109,7 +109,7 @@ export class AuthenticationKeysComponent extends BaseComponent implements OnInit
     }
 
     this.keysService.generateKeyPair(this.type.value)
-      .then(keyPair => {
+      .subscribe(keyPair => {
         const generatedKey = new KeyModel(
           this.alias.value,
           this.type.value,

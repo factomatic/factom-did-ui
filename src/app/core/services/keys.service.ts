@@ -45,14 +45,16 @@ export class KeysService {
       });
   }
 
-  async generateKeyPair(type: SignatureType): Promise<KeyPairModel> {
-    if (type === SignatureType.EdDSA) {
-      return this.generateEdDSAKeyPair();
-    } else if (type === SignatureType.ECDSA) {
-      return this.generateECDSAKeyPair();
-    } else if (type === SignatureType.RSA) {
-      return await this.generateRSAKeyPair();
-    }
+  generateKeyPair(type: SignatureType): Observable<KeyPairModel> {
+    return defer(async () => {
+      if (type === SignatureType.EdDSA) {
+        return this.generateEdDSAKeyPair();
+      } else if (type === SignatureType.ECDSA) {
+        return this.generateECDSAKeyPair();
+      } else if (type === SignatureType.RSA) {
+        return await this.generateRSAKeyPair();
+      }
+    });
   }
 
   autoGeneratePublicKey(): void {

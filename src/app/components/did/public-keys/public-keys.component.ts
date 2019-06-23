@@ -99,7 +99,7 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
     }
 
     this.keysService.generateKeyPair(this.type.value)
-      .then(keyPair => {
+      .subscribe(keyPair => {
         const generatedKey = new KeyModel(
           this.alias.value,
           this.type.value,
