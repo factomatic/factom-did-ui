@@ -56,15 +56,15 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
 
   ngOnInit() {
     this.subscription$ = this.store
-     .pipe(select(state => state))
-     .subscribe(state => {
+      .pipe(select(state => state))
+      .subscribe(state => {
         this.componentKeys = state.form.publicKeys.map(key => new ComponentKeyModel(Object.assign({}, key), DOWN_POSITION, true));
         this.publicKeys = state.form.publicKeys;
         this.authenticationKeys = state.form.authenticationKeys;
 
         this.continueButtonText = this.componentKeys.length > 0 ? 'Next' : 'Skip';
         this.selectedAction = state.action.selectedAction;
-     });
+      });
 
     this.subscriptions.push(this.subscription$);
 
@@ -87,7 +87,7 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
       type: [SignatureType.EdDSA, [Validators.required]],
       controller: [this.didId, [Validators.required]],
       alias: ['', [Validators.required,
-        CustomValidators.uniqueKeyAlias(this.componentKeys.map(key => key.keyModel), this.authenticationKeys)]]
+      CustomValidators.uniqueKeyAlias(this.componentKeys.map(key => key.keyModel), this.authenticationKeys)]]
     });
 
     this.cd.detectChanges();
@@ -98,17 +98,19 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
       return;
     }
 
-    const keyPair = this.keysService.generateKeyPair(this.type.value);
-    const generatedKey = new KeyModel(
-      this.alias.value,
-      this.type.value,
-      this.controller.value,
-      keyPair.publicKey,
-      keyPair.privateKey
-    );
+    this.keysService.generateKeyPair(this.type.value)
+      .subscribe(keyPair => {
+        const generatedKey = new KeyModel(
+          this.alias.value,
+          this.type.value,
+          this.controller.value,
+          keyPair.publicKey,
+          keyPair.privateKey
+        );
 
-    this.store.dispatch(new AddPublicKey(generatedKey));
-    this.createForm();
+        this.store.dispatch(new AddPublicKey(generatedKey));
+        this.createForm();
+      });
   }
 
   removeKey(key: KeyModel) {
@@ -149,15 +151,15 @@ export class PublicKeysComponent extends BaseComponent implements OnInit, AfterV
     this.workflowService.moveToPreviousStep();
   }
 
-  get type () {
+  get type() {
     return this.keyForm.get('type');
   }
 
-  get alias () {
+  get alias() {
     return this.keyForm.get('alias');
   }
 
-  get controller () {
+  get controller() {
     return this.keyForm.get('controller');
   }
 }
